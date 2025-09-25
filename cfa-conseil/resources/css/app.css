@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .radial-gradient-center {
+      --gradient-x: 50%;
+      --gradient-y: 50%;
+      background: radial-gradient(
+        circle at var(--gradient-x) var(--gradient-y),
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(37, 37, 80, 1) 100%
+      );
+    }
+  }
