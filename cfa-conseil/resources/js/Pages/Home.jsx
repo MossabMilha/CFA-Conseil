@@ -1,7 +1,10 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
 import Nav from '@/Components/Nav';
 import ServiceCard from '@/Components/ServiceCard';
+import IconOne from '@/assets/one.svg?react';
+import IconTwo from '@/assets/two.svg?react';
+import IconThree from '@/assets/three.svg?react';
+import IconFour from '@/assets/four.svg?react';
 
 export default function Home() {
     return (
@@ -135,7 +138,7 @@ export default function Home() {
                 </section>
 
                 <section className='py-16'>
-                    <div className='container mx-auto px-4'>
+                    <div className=' mx-auto px-4'>
                         <div className='flex flex-col items-center text-center mb-12'>
                             <h2 className='text-5xl font-bold text-[#252550] mb-4'>Pourquoi Nous Choisir</h2>
                             <p className='text-[#252550] text-lg max-w-5xl text-justify'>
@@ -143,6 +146,42 @@ export default function Home() {
                             situations dans des secteurs d'activité différents, CFA Conseil a bénéficié de la capitalisation d'une forte expérience et d'une
                             compétence organisationnelle et technique qui le distingue comme un cabinet comptable marocain a forte valeur ajoutée.
                             </p>
+                        </div>
+                        <div className='flex justify-center mb-12'>
+                            <div className='flex items-end font-bold text-center text-[#252550] w-24 font-jetbrains mr-6'>
+                                <IconOne height={100} width={100} style={{ "--number-color": "#252550" }} />
+                            </div>
+                            <div className='text-[#252550] text-lg max-w-5xl text-justify bg-[#92aec8] p-4'>
+                                <h3 className='font-bold text-3xl mb-2'>Une équipe compétente et hautement qualifiée</h3>
+                                <p>Formée dans les grandes écoles et universités nationales et internationales, notre équipe bénéficie en permanence de formations continues adaptées au domaine de compétence de chacun de ses membres. </p>
+                            </div>
+                        </div>
+                        <div className='flex flex-row-reverse justify-center mb-12'>
+                            <div className='flex items-end font-bold text-center text-[#252550] w-24 font-jetbrains ml-6'>
+                                <IconTwo height={100} width={100} style={{ "--number-color": "#92aec8" }} />
+                            </div>
+                            <div className='text-[#252550] text-lg max-w-5xl text-justify bg-[#d7d7d7] p-4'>
+                                <h3 className='font-bold text-3xl mb-2'>Des outils modernes et performants</h3>
+                                <p>Nous mettons a la disposition de nos clients des solutions informatiques et techniques avancées, conçues pour suivre chaque évolution et garantir un accompagnement efficace face aux changements futurs.</p>
+                            </div>
+                        </div>
+                        <div className='flex justify-center mb-12'>
+                            <div className='flex items-end font-bold text-center text-[#252550] w-24 font-jetbrains mr-6'>
+                                <IconThree height={100} width={100} style={{ "--number-color": "#d7d7d7" }} />
+                            </div>
+                            <div className='text-[#d7d7d7] text-lg max-w-5xl text-justify bg-[#252550] p-4'>
+                                <h3 className='font-bold text-3xl mb-2'>Une expertise solide et diversifiée</h3>
+                                <p>Avec plusieurs années d'expérience en audit et en comptabilité dans des secteurs variés, nous offrons une vision claire et à long terme, capable d'anticiper les risques et de prévenir les dysfonctionnements. </p>
+                            </div>
+                        </div>
+                        <div className='flex flex-row-reverse justify-center mb-12'>
+                            <div className='flex items-end font-bold text-center text-[#252550] w-24 font-jetbrains ml-6'>
+                                <IconFour height={100} width={100} style={{ "--number-color": "#252550" }} />
+                            </div>
+                            <div className='text-[#252550] text-lg max-w-5xl text-justify bg-[#92aec8] p-4'>
+                                <h3 className='font-bold text-3xl mb-2'>Un réseau professionnel de confiance</h3>
+                                <p>Grace a nos liens étroits avec des acteurs majeurs du secteur financier et de grandes entreprises marocaines, nous assurons à nos clients un appui stratégique et un accompagnement de haute valeur. </p>
+                            </div>
                         </div>
                     </div>
                 </section>
