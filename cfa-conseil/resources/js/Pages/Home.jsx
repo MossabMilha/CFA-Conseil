@@ -5,6 +5,12 @@ import IconOne from '@/assets/one.svg?react';
 import IconTwo from '@/assets/two.svg?react';
 import IconThree from '@/assets/three.svg?react';
 import IconFour from '@/assets/four.svg?react';
+import FacebookIcon from '@/assets/icons-facebook.svg?react';
+import TwitterIcon from '@/assets/icons-x.svg?react';
+import LinkedInIcon from '@/assets/icons-linkedin.svg?react';
+import GoogleIcon from '@/assets/icons-google-plus.svg?react';
+import { MapPin, Phone, Mail } from 'lucide-react';
+// import { Facebook, TwitterX, LinkedIn, Google } from 'lucide-react';
 
 export default function Home() {
     return (
@@ -138,9 +144,9 @@ export default function Home() {
                 </section>
 
                 <section className='py-16'>
-                    <div className=' mx-auto px-4'>
+                    <div className='container mx-auto px-4'>
                         <div className='flex flex-col items-center text-center mb-12'>
-                            <h2 className='text-5xl font-bold text-[#252550] mb-4'>Pourquoi Nous Choisir</h2>
+                            <h2 className='text-5xl font-bold text-[#252550] mb-4'>Pourquoi Nous Choisissez</h2>
                             <p className='text-[#252550] text-lg max-w-5xl text-justify'>
                             Choisir CFA, c'est choisir I'expertise dans toute sans ampleur grace ses multiples interventions et confrontations aux différentes
                             situations dans des secteurs d'activité différents, CFA Conseil a bénéficié de la capitalisation d'une forte expérience et d'une
@@ -184,6 +190,232 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
+                </section>
+
+                <section className='flex justify-center py-8 bg-[#eaeaea]'>
+                    <div className='flex mx-auto px-4'>
+                        <div className='flex justify-center items-center p-4'>
+                            <div className='grid grid-cols-2'>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-tl-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-tr-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-tl-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-tr-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-bl-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-br-none'></div>
+                                
+                            </div>
+                        </div>
+
+                        <div className='flex flex-col justify-center items-center p-4'>
+                            <h2 className='text-5xl text-center font-bold text-[#252550] mb-4'>Nos References</h2>
+                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                                {/* <div className="flex items-center justify-center h-24 p-4">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=200&q=80" 
+                                        alt="Company Logo 1" 
+                                        className="h-16 w-auto object-contain"
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-center h-24 p-4">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=200&q=80" 
+                                        alt="Company Logo 2" 
+                                        className="h-16 w-auto object-contain"
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-center h-24 p-4">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80" 
+                                        alt="Company Logo 3" 
+                                        className="h-16 w-auto object-contain"
+                                    />
+                                </div> */}
+                            </div>
+                        </div>
+
+                        <div className='flex justify-center items-center p-4'>
+                            <div className='grid grid-cols-2'>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-tl-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-tr-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-tl-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-tr-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-bl-none'></div>
+                                <div className='bg-[#92aec8] w-16 h-16 rounded-full rounded-br-none'></div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className='flex justify-center py-8'>
+                    <div className="container grid grid-cols-2 justify-center gap-8">
+                        <div >
+                            <h2 className='text-5xl text-start font-bold text-[#252550] mb-4'>Contactez-nous <br/>dès aujourd'hui</h2>
+                            <div>
+                                <form action="">
+                                    <div className='grid grid-cols-2 gap-4 pb-4'>
+                                        <div className='col-span-2 flex flex-col'>
+                                            <label className='mb-2' htmlFor="name">Nom et Prenom</label>
+                                            <input className='p-2 border-0 bg-[#eaeaea] rounded-md' type="text" id="name" name="name" placeholder="Nom et Prenom" />
+                                        </div>
+                                        <div className='col-span-1 flex flex-col'>
+                                            <label className='mb-2' htmlFor="email">Email</label>
+                                            <input className='p-2 border-0 bg-[#eaeaea] rounded-md' type="email" id="email" name="email" placeholder="Email" />
+                                        </div>
+                                        <div className='col-span-1 flex flex-col'>
+                                            <label className='mb-2' htmlFor="phone">Téléphone</label>
+                                            <input className='p-2 border-0 bg-[#eaeaea] rounded-md' type="tel" id="phone" name="phone" placeholder="Téléphone" />
+                                        </div>
+                                        <div className='col-span-1 flex flex-col'>
+                                            <label className='mb-2' htmlFor="company">Société</label>
+                                            <input className='p-2 border-0 bg-[#eaeaea] rounded-md' type="text" id="company" name="company" placeholder="Société" />
+                                        </div>
+                                        <div className='col-span-1 flex flex-col'>
+                                            <label className='mb-2' htmlFor="post">Poste</label>
+                                            <input className='p-2 border-0 bg-[#eaeaea] rounded-md' type="text" id="post" name="post" placeholder="Poste" />
+                                        </div>
+                                        <div className='col-span-1 flex flex-col'>
+                                            <label className='mb-2' htmlFor="country">Pays</label>
+                                            <input className='p-2 border-0 bg-[#eaeaea] rounded-md' type="text" id="country" name="country" placeholder="Pays" />
+                                        </div>
+                                        <div className='col-span-1 flex flex-col'>
+                                            <label className='mb-2' htmlFor="city">Ville</label>
+                                            <input className='p-2 border-0 bg-[#eaeaea] rounded-md' type="text" id="city" name="city" placeholder="Ville" />
+                                        </div>
+                                        <div className='col-span-2 flex flex-col'>
+                                            <label className='mb-2' htmlFor="message">Message</label>
+                                            <textarea className='p-2 border-0 bg-[#eaeaea] rounded-md min-h-32' id="message" name="message" placeholder="Message"></textarea>
+                                        </div>
+                                    </div>
+                                    <button className='py-2 px-4 border-0 bg-[#92aec8] rounded-md'>Envoyer</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div className='flex flex-col gap-4'>
+                            <div className='grid grid-cols-3 gap-4'>
+                                <div className='p-3 rounded-md'>
+                                    <div className='flex items-center gap-2 text-2xl pb-2'>
+                                        <MapPin size={'1em'} color={'#252550'} />
+                                        <h3 className='text-[#252550] font-bold'>Adresse</h3>
+                                    </div>
+                                    <p className=''>HORIZON BUSINESS <br/>CENTER,
+                                    Avenue YAFA N3,<br/>
+                                    AIN CHOK-CASABLANCA</p>
+                                </div>
+                                <div className='p-3 rounded-md'>
+                                    <div className='flex items-center gap-2 text-2xl pb-2'>
+                                        <Phone />
+                                        <h3 className='text-[#252550] font-bold'>Telephone</h3>
+                                    </div>
+                                    <p className='text-lg'>+212 5 22 21 03 93</p>
+                                    <p className='text-lg'>+212 6 70 05 04 47</p>
+                                </div>
+                                <div className='p-3 rounded-md'>
+                                    <div className='flex items-center gap-2 text-2xl pb-2'>
+                                        <Mail />
+                                        <h3 className='text-[#252550] font-bold'>Email</h3>
+                                    </div>
+                                    <p className='text-lg'>contact@cfa-conseil.com</p>
+                                </div>
+                            </div>
+                            <div className='overflow-hidden rounded-lg border h-full'>
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.1234!2d-7.5898!3d33.5731!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7c0d1f!2sCasablanca!5e0!3m2!1sen!2sma!4v1695761234567!5m2!1sen!2sma"
+                                    width="600"
+                                    height="450"
+                                    style={{ border: 0 }}
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    title="CFA Conseil Location"
+                                    className="w-full h-full"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className='flex justify-center items-center py-8 bg-[#252550]'>
+                    <footer className='text-white  py-8'>
+                        <div className='flex gap-16 mb-8'>
+                            <div className='flex flex-col gap-2'>
+                                <h3 className='text-4xl font-bold'>CFA Conseil</h3>
+                                <p className='text-lg max-w-[300px]'>CFA Conseil, cabinet comptable 
+                                agréé basé a Casablanca,
+                                accompagne PME et grandes
+                                entreprises en comptabilité,
+                                finance, audit, conseil juridique
+                                et fiscal. Votre partenaire de
+                                confiance pour des solutions
+                                fiables et une croissance
+                                durable.</p>
+                            </div>
+                            <div className='flex flex-col gap-2'>
+                                <h3 className='text-2xl font-bold'>Short links</h3>
+                                <ul className='list-inside text-lg'>
+                                    <li><a href='#' rel='noopener noreferrer'>Accueil</a></li>
+                                    <li><a href='#' rel='noopener noreferrer'>Qui sommes-nous</a></li>
+                                    <li><a href='#' rel='noopener noreferrer'>Pourquoi nous choisissez</a></li>
+                                    <li><a href='#' rel='noopener noreferrer'>Notre services</a></li>
+                                    <li><a href='#' rel='noopener noreferrer'>Contact</a></li>
+                                </ul>
+                            </div>
+                            <div className='flex flex-col gap-2'>
+                                <h3 className='text-2xl font-bold'>Contactez-nous</h3>
+                                <div className='flex flex-col gap-0.5'>
+                                    <h4 className='text-lg font-bold'>Telephone</h4>
+                                    <div>
+                                        <p className='text-lg'>+212 5 22 21 03 93</p>
+                                        <p className='text-lg'>+212 6 70 05 04 47</p>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col gap-0.5'>
+                                    <h4 className='text-lg font-bold'>Email</h4>
+                                    <p className='text-lg'>contact@cfa-conseil.com</p>
+                                </div>
+                                <div className='flex flex-col gap-0.5'>
+                                    <h4 className='text-lg font-bold'>Adresse</h4>
+                                    <p className='text-lg'>Horizon Business Center,<br/>
+                                    Avenue Yafa N 3, Ain Chok<br/>
+                                    Casablanca</p>
+                                </div>
+                            </div>
+                            <div className='flex flex-col gap-2'>
+                                <h3 className='text-2xl font-bold'>Follow us</h3>
+                                <div className='flex gap-2'>
+                                    <a href="" rel="noopener noreferrer"><FacebookIcon className='w-8 h-8' style={{ '--fill-color': '#fff' }} /></a>
+                                    <a href="" rel="noopener noreferrer"><TwitterIcon className='w-8 h-8' style={{ '--fill-color': '#fff' }} /></a>
+                                    <a href="" rel="noopener noreferrer"><LinkedInIcon className='w-8 h-8' style={{ '--fill-color': '#fff' }} /></a>
+                                    <a href="" rel="noopener noreferrer"><GoogleIcon className='w-8 h-8' style={{ '--fill-color': '#fff' }} /></a>
+                                </div>
+                            </div>
+                            <div className='flex items-end'>
+                                <div className='grid grid-cols-4'>
+                                    <div className='bg-[#6885ab] w-24 h-24 rounded-full rounded-br-none'></div>
+                                    <div className='bg-[#6885ab] w-24 h-24'><div className='bg-[#252550] w-24 h-24 rounded-full rounded-bl-none'></div></div>
+                                    <div></div>
+                                    <div></div>
+
+                                    <div></div>
+                                    <div className='bg-[#6885ab] w-24 h-24'><div className='bg-[#252550] w-24 h-24 rounded-full rounded-tl-none'></div></div>
+                                    <div className='bg-[#6885ab] w-24 h-24'><div className='bg-[#252550] w-24 h-24 rounded-full rounded-br-none'></div></div>
+                                    <div className='bg-[#6885ab] w-24 h-24 rounded-full rounded-bl-none'></div>
+
+                                    <div className='bg-[#6885ab] w-24 h-24'><div className='bg-[#252550] w-24 h-24 rounded-full rounded-br-none'></div></div>
+                                    <div className='bg-[#6885ab] w-24 h-24 rounded-full rounded-bl-none'></div>
+                                    <div className='bg-[#6885ab] w-24 h-24 rounded-full rounded-tr-none'></div>
+                                    <div className='bg-[#6885ab] w-24 h-24'><div className='bg-[#252550] w-24 h-24 rounded-full rounded-tl-none'></div></div>
+
+                                    <div className='bg-[#6885ab] w-24 h-24 rounded-full rounded-tr-none'></div>
+                                    <div className='bg-[#6885ab] w-24 h-24 rounded-full rounded-tl-none'></div>
+                                    <div></div>
+                                    <div className='bg-[#6885ab] w-24 h-24 rounded-full rounded-tl-none'></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>© {new Date().getFullYear()} CFA Conseil. Tous droits réservés.</p>
+                    </footer>
                 </section>
             </main>
         </div>
