@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from 'react';
 
 const DropDownContext = createContext();
 
-const Dropdown = ({ children }) => {
+const Dropdown = ({className, children }) => {
     const [open, setOpen] = useState(false);
 
     const toggleOpen = () => {
@@ -13,7 +13,7 @@ const Dropdown = ({ children }) => {
 
     return (
         <DropDownContext.Provider value={{ open, setOpen, toggleOpen }}>
-            <div className="relative">{children}</div>
+            <div className={`relative content-center ${className}`}>{children}</div>
         </DropDownContext.Provider>
     );
 };
@@ -38,7 +38,7 @@ const Trigger = ({ children }) => {
 const Content = ({
     align = 'right',
     width = '48',
-    contentClasses = 'py-1 bg-white',
+    contentClasses = 'bg-white',
     children,
 }) => {
     const { open, setOpen } = useContext(DropDownContext);

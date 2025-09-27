@@ -8,3 +8,7 @@ use Inertia\Inertia;
 Route::get('/home', function () {
     return Inertia::render('Home');
 });
+
+Route::get('/blog-editor', function () {
+    return Inertia::render('BlogEditor');
+});
