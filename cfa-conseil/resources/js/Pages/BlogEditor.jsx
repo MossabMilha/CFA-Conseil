@@ -11,8 +11,8 @@ import { Bold, Italic, Heading, List, ListOrdered, Image as ImageIcon, Heading1,
 
 import "@/../css/tiptap/editor-content.css";
 
-// Utility: generate unique ID for each image 
-const generateId = () => Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+// Utility: generate unique ID for each image
+    const generateId = () => Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 
 export default function BlogEditor() {
 
@@ -43,13 +43,13 @@ export default function BlogEditor() {
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
     ],
     content: "<p>Start writing your blog here...</p>",
-    editorProps: { 
-      attributes: { 
-        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none' 
-      } 
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none'
+      }
     },
     onUpdate: ({ editor }) => {
-      
+
       const currentImageIds = new Set();
       editor.state.doc.descendants((node) => {
         if (node.type.name === "image" && node.attrs["data-temp-id"]) {
@@ -58,7 +58,7 @@ export default function BlogEditor() {
       });
 
       const usedBlobUrls = new Set();
-      
+
       for (const [id, { blobUrl }] of imagesRef.current.entries()) {
         if (!currentImageIds.has(id) && blobUrl) {
           URL.revokeObjectURL(blobUrl);
@@ -92,19 +92,19 @@ export default function BlogEditor() {
 
     const imageId = generateId();
     const blobUrl = URL.createObjectURL(file);
-    
+
     // Store reference with both blob URL and data URL
     imagesRef.current.set(imageId, {file, blobUrl});
-    
+
     setTempImageFiles(prev => [...prev, file]);
-    
+
     // Use data URL in the editor instead of blob URL
-    editor.chain().focus().setImage({ 
-      src: blobUrl, 
-      'data-temp-id': imageId 
+    editor.chain().focus().setImage({
+      src: blobUrl,
+      'data-temp-id': imageId
     }).run();
-    
-    
+
+
     event.target.value = '';
   };
 
@@ -117,7 +117,7 @@ export default function BlogEditor() {
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
       {/* Toolbar */}
       <div className="flex flex-wrap gap-2 mb-4 p-2 bg-gray-50 rounded-md border border-gray-200">
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('bold') ? 'bg-gray-200' : ''}`}
           title="Bold"
@@ -125,7 +125,7 @@ export default function BlogEditor() {
           <Bold />
         </button>
 
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('italic') ? 'bg-gray-200' : ''}`}
           title="Italic"
@@ -138,58 +138,58 @@ export default function BlogEditor() {
             <div className="flex items-center px-2"><Heading /></div>
           </Dropdown.Trigger>
           <Dropdown.Content width="min-w-64">
-            <button 
+            <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
               className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-200' : ''}`}
               title="Heading 1"
-            > 
-              <Heading1/> 
-              <span className="whitespace-nowrap">Heading 1</span> 
+            >
+              <Heading1/>
+              <span className="whitespace-nowrap">Heading 1</span>
             </button>
-            <button 
+            <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
               className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-200' : ''}`}
               title="Heading 2"
-            > 
-              <Heading2 /> 
-              <span className="whitespace-nowrap">Heading 2</span> 
+            >
+              <Heading2 />
+              <span className="whitespace-nowrap">Heading 2</span>
             </button>
-            <button 
+            <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
               className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', { level: 3 }) ? 'bg-gray-200' : ''}`}
               title="Heading 3"
-            > 
-              <Heading3 /> 
-              <span className="whitespace-nowrap">Heading 3</span> 
+            >
+              <Heading3 />
+              <span className="whitespace-nowrap">Heading 3</span>
             </button>
-            <button 
+            <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
               className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', { level: 4 }) ? 'bg-gray-200' : ''}`}
               title="Heading 4"
-            > 
-              <Heading4 /> 
-              <span className="whitespace-nowrap">Heading 4</span> 
+            >
+              <Heading4 />
+              <span className="whitespace-nowrap">Heading 4</span>
             </button>
-            <button 
+            <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
               className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', { level: 5 }) ? 'bg-gray-200' : ''}`}
               title="Heading 5"
-            > 
-              <Heading5 /> 
-              <span className="whitespace-nowrap">Heading 5</span> 
+            >
+              <Heading5 />
+              <span className="whitespace-nowrap">Heading 5</span>
             </button>
-            <button 
+            <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
               className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', { level: 6 }) ? 'bg-gray-200' : ''}`}
               title="Heading 6"
-            > 
-              <Heading6 /> 
-              <span className="whitespace-nowrap">Heading 6</span> 
+            >
+              <Heading6 />
+              <span className="whitespace-nowrap">Heading 6</span>
             </button>
           </Dropdown.Content>
         </Dropdown>
 
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('bulletList') ? 'bg-gray-200' : ''}`}
           title="Bullet List"
@@ -197,7 +197,7 @@ export default function BlogEditor() {
           <List />
         </button>
 
-        <button 
+        <button
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('orderedList') ? 'bg-gray-200' : ''}`}
           title="Numbered List"
@@ -256,7 +256,7 @@ export default function BlogEditor() {
               accept="image/*"
               className="hidden"
             />
-            <button 
+            <button
               type="button"
               onClick={triggerFileInput}
               className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
@@ -264,7 +264,7 @@ export default function BlogEditor() {
             >
               <ImagePlus /><span className="whitespace-nowrap">Insert Image</span>
             </button>
-            <button 
+            <button
               type="button"
               className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
               title="Insert Image"
@@ -275,14 +275,14 @@ export default function BlogEditor() {
         </Dropdown>
 
         <div className="relative">
-          
+
         </div>
       </div>
 
       {/* Editor */}
       <div className="max-w-none">
-        <EditorContent 
-          editor={editor} 
+        <EditorContent
+          editor={editor}
           className="editor-content min-h-[300px] p-4 border border-gray-300 rounded-md prose focus:outline-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:focus:outline-none [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6"
         />
       </div>

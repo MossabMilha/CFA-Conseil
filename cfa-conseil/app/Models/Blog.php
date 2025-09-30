@@ -8,18 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Blog extends Model
 {
     use HasFactory;
-    protected $fillable =[
-        'user_id', 'title', 'slug', 'content_html',
-        'excerpt', 'featured_image', 'status', 'published_at'
+
+    protected $fillable = [
+        'user_id',
+        'title',
+        'slug',
+        'content_html',
+        'excerpt',
+        'featured_image' // main image
     ];
 
-    // Relationships
-    public function author(){
-        return $this->belongsTo(User::class,'user_id');
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function images(){
-        return $this->hasMany(Image::class);
-
+    public function images()
+    {
+        return $this->hasMany(BlogImages::class);
     }
 }
