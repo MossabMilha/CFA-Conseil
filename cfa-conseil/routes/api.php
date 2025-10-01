@@ -12,4 +12,5 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::post('/blogs', [BlogController::class, 'store']);;
+Route::post('/blogs', [BlogController::class, 'store']);
+Route::post('/upload-image', [BlogController::class, 'uploadImage']);

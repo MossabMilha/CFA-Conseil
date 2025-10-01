@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class BlogController extends Controller
 {
@@ -45,33 +46,61 @@ class BlogController extends Controller
         $blog->user_id = 2; // Replace with Auth::id()
         $blog->title = $request->title;
         $blog->slug = Str::slug($request->title);
-        $blog->content_html = $request->content_html;
         $blog->excerpt = $request->excerpt ?? null;
+        $blog->content_html = $request->content_html; // Set content_html immediately
 
         // Featured image
         if ($request->hasFile('featured_image')) {
             $path = $request->file('featured_image')->store('images/blogs', 'public');
-            $blog->featured_image = '/storage/' . $path;
+            $blog->featured_image = $path;
         }
 
+        // Save the blog first to ensure it has an ID for related images
         $blog->save();
+
+        $replacementMap = [];
 
         // Save images
         if ($request->hasFile('images')) {
-            foreach ((array) $request->file('images') as $image) {
+            foreach ((array) $request->file('images') as $index => $image) {
                 $path = $image->store('images/blogs', 'public');
+
+                // Create DB record
                 $blog->images()->create([
-                    'file_path' => '/storage/' . $path,
+                    'file_path' => $path,
                     'alt_text'  => null,
                 ]);
+
+                // Map data-temp-id to real file path
+                $tempId = $request->input("images_temp_ids.$index");
+                if ($tempId) {
+                    $replacementMap[$tempId] = asset('storage/' . $path);
+                }
             }
+        }
+
+        // Replace blob src with correct storage paths in content_html
+        // Replace blob src with correct public storage paths in content_html
+        $content = $blog->content_html;
+        foreach ($replacementMap as $tempId => $realUrl) {
+            $content = preg_replace(
+                '/(<img[^>]+data-temp-id="' . preg_quote($tempId, '/') . '"[^>]+src=")[^"]+(")/',
+                '$1' . $realUrl . '$2',
+                $content
+            );
+        }
+
+        // Only update content_html if we made replacements
+        if ($content !== $blog->content_html) {
+            $blog->content_html = $content;
+            $blog->save();
         }
 
         return response()->json([
             'success' => true,
             'message' => 'Blog created successfully!',
             'data'    => $blog->load('images')
-        ], 201); // <= BUT Here we used the default API routes so the frontend can fetch data directly from the backend.
+        ], 201);
     }
 
     public function update(Request $request, $id)
@@ -143,4 +172,18 @@ class BlogController extends Controller
             'message' => 'Blog and its images deleted successfully'
         ], 200);
     }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $path = $request->file('image')->store('images/blogs', 'public');
+
+        return response()->json([
+            'url' => asset('storage/' . $path),
+        ]);
+    }
+
 }
