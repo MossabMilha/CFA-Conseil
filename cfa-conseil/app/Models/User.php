@@ -19,7 +19,10 @@ class User extends Authenticatable
         'avatar_url'
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     public function blogs()
     {

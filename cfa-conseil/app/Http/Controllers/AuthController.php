@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
     public function showRegisterForm(){
         return view(); //Return The Register Form
     }
@@ -17,12 +18,21 @@ class AuthController extends Controller
 
     }
     public function register(Request $request){
+        $fixedCode = "CFA_AGENCY_WEB";
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:6|confirmed',
+            'verification_ode'=>'required|string'
         ]);
+        // Check verification code
+        if ($request->verification_code !== $fixedCode) {
+            return back()->withErrors([
+                'verification_code' => 'Invalid verification code.',
+            ])->withInput();
+        }
+
         $user = User::create([
             'first_name'=>$request->first_name,
             'last_name'=>$request->last_name,
@@ -32,41 +42,38 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
-        return response()->json([
-            'message' => 'User registered successfully',
-            'user'    => $user
-        ], 201);
 
-//        return redirect()->route('dashboard');
+        // Redirect with session
+        return redirect()->route('dashboard')->with('success', 'Welcome, '.$user->first_name.'!');
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
-        if(Auth::attempt($credentials,$request->filled('remember'))){
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
-        }
-        return response()->json([
-            'message' => 'Invalid credentials'
-        ], 401);
 
-//        return back()->withErrors([
-//            'email' => 'Invalid credentials'
-//        ]);
+            return redirect()->intended('dashboard')
+                ->with('success', 'Logged in successfully!');
+        }
+
+        return back()->withErrors([
+            'email' => 'Invalid credentials.',
+        ])->onlyInput('email');
     }
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return response()->json([
-            'message' => 'Logged out successfully'
-        ]);
 
-//        return redirect()->route('login');
+        return redirect()->route('login')
+            ->with('success', 'You have been logged out.');
     }
 
 }

@@ -15,12 +15,9 @@ Route::get('/blog/{id}', [BlogController::class, 'show'] );
 
 Route::get('/blog-editor', function () {return Inertia::render('BlogEditor'); });
 
-//html
-//images
-//title
-//tswira lewelanya
 
-//Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/register', [AuthController::class, 'register']);
 //Route::post('/log in', [AuthController::class, 'login']);
 //Route::post('/logout', [AuthController::class, 'logout']);
 
