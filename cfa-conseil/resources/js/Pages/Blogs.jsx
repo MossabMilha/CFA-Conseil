@@ -1,12 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppLayout from '@/Layouts/AppLayout';
 import { Search } from 'lucide-react';
+import { Link } from "@inertiajs/react";
 
-export default function Blogs() {
+export default function Blogs({ blogs = [] }) {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // Filter blogs based on search term
+    const filteredBlogs = blogs.filter(blog =>
+        blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (blog.excerpt && blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
+
     return (
         <main className="min-h-screen flex flex-col">
             <div className="flex flex-col justify-center">
-                <div className="flex justify-between"> 
+                <div className="flex justify-between">
                     <div className=' left-0 top-0 -z-10 grid grid-cols-3 '>
                         <div className='bg-[#252550] w-20 h-20 rounded-full rounded-tl-none'></div>
                         <div className='bg-[#252550] w-20 h-20'><div className='bg-white w-20 h-20 rounded-full rounded-br-none'></div></div>
@@ -29,159 +46,65 @@ export default function Blogs() {
                 <h1 className="text-9xl font-bold text-center text-[#252550]">Blogs.</h1>
                 <div className="flex justify-center mt-20">
                     <div className="min-w-96 flex items-center justify-center gap-2 bg-[#e5e5e5] border-b-2 border-b-[#252550] px-2 rounded">
-                        <input className="border-0 w-full bg-[#e5e5e5]" type="text" placeholder="Search" /> <Search/>
+                        <input
+                            className="border-0 w-full bg-[#e5e5e5] focus:outline-none focus:ring-0"
+                            type="text"
+                            placeholder="Search blogs..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <Search/>
                     </div>
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-8 my-16 max-w-7xl mx-auto w-full'>
-                    {/* Blog Card 1 */}
-                    <div className='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'>
-                        <div className='h-48 bg-[#92aec8] relative'>
-                            <div className='absolute top-4 left-4 bg-[#252550] text-white px-3 py-1 rounded-full text-sm'>
-                                Category
+                    {filteredBlogs.length > 0 ? (
+                        filteredBlogs.map(blog => (
+                            <div
+                                key={blog.id}
+                                className='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'>
+                                <div className='h-48 bg-[#92aec8] relative overflow-hidden'>
+                                    {blog.featured_image && (
+                                        <img
+                                            src={`/storage/${blog.featured_image}`}
+                                            alt={blog.title}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    )}
+                                </div>
+                                <div className='p-6'>
+                                    <div className='flex items-center text-sm text-gray-500 mb-2'>
+                                        <span>{formatDate(blog.updated_at)}</span>
+                                        <span className='mx-2'>•</span>
+                                        <span>{Math.ceil((blog.content_html?.length || 0) / 1000)} min read</span>
+                                    </div>
+                                    <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
+                                        {blog.title}
+                                    </h3>
+                                    <p className='text-gray-600 mb-4 line-clamp-3'>
+                                        {blog.excerpt || 'Read this amazing blog post...'}
+                                    </p>
+                                    <Link
+                                        href={`/blog/${blog.id}`}
+                                        className='text-[#252550] font-medium hover:underline'
+                                    >
+                                        Read More →
+                                    </Link>
+                                </div>
                             </div>
-                        </div>
-                        <div className='p-6'>
-                            <div className='flex items-center text-sm text-gray-500 mb-2'>
-                                <span>Sep 28, 2025</span>
-                                <span className='mx-2'>•</span>
-                                <span>5 min read</span>
-                            </div>
-                            <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
-                                Blog Post Title That Can Span Multiple Lines If Needed
-                            </h3>
-                            <p className='text-gray-600 mb-4 line-clamp-3'>
-                                A brief excerpt from the blog post that gives readers a preview of the content. This text will be truncated after a few lines.
+                        ))
+                    ) : (
+                        <div className="col-span-full text-center py-12">
+                            <p className="text-gray-500 text-lg">
+                                {searchTerm ? 'No blogs found matching your search.' : 'No blogs available yet.'}
                             </p>
-                            <button className='text-[#252550] font-medium hover:underline'>
-                                Read More →
-                            </button>
+                            <Link
+                                href="/blog-editor"
+                                className="mt-4 inline-block bg-[#252550] text-white px-6 py-2 rounded-lg hover:bg-[#1a1a3a] transition-colors"
+                            >
+                                Create First Blog
+                            </Link>
                         </div>
-                    </div>
-
-                    {/* Blog Card 2 */}
-                    <div className='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'>
-                        <div className='h-48 bg-[#d7d7d7] relative'>
-                            <div className='absolute top-4 left-4 bg-[#252550] text-white px-3 py-1 rounded-full text-sm'>
-                                Insights
-                            </div>
-                        </div>
-                        <div className='p-6'>
-                            <div className='flex items-center text-sm text-gray-500 mb-2'>
-                                <span>Sep 25, 2025</span>
-                                <span className='mx-2'>•</span>
-                                <span>3 min read</span>
-                            </div>
-                            <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
-                                Another Interesting Blog Post Title
-                            </h3>
-                            <p className='text-gray-600 mb-4 line-clamp-3'>
-                                This is another example of a blog post excerpt that provides a preview of the content to entice readers.
-                            </p>
-                            <button className='text-[#252550] font-medium hover:underline'>
-                                Read More →
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Blog Card 3 */}
-                    <div className='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'>
-                        <div className='h-48 bg-[#252550] relative'>
-                            <div className='absolute top-4 left-4 bg-[#92aec8] text-[#252550] px-3 py-1 rounded-full text-sm font-medium'>
-                                News
-                            </div>
-                        </div>
-                        <div className='p-6'>
-                            <div className='flex items-center text-sm text-gray-500 mb-2'>
-                                <span>Sep 20, 2025</span>
-                                <span className='mx-2'>•</span>
-                                <span>7 min read</span>
-                            </div>
-                            <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
-                                Latest Updates and Industry News
-                            </h3>
-                            <p className='text-gray-600 mb-4 line-clamp-3'>
-                                Stay updated with the latest trends and news in the industry with our comprehensive coverage.
-                            </p>
-                            <button className='text-[#252550] font-medium hover:underline'>
-                                Read More →
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Blog Card 4 */}
-                    <div className='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'>
-                        <div className='h-48 bg-[#92aec8] relative'>
-                            <div className='absolute top-4 left-4 bg-[#252550] text-white px-3 py-1 rounded-full text-sm'>
-                                Category
-                            </div>
-                        </div>
-                        <div className='p-6'>
-                            <div className='flex items-center text-sm text-gray-500 mb-2'>
-                                <span>Sep 28, 2025</span>
-                                <span className='mx-2'>•</span>
-                                <span>5 min read</span>
-                            </div>
-                            <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
-                                Blog Post Title That Can Span Multiple Lines If Needed
-                            </h3>
-                            <p className='text-gray-600 mb-4 line-clamp-3'>
-                                A brief excerpt from the blog post that gives readers a preview of the content. This text will be truncated after a few lines.
-                            </p>
-                            <button className='text-[#252550] font-medium hover:underline'>
-                                Read More →
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Blog Card 5 */}
-                    <div className='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'>
-                        <div className='h-48 bg-[#92aec8] relative'>
-                            <div className='absolute top-4 left-4 bg-[#252550] text-white px-3 py-1 rounded-full text-sm'>
-                                Category
-                            </div>
-                        </div>
-                        <div className='p-6'>
-                            <div className='flex items-center text-sm text-gray-500 mb-2'>
-                                <span>Sep 28, 2025</span>
-                                <span className='mx-2'>•</span>
-                                <span>5 min read</span>
-                            </div>
-                            <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
-                                Blog Post Title That Can Span Multiple Lines If Needed
-                            </h3>
-                            <p className='text-gray-600 mb-4 line-clamp-3'>
-                                A brief excerpt from the blog post that gives readers a preview of the content. This text will be truncated after a few lines.
-                            </p>
-                            <button className='text-[#252550] font-medium hover:underline'>
-                                Read More →
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Blog Card 6 */}
-                    <div className='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'>
-                        <div className='h-48 bg-[#92aec8] relative'>
-                            <div className='absolute top-4 left-4 bg-[#252550] text-white px-3 py-1 rounded-full text-sm'>
-                                Category
-                            </div>
-                        </div>
-                        <div className='p-6'>
-                            <div className='flex items-center text-sm text-gray-500 mb-2'>
-                                <span>Sep 28, 2025</span>
-                                <span className='mx-2'>•</span>
-                                <span>5 min read</span>
-                            </div>
-                            <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
-                                Blog Post Title That Can Span Multiple Lines If Needed
-                            </h3>
-                            <p className='text-gray-600 mb-4 line-clamp-3'>
-                                A brief excerpt from the blog post that gives readers a preview of the content. This text will be truncated after a few lines.
-                            </p>
-                            <button className='text-[#252550] font-medium hover:underline'>
-                                Read More →
-                            </button>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </main>

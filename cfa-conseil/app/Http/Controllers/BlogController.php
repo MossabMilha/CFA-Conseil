@@ -10,6 +10,26 @@ use Illuminate\Support\Facades\Log;
 
 class BlogController extends Controller
 {
+  //Normally, we should use Inertia::render() to send data from Laravel to the frontend, like in our web project.
+  //Here, we didn’t use it and instead used Laravel’s default API routes, fetching data manually from the frontend.
+    public function index()
+    {
+        $blogs = Blog::orderBy('updated_at', 'desc')->get();
+
+        return Inertia::render('Blogs', [
+            'blogs' => $blogs // <= this is the same way we did in our web project that will allow us to use $blogs in our frontend directly :)
+        ]);
+    }
+
+    public function show($id)
+    {
+        $blog = Blog::findOrFail($id);
+
+        return Inertia::render('Blog', [
+            'blog' => $blog
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -51,7 +71,7 @@ class BlogController extends Controller
             'success' => true,
             'message' => 'Blog created successfully!',
             'data'    => $blog->load('images')
-        ], 201);
+        ], 201); // <= BUT Here we used the default API routes so the frontend can fetch data directly from the backend.
     }
 
     public function update(Request $request, $id)

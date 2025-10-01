@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useEditor } from "@tiptap/react";
+import { useForm } from '@inertiajs/react';
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import { TextAlign } from '@tiptap/extension-text-align';
@@ -7,18 +8,78 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
 import { EditorContent } from "@tiptap/react";
 import Dropdown from "@/Components/Dropdown";
+import AppLayout from '@/Layouts/AppLayout';
 import { Bold, Italic, Heading, List, ListOrdered, Image as ImageIcon, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Palette, Baseline, ImagePlus, Images } from "lucide-react";
 
 import "@/../css/tiptap/editor-content.css";
 
 // Utility: generate unique ID for each image
-    const generateId = () => Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+const generateId = () => Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 
 export default function BlogEditor() {
-
   const fileInputRef = useRef(null);
+  const featuredImageRef = useRef(null);
   const imagesRef = useRef(new Map());
   const [tempImageFiles, setTempImageFiles] = useState([]);
+
+  const { data, setData, post, processing, errors, reset } = useForm({
+    title: '',
+    content_html: '',
+    featured_image: null,
+    images: [],
+    excerpt: ''
+  });
+
+  const handleBlogUpload = async () => {
+    // Create a new FormData object to properly handle file uploads
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('content_html', editor.getHTML());
+
+    if (data.excerpt) {
+      formData.append('excerpt', data.excerpt);
+    }
+
+    // Add featured image if exists
+    if (data.featured_image) {
+      formData.append('featured_image', data.featured_image);
+    }
+
+    // Add content images
+    tempImageFiles.forEach((file, index) => {
+      formData.append(`images[${index}]`, file);
+    });
+
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    try {
+      const response = await axios.post('/api/blogs', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      console.log('Success:', response.data);
+
+      // Reset form after success
+      reset();
+      editor?.commands.setContent('<p>Start writing your blog here...</p>');
+      setTempImageFiles([]);
+      imagesRef.current.clear();
+
+      // Redirect to blogs page
+      window.location.href = '/blogs';
+
+    } catch (error) {
+      console.error('Error saving blog:', error);
+      if (error.response) {
+        console.error('Error details:', error.response.data);
+        alert('Error: ' + (error.response.data.message || 'Something went wrong'));
+      }
+    }
+  };
 
   const editor = useEditor({
     extensions: [
@@ -49,7 +110,6 @@ export default function BlogEditor() {
       }
     },
     onUpdate: ({ editor }) => {
-
       const currentImageIds = new Set();
       editor.state.doc.descendants((node) => {
         if (node.type.name === "image" && node.attrs["data-temp-id"]) {
@@ -57,14 +117,10 @@ export default function BlogEditor() {
         }
       });
 
-      const usedBlobUrls = new Set();
-
       for (const [id, { blobUrl }] of imagesRef.current.entries()) {
         if (!currentImageIds.has(id) && blobUrl) {
           URL.revokeObjectURL(blobUrl);
           imagesRef.current.delete(id);
-        } else if (blobUrl) {
-          usedBlobUrls.add(blobUrl);
         }
       }
 
@@ -87,8 +143,20 @@ export default function BlogEditor() {
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
+
     if (!file) return;
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size should be less than 5MB');
+      return;
+    }
 
     const imageId = generateId();
     const blobUrl = URL.createObjectURL(file);
@@ -105,13 +173,11 @@ export default function BlogEditor() {
     }).run();
 
 
+    // Clear the input
     event.target.value = '';
   };
 
   const triggerFileInput = () => fileInputRef.current?.click();
-
-  console.log("imagesRef.current.values() ", imagesRef.current.values());
-  console.log("tempImageFiles ", tempImageFiles);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -242,42 +308,45 @@ export default function BlogEditor() {
           </Dropdown.Content>
         </Dropdown>
 
-        <Dropdown>
-          <Dropdown.Trigger>
-            <div className="flex items-center px-2">
-                <ImageIcon />
-            </div>
-          </Dropdown.Trigger>
-          <Dropdown.Content width="min-w-48">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              accept="image/*"
-              className="hidden"
-            />
-            <button
-              type="button"
-              onClick={triggerFileInput}
-              className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
-              title="Insert Image"
-            >
-              <ImagePlus /><span className="whitespace-nowrap">Insert Image</span>
-            </button>
-            <button
-              type="button"
-              className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
-              title="Insert Image"
-            >
-              <Images /><span className="whitespace-nowrap">Your Images</span>
-            </button>
-          </Dropdown.Content>
-        </Dropdown>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageUpload}
+          accept="image/*"
+          className="hidden"
+        />
+        <button
+          type="button"
+          onClick={triggerFileInput}
+          className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
+          title="Insert Image"
+        >
+          <ImagePlus /><span className="whitespace-nowrap">Insert Image</span>
+        </button>
 
-        <div className="relative">
-
-        </div>
       </div>
+
+      {/*Title*/}
+      <div className="flex items-center gap-2 mb-4 w-full">
+        <input
+          type="text"
+          placeholder="Title"
+          value={data.title}
+          onChange={(e) => setData('title', e.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/*Excerpt*/}
+      <div className="flex items-center gap-2 mb-4 w-full">
+        <textarea
+          placeholder="Excerpt"
+          value={data.excerpt}
+          onChange={(e) => setData('excerpt', e.target.value)}
+          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
 
       {/* Editor */}
       <div className="max-w-none">
@@ -290,10 +359,7 @@ export default function BlogEditor() {
       {/* Save Button */}
       <div className="mt-6 flex justify-end">
         <button
-          onClick={() => {
-            console.log(editor.getHTML());
-            alert("Blog saved! Check console for HTML output.");
-          }}
+          onClick={handleBlogUpload}
           className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
         >
           Save Blog

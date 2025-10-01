@@ -9,7 +9,7 @@ export default function Nav() {
                 <ul className="flex text-white space-x-4">
                     <li><a href="/about">a propos</a></li>
                     <li><a href="/services">services</a></li>
-                    <li><a href="/blog">Blog</a></li>
+                    <li><a href="/cfa-conseil/resources/js/Pages/Blog">Blog</a></li>
                     <li><a className='text-[#252550] bg-white rounded-full px-2 py-1' href="/contact">Contact Us</a></li>
                 </ul>
             </div>
