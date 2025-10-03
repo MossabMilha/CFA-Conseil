@@ -17,7 +17,7 @@ const ServiceCard = ({
 
   return (
     <div 
-      className="relative w-full h-[420px] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105"
+      className="relative w-full h-[480px] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105"
       style={{ backgroundColor: bgColor }}
     >
       <div className="relative h-1/2 w-full">

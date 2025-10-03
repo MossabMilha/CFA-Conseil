@@ -15,6 +15,8 @@ Route::get('/blog/{id}', [BlogController::class, 'show'] );
 
 Route::get('/blog-editor', function () {return Inertia::render('BlogEditor'); });
 
+Route::get('/contact', function () {return Inertia::render('Contact'); });
+
 
 
 Route::post('/register', [AuthController::class, 'register']);
