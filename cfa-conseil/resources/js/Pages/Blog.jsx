@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { Calendar, Clock, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, ImageIcon } from 'lucide-react';
 import AppLayout from '@/Layouts/AppLayout';
 import  '../../css/tiptap/editor-content.css'
 
@@ -27,23 +27,25 @@ export default function Blog({ blog }) {
                 {/* Header with decorative elements */}
                 <div className="relative">
                     <div className="flex justify-between h-60">
-                        <div className='absolute left-0 top-0 -z-10 grid grid-cols-3'>
-                            <div className='bg-[#252550] w-20 h-20 rounded-full rounded-tl-none'></div>
-                            <div className='bg-[#252550] w-20 h-20'><div className='bg-white w-20 h-20 rounded-full rounded-br-none'></div></div>
-                            <div className='bg-[#6886ab] w-20 h-20 rounded-full rounded-bl-none'></div>
-                            <div className='bg-[#6886ab] w-20 h-20 rounded-full rounded-tr-none'></div>
-                            <div className='bg-[#6886ab] w-20 h-20'><div className='bg-white w-20 h-20 rounded-full rounded-tl-none'></div></div>
+                        <div className='absolute left-0 top-0 -z-10 grid grid-cols-3 '>
+                            <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tl-none'></div>
+                            <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div></div>
+                            <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div>
+                            <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
+                            <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tl-none'></div></div>
                             <div></div>
-                            <div className='bg-[#252550] w-20 h-20 rounded-full rounded-br-none'></div>
+                            <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div>
                         </div>
-                        <div className='absolute right-0 top-0 -z-10 grid grid-cols-3'>
-                            <div className='bg-[#252550] w-20 h-20 rounded-full rounded-tl-none'></div>
-                            <div className='bg-[#252550] w-20 h-20'><div className='bg-white w-20 h-20 rounded-full rounded-br-none'></div></div>
-                            <div className='bg-[#6886ab] w-20 h-20 rounded-full rounded-bl-none'></div>
-                            <div className='bg-[#6886ab] w-20 h-20 rounded-full rounded-tr-none'></div>
-                            <div className='bg-[#6886ab] w-20 h-20'><div className='bg-white w-20 h-20 rounded-full rounded-tl-none'></div></div>
+                        <div className='absolute right-0 top-0 -z-10 grid grid-cols-3 '>
+                            <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
+                            <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div></div>
+                            <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
                             <div></div>
-                            <div className='bg-[#252550] w-20 h-20 rounded-full rounded-br-none'></div>
+                            <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div>
+                            <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div></div>
+                            <div></div>
+                            <div></div>
+                            <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div>
                         </div>
                     </div>
                 </div>
@@ -93,6 +95,9 @@ export default function Blog({ blog }) {
                                     src={`/storage/${blog.featured_image}`}
                                     alt={blog.title}
                                     className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        e.target.src = "/storage/images/blogs/fallback.png";
+                                    }}
                                 />
                             </div>
                         </div>
