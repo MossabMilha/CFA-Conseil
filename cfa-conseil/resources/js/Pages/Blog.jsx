@@ -121,6 +121,7 @@ export default function Blog({ blog }) {
                                 <ArrowLeft size={20}/>
                                 All Blogs
                             </Link>
+                            // TODO : if(Auth::user.role === admin)
                             <Link
                                 href="/blog-editor"
                                 className="text-[#252550] font-medium hover:underline"

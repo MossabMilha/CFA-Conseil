@@ -29,10 +29,6 @@ class User extends Authenticatable
         return $this->hasMany(Blog::class);
     }
 
-    public function images()
-    {
-        return $this->hasMany(Image::class);
-    }
 
     public function logs()
     {

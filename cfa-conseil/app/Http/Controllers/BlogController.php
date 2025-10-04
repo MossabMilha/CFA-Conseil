@@ -22,9 +22,10 @@ class BlogController extends Controller
         ]);
     }
 
-    public function show($id)
+
+    public function show($slug)
     {
-        $blog = Blog::findOrFail($id);
+        $blog = Blog::where('slug', $slug)->firstOrFail();
 
         return Inertia::render('Blog', [
             'blog' => $blog
@@ -43,11 +44,11 @@ class BlogController extends Controller
         ]);
 
         $blog = new Blog();
-        $blog->user_id = 2; // Replace with Auth::id()
+        $blog->user_id = 2;
         $blog->title = $request->title;
         $blog->slug = Str::slug($request->title);
         $blog->excerpt = $request->excerpt ?? null;
-        $blog->content_html = $request->content_html; // Set content_html immediately
+        $blog->content_html = $request->content_html;
 
         // Featured image
         if ($request->hasFile('featured_image')) {

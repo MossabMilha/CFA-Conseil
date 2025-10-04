@@ -21,4 +21,20 @@ class Log extends Model
     {
         return $this->belongsTo(User::class);
     }
+    // 🔹 Reusable function to track logs
+    public static function track($user, $action, $description = null, $request = null)
+    {
+        if ($user && $user->role === 'admin') {
+            return self::create([
+                'user_id'    => $user->id,
+                'action'     => $action,
+                'description'=> $description,
+                'ip_address' => $request?->ip(),
+                'user_agent' => $request?->header('User-Agent'),
+            ]);
+        }
+
+        return null;
+    }
+
 }

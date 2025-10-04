@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -11,17 +12,17 @@ Route::get('/home', function () {
 
 Route::get('/blogs', [BlogController::class, 'index']);
 
-Route::get('/blog/{id}', [BlogController::class, 'show'] );
+Route::get('/blog/{slug}', [BlogController::class, 'show'] );
 
 Route::get('/blog-editor', function () {return Inertia::render('BlogEditor'); });
-
 Route::get('/contact', function () {return Inertia::render('Contact'); });
+Route::get('/contact-form',[ContactController::class,'contact']);
 
 
 
 Route::post('/register', [AuthController::class, 'register']);
-//Route::post('/log in', [AuthController::class, 'login']);
-//Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
 
 

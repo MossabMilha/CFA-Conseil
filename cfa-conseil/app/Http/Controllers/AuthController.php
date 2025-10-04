@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class AuthController extends Controller
             'password'=>Hash::make($request->password),
             'role'=>'admin'
         ]);
-
+        Log::track($user, 'register', 'New admin registered', $request);
         Auth::login($user);
 
         // Redirect with session
@@ -56,10 +57,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
+            $user = Auth::user();
+            Log::track($user, 'login', 'Admin logged in', $request);
 
             return redirect()->intended('dashboard')
                 ->with('success', 'Logged in successfully!');
         }
+
 
         return back()->withErrors([
             'email' => 'Invalid credentials.',
@@ -67,11 +71,11 @@ class AuthController extends Controller
     }
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        Log::track($user, 'logout', 'Admin logged out', $request);
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return redirect()->route('login')
             ->with('success', 'You have been logged out.');
     }
