@@ -61,7 +61,7 @@ export default function Blogs({ blogs = [] }) {
                         filteredBlogs.map(blog => (
                             <div
                                 key={blog.id}
-                                className='bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300'>
+                                className='bg-[#eaeaea] rounded-lg overflow-hidden duration-300'>
                                 <div className='h-48 bg-[#92aec8] relative overflow-hidden'>
                                     {blog.featured_image && (
                                         <img
