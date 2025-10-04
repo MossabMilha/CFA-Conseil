@@ -84,7 +84,7 @@ export default function Blogs({ blogs = [] }) {
                                         {blog.excerpt || 'Read this amazing blog post...'}
                                     </p>
                                     <Link
-                                        href={`/blog/${blog.id}`}
+                                        href={`/blog/${blog.slug}`}
                                         className='text-[#252550] font-medium hover:underline'
                                     >
                                         Read More →

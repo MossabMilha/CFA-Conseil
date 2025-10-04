@@ -22,9 +22,10 @@ class BlogController extends Controller
         ]);
     }
 
-    public function show($id)
+
+    public function show($slug)
     {
-        $blog = Blog::findOrFail($id);
+        $blog = Blog::where('slug', $slug)->firstOrFail();
 
         return Inertia::render('Blog', [
             'blog' => $blog
