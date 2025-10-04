@@ -213,30 +213,38 @@ export default function Home() {
 
                         <div className='flex flex-col justify-center items-center p-4'>
                             <h2 className='text-3xl sm:text-5xl text-center font-bold text-[#252550] mb-4'>Nos References</h2>
-                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                                {/* <div className="flex items-center justify-center h-24 p-4">
+                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>
+                                <div className="flex items-center justify-center h-24 p-4">
                                     <img
-                                        src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=200&q=80"
-                                        alt="Company Logo 1"
+                                        src="storage/images/logos/dimaPlast.webp"
+                                        alt="DimaPlast"
                                         className="h-16 w-auto object-contain"
                                     />
                                 </div>
 
                                 <div className="flex items-center justify-center h-24 p-4">
                                     <img
-                                        src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=200&q=80"
-                                        alt="Company Logo 2"
+                                        src="storage/images/logos/villa-des-Lilas.webp"
+                                        alt="Villa des Lilas"
                                         className="h-16 w-auto object-contain"
                                     />
                                 </div>
 
                                 <div className="flex items-center justify-center h-24 p-4">
                                     <img
-                                        src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80"
-                                        alt="Company Logo 3"
+                                        src="storage/images/logos/first4com.webp"
+                                        alt="First4com"
                                         className="h-16 w-auto object-contain"
                                     />
-                                </div> */}
+                                </div>
+
+                                <div className="flex items-center justify-center h-24 p-4">
+                                    <img
+                                        src="storage/images/logos/networker.webp"
+                                        alt="Networker"
+                                        className="h-16 w-auto object-contain"
+                                    />
+                                </div>
                             </div>
                         </div>
 
