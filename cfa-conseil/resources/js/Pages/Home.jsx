@@ -91,46 +91,55 @@ export default function Home() {
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4'>
                             <ServiceCard
+                                imageUrl='storage/images/services/business-man-financial-inspector-secretary-making-report-calculating-checking-balance-internal-revenue-service-inspector-checking-document-audit-concept.webp'
                                 title="Missions Comptables"
                                 description="Nous assurons la tenue et le suivi complet de votre comptabilité, avec des états financiers fiables et conformes aux normes en vigueur."
                                 bgColor="#d7d7d7"
                             />
                             <ServiceCard
+                                imageUrl='storage/images/services/business-team-discussing-their-ideas-office.webp'
                                 title="Missions de conseil-gestion"
                                 description="Un conseil stratégique et opérationnel pour optimiser la performance de votre entreprise et renforcer vos outils de pilotage."
                                 bgColor="#92aec8"
                             />
                             <ServiceCard
+                                imageUrl='storage/images/services/working-process-startup-businessman-working-wood-table-with-new-finance-project-modern-notebook-table-pen-holding-hand.webp'
                                 title="Missions d'audit"
                                 description="Nous réalisons des audits financiers et organisationnels approfondis afin d'identifier les risques et garantir la fiabilité de vos données."
                                 bgColor="#252550"
                             />
                             <ServiceCard
+                                imageUrl='storage/images/services/female-applicant-interviewed-by-hr-mangers.webp'
                                 title="Missions sociales et RH"
                                 description="Un accompagnement personnalisé dans la gestion de vos ressources humaines : contrats, paie, déclarations sociales et obligations légales."
                                 bgColor="#92aec8"
                             />
                             <ServiceCard
+                                imageUrl='storage/images/services/closeup-gavel-judgement-concept.webp'
                                 title="Missions juridiques"
                                 description="Nous vous accompagnons dans vos démarches juridiques : création d'entreprise, rédaction de statuts, assemblées générales et formalités."
                                 bgColor="#252550"
                             />
                             <ServiceCard
+                                imageUrl='storage/images/services/mid-section-anonymous-male-accountant-calculating-financial-data.webp'
                                 title="Missions fiscales"
                                 description="Un suivi rigoureux de vos obligations fiscales et l'optimisation de votre fiscalité pour sécuriser et alléger vos charges."
                                 bgColor="#d7d7d7"
                             />
                             <ServiceCard
-                                title="Mise en place S.M.G"
+                                imageUrl='storage/images/services/reading-business-report.webp'
+                                title="Mise en place S.M.Q"
                                 description="Nous vous guidons dans la mise en place et le suivi d'un Systéme de Management de la Qualité, adapté a vos objectifs et exigences."
                                 bgColor="#252550"
                             />
                             <ServiceCard
+                                imageUrl='storage/images/services/team-businessmen-listening-business-lecture-briefing.webp'
                                 title="Formation"
                                 description="Des programmes de formation ciblés et pratiques, destinés a renforcer les compétences de vos équipes dans leurs domaines d'expertise."
                                 bgColor="#d7d7d7"
                             />
                             <ServiceCard
+                                imageUrl='storage/images/services/business-people-are-brainstorming.webp'
                                 title="Gestion des projets"
                                 description="Nous vous assistons dans la planification, le suivi et la réussite de vos projets, en assurant qualité, respect des délais et efficacité."
                                 bgColor="#92aec8"
@@ -139,7 +148,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                <section className='py-16'>
+                <section id='why-choose-us' className='py-16'>
                     <div className='container mx-auto px-4'>
                         <div className='flex flex-col items-center text-center mb-12'>
                             <h2 className='text-4xl md:text-5xl font-bold text-[#252550] mb-4'>Pourquoi Nous Choisissez</h2>
@@ -245,7 +254,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                <section className='flex justify-center py-8'>
+                <section id='contact' className='flex justify-center py-8'>
                     <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-20 2xl:px-32 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-start font-bold text-[#252550] mb-4">

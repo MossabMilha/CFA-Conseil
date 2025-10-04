@@ -1,8 +1,36 @@
 import React from 'react';
+import { Link, router } from '@inertiajs/react';
 import FacebookIcon from '@/assets/icons-facebook.svg?react';
 import TwitterIcon from '@/assets/icons-x.svg?react';
 import LinkedInIcon from '@/assets/icons-linkedin.svg?react';
 import GoogleIcon from '@/assets/icons-google-plus.svg?react';
+
+// Handle smooth scrolling for hash links
+const scrollToSection = (e, hash) => {
+  e.preventDefault();
+  
+  // Navigate to the home page first if we're not already there
+  if (!window.location.pathname.endsWith('/home')) {
+    router.visit('/home', {
+      onSuccess: () => {
+        // Small delay to ensure the page has rendered
+        setTimeout(() => {
+          const element = document.querySelector(hash);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      },
+      preserveState: true
+    });
+  } else {
+    // If already on home page, just scroll to the section
+    const element = document.querySelector(hash);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+};
 
 export default function Footer() {
     return (
@@ -23,11 +51,11 @@ export default function Footer() {
                         <div className="flex flex-col gap-2">
                             <h3 className="text-xl sm:text-2xl font-bold">Short links</h3>
                             <ul className="list-inside text-sm sm:text-base md:text-lg flex flex-col gap-1">
-                                <li><a href="#" className="hover:underline">Accueil</a></li>
-                                <li><a href="#" className="hover:underline">Qui sommes-nous</a></li>
-                                <li><a href="#" className="hover:underline">Pourquoi nous choisissez</a></li>
-                                <li><a href="#" className="hover:underline">Nos services</a></li>
-                                <li><a href="#" className="hover:underline">Contact</a></li>
+                                <li><Link href="/home" className="hover:underline">Accueil</Link></li>
+                                <li><a href="#about" onClick={(e) => scrollToSection(e, '#about')} className="hover:underline">Qui sommes-nous</a></li>
+                                <li><a href="#why-choose-us" onClick={(e) => scrollToSection(e, '#why-choose-us')} className="hover:underline">Pourquoi nous choisissez</a></li>
+                                <li><a href="#services" onClick={(e) => scrollToSection(e, '#services')} className="hover:underline">Nos services</a></li>
+                                <li><a href="#contact" onClick={(e) => scrollToSection(e, '#contact')} className="hover:underline">Contact</a></li>
                             </ul>
                         </div>
 
@@ -81,41 +109,6 @@ export default function Footer() {
                         © {new Date().getFullYear()} CFA Conseil. Tous droits réservés.
                     </p>
                 </div>
-
-                {/* Right decorative grid */}
-                {/*<div className="hidden 2xl:flex flex-col justify-end items-start gap-4">*/}
-                {/*    <div className="grid grid-cols-4">*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24 rounded-full rounded-br-none"></div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24">*/}
-                {/*            <div className="bg-[#252550] w-24 h-24 rounded-full rounded-bl-none"></div>*/}
-                {/*        </div>*/}
-                {/*        <div></div>*/}
-                {/*        <div></div>*/}
-
-                {/*        <div></div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24">*/}
-                {/*            <div className="bg-[#252550] w-24 h-24 rounded-full rounded-tl-none"></div>*/}
-                {/*        </div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24">*/}
-                {/*            <div className="bg-[#252550] w-24 h-24 rounded-full rounded-br-none"></div>*/}
-                {/*        </div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24 rounded-full rounded-bl-none"></div>*/}
-
-                {/*        <div className="bg-[#6885ab] w-24 h-24">*/}
-                {/*            <div className="bg-[#252550] w-24 h-24 rounded-full rounded-br-none"></div>*/}
-                {/*        </div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24 rounded-full rounded-bl-none"></div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24 rounded-full rounded-tr-none"></div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24">*/}
-                {/*            <div className="bg-[#252550] w-24 h-24 rounded-full rounded-tl-none"></div>*/}
-                {/*        </div>*/}
-
-                {/*        <div className="bg-[#6885ab] w-24 h-24 rounded-full rounded-tr-none"></div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24 rounded-full rounded-tl-none"></div>*/}
-                {/*        <div></div>*/}
-                {/*        <div className="bg-[#6885ab] w-24 h-24 rounded-full rounded-tl-none"></div>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
             </footer>
         </div>
     )

@@ -1,7 +1,37 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, router } from '@inertiajs/react';
+
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef(null);
+
+  // Handle smooth scrolling for hash links
+  const scrollToSection = (e, hash) => {
+    e.preventDefault();
+    setIsOpen(false);
+    
+    // Navigate to the home page first if we're not already there
+    if (!window.location.pathname.endsWith('/home')) {
+      router.visit('/home', {
+        onSuccess: () => {
+          // Small delay to ensure the page has rendered
+          setTimeout(() => {
+            const element = document.querySelector(hash);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
+        },
+        preserveState: true
+      });
+    } else {
+      // If already on home page, just scroll to the section
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -36,8 +66,8 @@ export default function Nav() {
 
         {/* Desktop menu */}
         <ul className="hidden md:flex text-white space-x-4 lg:space-x-8 text-sm md:text-base">
-          <li><a href="#about">À propos</a></li>
-          <li><a href="#services">Services</a></li>
+          <li><a href="#about" onClick={(e) => scrollToSection(e, '#about')}>À propos</a></li>
+          <li><a href="#services" onClick={(e) => scrollToSection(e, '#services')}>Services</a></li>
           <li><a href="/blogs">Blog</a></li>
           <li>
             <a
@@ -65,8 +95,8 @@ export default function Nav() {
       {isOpen && (
         <div className="absolute top-16 left-1/2 transform -translate-x-1/2 bg-[#252550] rounded-lg shadow-lg w-[90%] max-w-xs p-4 md:hidden">
           <ul className="flex flex-col space-y-4 text-white text-center">
-            <li className="flex items-center justify-center"><a className="w-full" href="/home#about">À propos</a></li>
-            <li className="flex items-center justify-center"><a className="w-full" href="/home#services">Services</a></li>
+            <li className="flex items-center justify-center"><a className="w-full" href="#about" onClick={(e) => scrollToSection(e, '#about')}>À propos</a></li>
+            <li className="flex items-center justify-center"><a className="w-full" href="#services" onClick={(e) => scrollToSection(e, '#services')}>Services</a></li>
             <li className="flex items-center justify-center"><a className="w-full" href="/blogs">Blog</a></li>
             <li className="flex items-center justify-center">
               <a
