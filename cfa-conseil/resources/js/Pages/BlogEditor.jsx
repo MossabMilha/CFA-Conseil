@@ -5,12 +5,13 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import { TextAlign } from '@tiptap/extension-text-align';
 import { TextStyle } from '@tiptap/extension-text-style';
+import { Underline } from "@tiptap/extension-underline";
 import { Color } from '@tiptap/extension-color';
 import Dropdown from "@/Components/Dropdown";
 import {
     Bold, Italic, Heading, List, ListOrdered,
     Heading1, Heading2, Heading3, Heading4, Heading5, Heading6,
-    Baseline, ImagePlus, X
+    Baseline, ImagePlus, X, ArrowLeft, UnderlineIcon
 } from "lucide-react";
 
 import "@/../css/tiptap/editor-content.css";
@@ -25,10 +26,9 @@ export default function BlogEditor() {
     // --------------------
     // Refs & State
     // --------------------
-    const fileInputRef = useRef(null);         // for inserting content images
+    const fileInputRef = useRef(null);
     const featuredImageRef = useRef(null);
-    const imagesRef = useRef(new Map());       // stores imageId -> {file, blobUrl}
-    const [tempImageFiles, setTempImageFiles] = useState([]); // preview state
+    const imagesRef = useRef(new Map());
     const [featuredImage, setFeaturedImage] = useState(null);
 
     // Inertia form state
@@ -46,7 +46,7 @@ export default function BlogEditor() {
     const editor = useEditor({
         extensions: [
             StarterKit.configure({ heading: { levels: [1, 2, 3, 4, 5, 6] } }),
-            // Extend Image to add "data-temp-id" attribute
+
             Image.extend({
                 addAttributes() {
                     return {
@@ -64,6 +64,7 @@ export default function BlogEditor() {
             TextStyle,
             Color.configure({ types: ['textStyle'] }),
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
+            Underline,
         ],
         content: "<p>Start writing your blog here...</p>",
         editorProps: {
@@ -106,8 +107,6 @@ export default function BlogEditor() {
                 imagesRef.current.delete(id);
             }
         }
-
-        setTempImageFiles(Array.from(imagesRef.current.values()).map(i => i.file));
     };
 
     // Handle inserting image into editor
@@ -224,14 +223,14 @@ export default function BlogEditor() {
     // JSX Render
     // --------------------
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+        <div className="bg-[#eaeaea] max-w-4xl my-16 mx-auto p-6 bg-white rounded-lg shadow-md">
 
             {/* Toolbar */}
-            <div className="flex flex-wrap gap-2 mb-4 p-2 bg-gray-50 rounded-md border border-gray-200">
+            <div className="sticky top-4 z-10 flex flex-wrap gap-2 mb-4 p-2 bg-gray-50 rounded-md border border-gray-200 shadow-sm">
                 {/* Bold */}
                 <button
                     onClick={() => editor.chain().focus().toggleBold().run()}
-                    className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('bold') ? 'bg-gray-200' : ''}`}
+                    className={`p-2 rounded hover:bg-gray-200 `}
                     title="Bold"
                 >
                     <Bold />
@@ -240,10 +239,19 @@ export default function BlogEditor() {
                 {/* Italic */}
                 <button
                     onClick={() => editor.chain().focus().toggleItalic().run()}
-                    className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('italic') ? 'bg-gray-200' : ''}`}
+                    className={`p-2 rounded hover:bg-gray-200 `}
                     title="Italic"
                 >
                     <Italic />
+                </button>
+
+                {/* Underline */}
+                <button
+                    onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    className={`p-2 rounded hover:bg-gray-200 `}
+                    title="Underline"
+                >
+                    <UnderlineIcon />
                 </button>
 
                 {/* Headings Dropdown */}
@@ -271,14 +279,14 @@ export default function BlogEditor() {
                 {/* Lists */}
                 <button
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
-                    className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('bulletList') ? 'bg-gray-200' : ''}`}
+                    className={`p-2 rounded hover:bg-gray-200 `}
                     title="Bullet List"
                 >
                     <List />
                 </button>
                 <button
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                    className={`p-2 rounded hover:bg-gray-200 ${editor.isActive('orderedList') ? 'bg-gray-200' : ''}`}
+                    className={`p-2 rounded hover:bg-gray-200 `}
                     title="Numbered List"
                 >
                     <ListOrdered />
@@ -338,7 +346,6 @@ export default function BlogEditor() {
             </div>
 
             {/*Featured Image */}
-
             <div className="relative flex flex-col gap-2 mb-4 w-full">
                 {/* Show preview if featuredImage exists */}
                 {featuredImage ? (
@@ -400,10 +407,16 @@ export default function BlogEditor() {
             </div>
 
             {/* Save Button */}
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex justify-between">
+                <button
+                    onClick={() => reset()}
+                    className="px-4 py-2 text-[#252550] flex rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                >
+                   <a href="/blogs" className="flex items-center gap-2"><ArrowLeft/> Blogs</a>
+                </button>
                 <button
                     onClick={handleBlogUpload}
-                    className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                    className="px-4 py-2 text-white bg-[#92aec8] rounded-md hover:bg-[#7aa3c0] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
                 >
                     Save Blog
                 </button>

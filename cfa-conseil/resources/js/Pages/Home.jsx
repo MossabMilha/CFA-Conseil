@@ -1,6 +1,3 @@
-import React, { Profiler } from 'react';
-import Nav from '@/Components/Nav';
-import Footer from '@/Components/Footer';
 import ServiceCard from '@/Components/ServiceCard';
 import IconOne from '@/assets/one.svg?react';
 import IconTwo from '@/assets/two.svg?react';
@@ -16,7 +13,7 @@ export default function Home() {
             <main>
                 <section className='min-h-screen from-[#92afc9] from-0% via-[#6886ab] via-50% to-[#6886ab] bg-gradient-to-br'>
                     <div className='relative px-8 flex items-center h-screen '>
-                        <h1 className='xl:text-8xl lg:text-7xl md:text-6xl text-5xl text-white font-bold'>
+                        <h1 className='2xl:text-8xl xl:text-7xl lg:text-7xl md:text-6xl text-5xl text-white font-bold'>
                             Votre partenaire
                             <br/>de confiance en
                             <br/> <i>finance</i>,
@@ -26,7 +23,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                <section className='relative py-16'>
+                <section id='about' className='relative py-16'>
                     <div className='absolute left-0 top-0 -z-10 grid grid-cols-3 '>
                         <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tl-none'></div>
                         <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div></div>
@@ -84,7 +81,7 @@ export default function Home() {
                     </div>
                 </section>
 
-                <section className='bg-[#eaeaea] py-16'>
+                <section id='services' className='bg-[#eaeaea] py-16'>
                     <div className='container mx-auto px-4'>
                         <div className='flex flex-col items-center text-center mb-12'>
                             <h2 className='text-5xl font-bold text-[#252550] mb-4'>Nos Services</h2>
