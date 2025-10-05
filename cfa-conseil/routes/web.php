@@ -18,14 +18,9 @@ Route::get('/blog-editor/{slug}', [BlogController::class, 'edit']);
 Route::get('/contact', function () {return Inertia::render('Contact'); });
 Route::get('/contact-form',[ContactController::class,'contact']);
 
-Route::get('/register', [AuthController::class, 'showRegisterForm']);
-Route::get('/login', [AuthController::class, 'showLoginForm']);
-
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-
-
-
-
