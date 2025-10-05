@@ -12,11 +12,14 @@ class AuthController extends Controller
 {
 
     public function showRegisterForm(){
-        return view(); //Return The Register Form
+        return Inertia::render('Auth/Register', [
+            'layout' => 'guest'
+        ]);
     }
-    public function  showLoginForm(){
-        return view(); //Return The Login Form
-
+    public function showLoginForm(){
+        return Inertia::render('Auth/Login', [
+            'layout' => 'guest'
+        ]);
     }
     public function register(Request $request){
         $fixedCode = "CFA_AGENCY_WEB";

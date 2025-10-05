@@ -11,8 +11,8 @@ export default function Nav() {
     setIsOpen(false);
     
     // Navigate to the home page first if we're not already there
-    if (!window.location.pathname.endsWith('/home')) {
-      router.visit('/home', {
+    if (!window.location.pathname.endsWith('/')) {
+      router.visit('/', {
         onSuccess: () => {
           // Small delay to ensure the page has rendered
           setTimeout(() => {
@@ -61,7 +61,7 @@ export default function Nav() {
       <div className="flex items-center justify-between h-12 md:h-16 bg-[#252550] rounded-full px-6 md:px-8 min-w-[280px] md:min-w-[580px] lg:min-w-[820px]">
         {/* Logo */}
         <h1 className="text-white text-lg md:text-xl font-bold">
-          <a href="/home">CFA-Conseil</a>
+          <a href="/">CFA-Conseil</a>
         </h1>
 
         {/* Desktop menu */}

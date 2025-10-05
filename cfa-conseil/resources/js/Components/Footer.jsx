@@ -10,8 +10,8 @@ const scrollToSection = (e, hash) => {
   e.preventDefault();
   
   // Navigate to the home page first if we're not already there
-  if (!window.location.pathname.endsWith('/home')) {
-    router.visit('/home', {
+  if (!window.location.pathname.endsWith('/')) {
+    router.visit('/', {
       onSuccess: () => {
         // Small delay to ensure the page has rendered
         setTimeout(() => {
@@ -51,7 +51,7 @@ export default function Footer() {
                         <div className="flex flex-col gap-2">
                             <h3 className="text-xl sm:text-2xl font-bold">Short links</h3>
                             <ul className="list-inside text-sm sm:text-base md:text-lg flex flex-col gap-1">
-                                <li><Link href="/home" className="hover:underline">Accueil</Link></li>
+                                <li><Link href="/" className="hover:underline">Accueil</Link></li>
                                 <li><a href="#about" onClick={(e) => scrollToSection(e, '#about')} className="hover:underline">Qui sommes-nous</a></li>
                                 <li><a href="#why-choose-us" onClick={(e) => scrollToSection(e, '#why-choose-us')} className="hover:underline">Pourquoi nous choisissez</a></li>
                                 <li><a href="#services" onClick={(e) => scrollToSection(e, '#services')} className="hover:underline">Nos services</a></li>

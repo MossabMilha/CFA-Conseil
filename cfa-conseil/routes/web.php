@@ -6,7 +6,7 @@ use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/home', function () {
+Route::get('/', function () {
     return Inertia::render('Home');
 });
 
@@ -18,6 +18,8 @@ Route::get('/blog-editor/{slug}', [BlogController::class, 'edit']);
 Route::get('/contact', function () {return Inertia::render('Contact'); });
 Route::get('/contact-form',[ContactController::class,'contact']);
 
+Route::get('/register', [AuthController::class, 'showRegisterForm']);
+Route::get('/login', [AuthController::class, 'showLoginForm']);
 
 
 Route::post('/register', [AuthController::class, 'register']);
