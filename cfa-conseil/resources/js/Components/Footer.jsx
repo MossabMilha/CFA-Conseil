@@ -85,21 +85,57 @@ export default function Footer() {
                         </div>
 
                         {/* Social */}
-                        <div className="flex flex-col gap-2">
-                            <h3 className="text-xl sm:text-2xl font-bold">Follow us</h3>
-                            <div className="flex gap-2">
-                                <a href="#" rel="noopener noreferrer">
-                                    <FacebookIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />
-                                </a>
-                                <a href="#" rel="noopener noreferrer">
-                                    <TwitterIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />
-                                </a>
-                                <a href="#" rel="noopener noreferrer">
-                                    <LinkedInIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />
-                                </a>
-                                <a href="#" rel="noopener noreferrer">
-                                    <GoogleIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />
-                                </a>
+                        <div className="flex flex-col gap-2 justify-between">
+                            <div className="flex flex-col gap-2">
+                                <h3 className="text-xl sm:text-2xl font-bold">Follow us</h3>
+                                <div className="flex gap-2">
+                                    {/* <a href="#" rel="noopener noreferrer">
+                                        <FacebookIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />
+                                    </a> */}
+                                    {/* <a href="#" rel="noopener noreferrer">
+                                        <TwitterIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />
+                                    </a> */}
+                                    <a href="https://ma.linkedin.com/company/cfaconseil" rel="noopener noreferrer">
+                                        <LinkedInIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />
+                                    </a>
+                                    {/* <a href="#" rel="noopener noreferrer">
+                                        <GoogleIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />
+                                    </a> */}
+                                </div>
+                            </div>
+                            
+                            <div className=" flex flex-col justify-end items-start gap-4 mt-8">
+                               <div className="grid grid-cols-4">
+                                   <div className="bg-[#6885ab] w-12 h-12 rounded-full rounded-br-none"></div>
+                                   <div className="bg-[#6885ab] w-12 h-12">
+                                       <div className="bg-[#252550] w-12 h-12 rounded-full rounded-bl-none"></div>
+                                   </div>
+                                   <div></div>
+                                   <div></div>
+
+                                   <div></div>
+                                   <div className="bg-[#6885ab] w-12 h-12">
+                                       <div className="bg-[#252550] w-12 h-12 rounded-full rounded-tl-none"></div>
+                                   </div>
+                                   <div className="bg-[#6885ab] w-12 h-12">
+                                       <div className="bg-[#252550] w-12 h-12 rounded-full rounded-br-none"></div>
+                                   </div>
+                                   <div className="bg-[#6885ab] w-12 h-12 rounded-full rounded-bl-none"></div>
+
+                                   <div className="bg-[#6885ab] w-12 h-12">
+                                       <div className="bg-[#252550] w-12 h-12 rounded-full rounded-br-none"></div>
+                                   </div>
+                                   <div className="bg-[#6885ab] w-12 h-12 rounded-full rounded-bl-none"></div>
+                                   <div className="bg-[#6885ab] w-12 h-12 rounded-full rounded-tr-none"></div>
+                                   <div className="bg-[#6885ab] w-12 h-12">
+                                       <div className="bg-[#252550] w-12 h-12 rounded-full rounded-tl-none"></div>
+                                   </div>
+
+                                   <div className="bg-[#6885ab] w-12 h-12 rounded-full rounded-tr-none"></div>
+                                   <div className="bg-[#6885ab] w-12 h-12 rounded-full rounded-tl-none"></div>
+                                   <div></div>
+                                   <div className="bg-[#6885ab] w-12 h-12 rounded-full rounded-tl-none"></div>
+                               </div>
                             </div>
                         </div>
                     </div>

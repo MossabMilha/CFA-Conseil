@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Validation\Rule;
 
 class BlogController extends Controller
 {
@@ -16,9 +17,8 @@ class BlogController extends Controller
     public function index()
     {
         $blogs = Blog::orderBy('updated_at', 'desc')->get();
-
         return Inertia::render('Blogs', [
-            'blogs' => $blogs // <= this is the same way we did in our web project that will allow us to use $blogs in our frontend directly :)
+            'blogs' => $blogs
         ]);
     }
 
@@ -26,9 +26,31 @@ class BlogController extends Controller
     public function show($slug)
     {
         $blog = Blog::where('slug', $slug)->firstOrFail();
-
         return Inertia::render('Blog', [
             'blog' => $blog
+        ]);
+    }
+    
+    public function edit($slug)
+    {
+        $blog = Blog::with('images')->where('slug', $slug)->firstOrFail();
+
+        return Inertia::render('BlogEditor', [
+            'blog' => [
+                'id' => $blog->id,
+                'title' => $blog->title,
+                'content_html' => $blog->content_html,
+                'excerpt' => $blog->excerpt,
+                'slug' => $blog->slug,
+                'featured_image' => $blog->featured_image,
+                'images' => $blog->images->map(function($image) {
+                    return [
+                        'id' => $image->id,
+                        'url' => $image->file_path ? asset('storage/' . $image->file_path) : null,
+                        'is_featured' => $image->is_featured
+                    ];
+                })->toArray()
+            ]
         ]);
     }
 
@@ -104,17 +126,17 @@ class BlogController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $blog = Blog::with('images')->findOrFail($id);
+        $blog = Blog::with('images')->where('slug', $request->slug)->firstOrFail();
 
-        $request->validate([
-            'title'          => 'required|string|max:255|unique:blogs,title,' . $blog->id,
+        $validated = $request->validate([
+            'title'          => ['required','string','max:255',Rule::unique('blogs', 'title')->ignore($blog->id)],
             'content_html'   => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'images'         => 'nullable',
             'images.*'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'excerpt'        => 'nullable|string|max:500'
+            'excerpt'        => 'nullable|string|max:500',
         ]);
 
         $blog->title = $request->title;

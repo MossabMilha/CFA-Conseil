@@ -16,4 +16,5 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/contact-form',[ContactController::class,'contact']);
 
 Route::post('/blogs', [BlogController::class, 'store']);
+Route::post('/blogs/{slug}', [BlogController::class, 'update']);
 Route::post('/upload-image', [BlogController::class, 'uploadImage']);

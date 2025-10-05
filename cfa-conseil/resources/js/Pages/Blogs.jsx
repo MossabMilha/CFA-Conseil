@@ -71,8 +71,7 @@ export default function Blogs({ blogs = [] }) {
                                         alt={blog.title}
                                         className="w-full h-full object-cover"
                                         onError={(e) => {
-                                            e.target.src = "/storage/images/fallback.png";
-                                            
+                                            e.target.src = "/storage/images/fallback.png"; 
                                         }}
                                     />
                                 </div>
@@ -88,12 +87,20 @@ export default function Blogs({ blogs = [] }) {
                                     <p className='text-gray-600 mb-4 line-clamp-3'>
                                         {blog.excerpt || 'Read this amazing blog post...'}
                                     </p>
-                                    <Link
-                                        href={`/blog/${blog.slug}`}
-                                        className='text-[#252550] font-medium hover:underline'
-                                    >
-                                        Read More →
-                                    </Link>
+                                    <div className='flex justify-between'>
+                                        <Link
+                                            href={`/blog/${blog.slug}`}
+                                            className='text-[#252550] font-medium hover:underline'
+                                        >
+                                            Read More →
+                                        </Link>
+                                        <Link
+                                            href={`/blog-editor/${blog.slug}`}
+                                            className='text-[#252550] font-medium hover:underline'
+                                        >
+                                            edit-blog
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         ))

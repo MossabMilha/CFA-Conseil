@@ -9,9 +9,9 @@ import { Underline } from "@tiptap/extension-underline";
 import { Color } from '@tiptap/extension-color';
 import Dropdown from "@/Components/Dropdown";
 import {
-    Bold, Italic, Heading, List, ListOrdered,
+    Bold, Italic, List, ListOrdered, Heading,
     Heading1, Heading2, Heading3, Heading4, Heading5, Heading6,
-    Baseline, ImagePlus, X, ArrowLeft, UnderlineIcon
+    Baseline, ImagePlus, X, ArrowLeft, Underline as UnderlineIcon
 } from "lucide-react";
 
 import "@/../css/tiptap/editor-content.css";
@@ -22,22 +22,25 @@ import "@/../css/tiptap/editor-content.css";
 const generateId = () =>
     Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 
-export default function BlogEditor() {
+export default function BlogEditor({ blog: initialBlog = null }) {
+    const isEditMode = !!initialBlog;
     // --------------------
     // Refs & State
     // --------------------
     const fileInputRef = useRef(null);
     const featuredImageRef = useRef(null);
     const imagesRef = useRef(new Map());
-    const [featuredImage, setFeaturedImage] = useState(null);
+    const [featuredImage, setFeaturedImage] = useState(initialBlog?.featured_image || null);
 
     // Inertia form state
     const { data, setData, reset } = useForm({
-        title: '',
-        content_html: '',
-        featured_image: null,
-        images: [],
-        excerpt: ''
+        id: initialBlog?.id || null,
+        title: initialBlog?.title || '',
+        slug: initialBlog?.slug || '',
+        content_html: initialBlog?.content_html || '',
+        featured_image: initialBlog?.featured_image || null,
+        images: initialBlog?.images || [],
+        excerpt: initialBlog?.excerpt || ''
     });
 
     // --------------------
@@ -45,8 +48,11 @@ export default function BlogEditor() {
     // --------------------
     const editor = useEditor({
         extensions: [
-            StarterKit.configure({ heading: { levels: [1, 2, 3, 4, 5, 6] } }),
-
+            StarterKit.configure({ 
+                heading: { levels: [1, 2, 3, 4, 5, 6] },
+                // Disable the default underline extension since we're adding it separately
+                underline: false
+            }),
             Image.extend({
                 addAttributes() {
                     return {
@@ -66,7 +72,7 @@ export default function BlogEditor() {
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
             Underline,
         ],
-        content: "<p>Start writing your blog here...</p>",
+        content: initialBlog?.content_html || "<p>Start writing your blog here...</p>",
         editorProps: {
             attributes: {
                 class:
@@ -74,19 +80,32 @@ export default function BlogEditor() {
             },
         },
         onUpdate: ({ editor }) => syncImages(editor),
-    });
+});
 
     if (!editor) return null;
 
-    // --------------------
-    // Cleanup on unmount
-    // --------------------
+    // Initialize editor with existing content and images
     useEffect(() => {
+        if (initialBlog) {
+            // Set featured image if exists
+            if (initialBlog.featured_image) {
+                setFeaturedImage(initialBlog.featured_image);
+            }
+        }
+
+        // Cleanup on unmount
         return () => {
             imagesRef.current.forEach(({ blobUrl }) => blobUrl && URL.revokeObjectURL(blobUrl));
             imagesRef.current.clear();
         };
-    }, []);
+    }, [initialBlog]);
+
+    // Handle editor initialization
+    useEffect(() => {
+        if (editor && initialBlog?.content_html) {
+            editor.commands.setContent(initialBlog.content_html);
+        }
+    }, [editor, initialBlog?.content_html]);
 
     // --------------------
     // Functions
@@ -98,6 +117,7 @@ export default function BlogEditor() {
         editor.state.doc.descendants((node) => {
             if (node.type.name === "image" && node.attrs["data-temp-id"]) {
                 currentIds.add(node.attrs["data-temp-id"]);
+                console.log(node.attrs["data-temp-id"]);
             }
         });
 
@@ -193,29 +213,42 @@ export default function BlogEditor() {
         const formData = new FormData();
         formData.append('title', data.title);
         formData.append('content_html', editor.getHTML());
-        if (data.excerpt) formData.append('excerpt', data.excerpt);
-
-        // featured_image is now URL string
-        if (data.featured_image) formData.append('featured_image', data.featured_image);
-
+        formData.append('excerpt', data.excerpt);
+    
+        if (data.featured_image instanceof File) {
+            // only append if it’s a new upload (a File)
+            formData.append('featured_image', data.featured_image);
+        }
+    
         try {
-            const response = await axios.post('/api/blogs', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
+            let response;
+            if (isEditMode) {
+                // console.log(formData.get('title'));
+                response = await axios.post(`/api/blogs/${data.slug}`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                console.log('Success:', response);
 
-            console.log('Success:', response.data);
-
+            } else {
+                response = await axios.post('/api/blogs', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                console.log('Success:', response.data);
+            }
+    
+    
             reset();
             editor.commands.setContent('<p>Start writing your blog here...</p>');
             setFeaturedImage(null);
-
-            window.location.href = '/blogs';
+    
+            // window.location.href = '/blogs';
         } catch (err) {
             console.error('Error saving blog:', err);
             if (err.response?.data?.message) alert('Error: ' + err.response.data.message);
             else alert('Something went wrong while saving blog.');
         }
     };
+    
 
 
 
@@ -372,9 +405,13 @@ export default function BlogEditor() {
                         {featuredImage ? (
                             <div className="relative">
                                 <img
-                                    src={featuredImage}
+                                    src={featuredImage.startsWith('http') ? featuredImage : `/storage/${featuredImage}`}
                                     alt="Featured preview"
                                     className="w-full h-64 object-cover rounded border"
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = '/images/placeholder.jpg'; // Add a fallback image
+                                    }}
                                 />
                                 <div className="absolute top-3 right-3 bg-gray-50 rounded-full p-1"
                                     onClick={(e) => { e.stopPropagation(); setFeaturedImage(null); setData('featured_image', null); }}

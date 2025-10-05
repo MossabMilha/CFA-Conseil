@@ -85,7 +85,7 @@ export default function Home() {
                     <div className='container mx-auto px-4'>
                         <div className='flex flex-col items-center text-center mb-12'>
                             <h2 className='text-5xl font-bold text-[#252550] mb-4'>Nos Services</h2>
-                            <h3 className='text-2xl font-bold text-[#252550] mb-8 max-w-2xl'>
+                            <h3 className='text-2xl text-[#252550] mb-8 max-w-2xl'>
                                 Découvrez tous les services dont votre entreprise a besoin
                             </h3>
                         </div>
@@ -312,34 +312,32 @@ export default function Home() {
                         </div>
 
                         <div className="flex flex-col gap-4">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div className="flex flex-col gap-2">
                                 <div className="p-3 rounded-md">
-                                    <div className="flex items-center gap-2 text-xl sm:text-2xl pb-2">
+                                    <div className="flex items-center gap-2 text-xl sm:text-2xl">
                                         <MapPin size="1em" color="#252550" />
                                         <h3 className="text-[#252550] font-bold">Adresse</h3>
                                     </div>
                                     <p className="text-sm sm:text-base">
-                                        HORIZON BUSINESS <br /> CENTER, Avenue YAFA N3,<br /> AIN CHOK-CASABLANCA
+                                        HORIZON BUSINESS CENTER, Avenue YAFA N3, AIN CHOK-CASABLANCA
                                     </p>
                                 </div>
                                 <div className="p-3 rounded-md">
-                                    <div className="flex items-center gap-2 text-xl sm:text-2xl pb-2">
+                                    <div className="flex items-center gap-2 text-xl sm:text-2xl">
                                         <Phone />
                                         <h3 className="text-[#252550] font-bold">Telephone</h3>
                                     </div>
-                                    <p className="text-sm sm:text-lg">+212 5 22 21 03 93</p>
-                                    <p className="text-sm sm:text-lg">+212 6 70 05 04 47</p>
+                                    <p className="inline mr-2 text-sm sm:text-lg">+212 522210393 / +212 670050447</p>
                                 </div>
                                 <div className="p-3 rounded-md">
-                                    <div className="flex items-center gap-2 text-xl sm:text-2xl pb-2">
+                                    <div className="flex items-center gap-2 text-xl sm:text-2xl">
                                         <Mail />
                                         <h3 className="text-[#252550] font-bold">Email</h3>
                                     </div>
                                     <p className="text-sm sm:text-lg">contact@cfa-conseil.com</p>
                                 </div>
                             </div>
-
-                            <div className="overflow-hidden rounded-lg border grow h-64 sm:h-80 md:h-96">
+                            <div className=" overflow-hidden grow rounded-md h-72">
                                 <iframe
                                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.1234!2d-7.5898!3d33.5731!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7c0d1f!2sCasablanca!5e0!3m2!1sen!2sma!4v1695761234567!5m2!1sen!2sma"
                                     width="600"
@@ -351,10 +349,11 @@ export default function Home() {
                                     className="w-full h-full"
                                 />
                             </div>
+
                         </div>
                     </div>
-
                 </section>
+                
             </main>
         </div>
     );
