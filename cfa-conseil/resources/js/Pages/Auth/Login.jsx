@@ -7,9 +7,8 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
-import { router } from '@inertiajs/react';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ canResetPassword }) {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -119,6 +118,13 @@ export default function Login({ status, canResetPassword }) {
                             Forgot your password?
                         </Link>
                     )}
+
+                    <Link
+                        href={route('register')}
+                        className="text-sm text-gray-600 hover:text-gray-900"
+                    >
+                        Don't have an account?
+                    </Link>
 
                     <PrimaryButton 
                         className={`bg-[#252550] ${processing ? 'opacity-75' : ''}`}
