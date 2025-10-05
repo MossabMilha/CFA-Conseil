@@ -11,8 +11,16 @@ export default function Home() {
     return (
         <div className="relative">
             <main>
-                <section className='min-h-screen from-[#92afc9] from-0% via-[#6886ab] via-50% to-[#6886ab] bg-gradient-to-br'>
-                    <div className='relative px-8 flex items-center h-screen '>
+                <section className='relative min-h-screen from-[#92afc9] from-0% via-[#6886ab] via-50% to-[#6886ab] bg-gradient-to-br'>
+                    <div className='absolute w-full h-full -z-9' 
+                    style={{
+                        backgroundImage: 'url(/storage/images/asset-4.png)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'left',
+                        backgroundRepeat: 'no-repeat',
+                        
+                    }}/>
+                    <div className='relative px-8 flex items-center justify-between h-screen '>
                         <h1 className='2xl:text-8xl xl:text-7xl lg:text-7xl md:text-6xl text-5xl text-white font-bold'>
                             Votre partenaire
                             <br/>de confiance en
@@ -20,6 +28,8 @@ export default function Home() {
                             <br/> <i>conformité</i>
                             <br/>et <i>croissance</i>.
                         </h1>
+                        
+                        
                     </div>
                 </section>
 

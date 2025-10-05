@@ -39,7 +39,7 @@ const ServiceCard = memo(({
         width={400}
         height={300}
         decoding="async"
-        fetchPriority="low"
+        fetchpriority="low"
         sizes="(max-width: 768px) 100vw, 50vw"
       />
       <div 
