@@ -29,8 +29,7 @@ class Log extends Model
                 'user_id'    => $user->id,
                 'action'     => $action,
                 'description'=> $description,
-                'ip_address' => $request?->ip(),
-                'user_agent' => $request?->header('User-Agent'),
+                'ip_address' => $request?->ip()
             ]);
         }
 

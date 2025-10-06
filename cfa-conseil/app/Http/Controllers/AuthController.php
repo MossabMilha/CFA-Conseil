@@ -29,7 +29,7 @@ class AuthController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
-            'verification_ode'=>'required|string'
+            'verification_code'=>'required|string'
         ]);
         // Check verification code
         if ($request->verification_code !== $fixedCode) {
@@ -64,8 +64,7 @@ class AuthController extends Controller
             $user = Auth::user();
             Log::track($user, 'login', 'Admin logged in', $request);
 
-            return redirect()->intended('dashboard')
-                ->with('success', 'Logged in successfully!');
+            return Inertia::render('Home');
         }
 
 
