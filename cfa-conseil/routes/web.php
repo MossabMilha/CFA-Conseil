@@ -12,7 +12,11 @@ Route::get('/', function () {
 
 Route::get('/blogs', [BlogController::class, 'index']);
 Route::get('/blog/{slug}', [BlogController::class, 'show'] );
-Route::get('/blog-editor', function () {return Inertia::render('BlogEditor'); });
+Route::middleware(['auth'])->group(function () {
+    Route::get('/blog-editor', function () {
+        return Inertia::render('BlogEditor');
+    });
+});
 Route::get('/blog-editor/{slug}', [BlogController::class, 'edit']);
 
 Route::get('/contact', function () {return Inertia::render('Contact'); });
