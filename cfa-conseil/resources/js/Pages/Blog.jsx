@@ -5,7 +5,7 @@ import { Calendar, Clock, ArrowLeft, ImageIcon } from 'lucide-react';
 import AppLayout from '@/Layouts/AppLayout';
 import  '../../css/tiptap/editor-content.css'
 
-export default function Blog({ blog }) {
+export default function Blog({ blog, auth }) {
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -121,13 +121,12 @@ export default function Blog({ blog }) {
                                 <ArrowLeft size={20}/>
                                 All Blogs
                             </Link>
-                            // TODO : if(Auth::user.role === admin)
-                            <Link
+                            {auth?.user?.role === 'admin' && <Link
                                 href="/blog-editor"
                                 className="text-[#252550] font-medium hover:underline"
                             >
                                 Write New Blog
-                            </Link>
+                            </Link>}
                         </div>
                     </div>
                 </div>

@@ -49,7 +49,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         // Redirect with session
-        return redirect()->route('dashboard')->with('success', 'Welcome, '.$user->first_name.'!');
+        return redirect()->route('/')->with('success', 'Welcome, '.$user->first_name.'!');
     }
 
     public function login(Request $request)

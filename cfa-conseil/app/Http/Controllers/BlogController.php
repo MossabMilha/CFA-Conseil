@@ -18,7 +18,10 @@ class BlogController extends Controller
     {
         $blogs = Blog::orderBy('updated_at', 'desc')->get();
         return Inertia::render('Blogs', [
-            'blogs' => $blogs
+            'blogs' => $blogs,
+            'auth' => [
+                'user' => auth()->user()
+            ]
         ]);
     }
 
@@ -27,7 +30,10 @@ class BlogController extends Controller
     {
         $blog = Blog::where('slug', $slug)->firstOrFail();
         return Inertia::render('Blog', [
-            'blog' => $blog
+            'blog' => $blog,
+            'auth' => [
+                'user' => auth()->user()
+            ]
         ]);
     }
     

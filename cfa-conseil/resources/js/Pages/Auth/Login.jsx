@@ -37,7 +37,7 @@ export default function Login({ canResetPassword }) {
             });
             
             // Handle successful login (Inertia will handle the redirect based on the response)
-            window.location.href = response.data.redirect || '/dashboard';
+            window.location.href = response.data.redirect || '/blogs';
         } catch (error) {
             if (error.response && error.response.status === 422) {
                 // Validation errors

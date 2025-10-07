@@ -3,7 +3,7 @@ import AppLayout from '@/Layouts/AppLayout';
 import { Search, ImageIcon } from 'lucide-react';
 import { Link } from "@inertiajs/react";
 
-export default function Blogs({ blogs = [] }) {
+export default function Blogs({ blogs = [], auth }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [onImage, setOnImage] = useState(false);
 
@@ -67,11 +67,12 @@ export default function Blogs({ blogs = [] }) {
                                 className='bg-[#eaeaea] rounded-lg overflow-hidden duration-300'>
                                 <div className='h-48 bg-[#92aec8] relative overflow-hidden'>
                                     <img
-                                        src={`/storage/${blog.featured_image}`}
+                                        src={blog.featured_image ? `/storage/${blog.featured_image}` : 'storage/images/fallback.png'}
                                         alt={blog.title}
                                         className="w-full h-full object-cover"
                                         onError={(e) => {
-                                            e.target.src = "/storage/images/fallback.png"; 
+                                            e.target.src = 'storage/images/fallback.png';
+                                            e.target.onerror = null;
                                         }}
                                     />
                                 </div>
@@ -94,12 +95,12 @@ export default function Blogs({ blogs = [] }) {
                                         >
                                             Read More →
                                         </Link>
-                                        <Link
+                                        {auth?.user?.role === 'admin' && <Link
                                             href={`/blog-editor/${blog.slug}`}
                                             className='text-[#252550] font-medium hover:underline'
                                         >
                                             edit-blog
-                                        </Link>
+                                        </Link>}
                                     </div>
                                 </div>
                             </div>
