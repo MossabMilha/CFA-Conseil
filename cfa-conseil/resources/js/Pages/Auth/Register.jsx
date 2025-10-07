@@ -30,11 +30,11 @@ export default function Register() {
     const submit = async (e) => {
         e.preventDefault();
         setProcessing(true);
-        
+
         try {
-            const response = await axios.post(route('register'), formData);
+            const response = await axios.post('register', formData);
             // Handle successful registration
-            window.location.href = response.data.redirect || '/dashboard';
+            window.location.href = response.data.redirect || '/blogs';
         } catch (error) {
             if (error.response && error.response.status === 422) {
                 setErrors(error.response.data.errors || {});
@@ -156,7 +156,7 @@ export default function Register() {
                         Already registered?
                     </Link>
 
-                    <PrimaryButton 
+                    <PrimaryButton
                         className={`bg-[#252550] ${processing ? 'opacity-75' : ''}`}
                         disabled={processing}
                         type="submit"

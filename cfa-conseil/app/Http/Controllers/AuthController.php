@@ -33,9 +33,9 @@ class AuthController extends Controller
         ]);
         // Check verification code
         if ($request->verification_code !== $fixedCode) {
-            return back()->withErrors([
-                'verification_code' => 'Invalid verification code.',
-            ])->withInput();
+            return response()->json([
+                'message' => 'Invalid Verification Code.',
+            ], 401);
         }
 
         $user = User::create([
@@ -49,11 +49,16 @@ class AuthController extends Controller
         Auth::login($user);
 
         // Redirect with session
-        return redirect()->route('/')->with('success', 'Welcome, '.$user->first_name.'!');
+        return response()->json([
+            'message' => 'Login successful',
+            'redirect' => '/blogs',
+            'user' => $user,
+        ], 200);
     }
 
     public function login(Request $request)
     {
+
         $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
@@ -64,15 +69,19 @@ class AuthController extends Controller
             $user = Auth::user();
             Log::track($user, 'login', 'Admin logged in', $request);
 
-            return Inertia::render('Home');
+            return response()->json([
+                'message' => 'Login successful',
+                'redirect' => '/blogs',
+                'user' => $user,
+            ], 200);
         }
 
 
-        return back()->withErrors([
-            'email' => 'Invalid credentials.',
-        ])->onlyInput('email');
+        return response()->json([
+            'message' => 'Invalid credentials.',
+        ], 401);
     }
-    
+
     public function logout(Request $request)
     {
         $user = Auth::user();

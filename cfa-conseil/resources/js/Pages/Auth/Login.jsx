@@ -28,14 +28,15 @@ export default function Login({ canResetPassword }) {
     const submit = async (e) => {
         e.preventDefault();
         setProcessing(true);
-        
+
         try {
+
             const response = await axios.post('login', {
                 email: formData.email,
                 password: formData.password,
                 remember: formData.remember
             });
-            
+
             // Handle successful login (Inertia will handle the redirect based on the response)
             window.location.href = response.data.redirect || '/blogs';
         } catch (error) {
@@ -53,7 +54,7 @@ export default function Login({ canResetPassword }) {
 
     return (
         <GuestLayout>
-            
+
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-[#252550] text-4xl font-bold">Login.</h1>
                 <div className="grid grid-cols-2">
@@ -126,7 +127,7 @@ export default function Login({ canResetPassword }) {
                         Don't have an account?
                     </Link>
 
-                    <PrimaryButton 
+                    <PrimaryButton
                         className={`bg-[#252550] ${processing ? 'opacity-75' : ''}`}
                         disabled={processing}
                         type="submit"
