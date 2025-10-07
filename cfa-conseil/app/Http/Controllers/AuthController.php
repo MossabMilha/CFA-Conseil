@@ -72,6 +72,7 @@ class AuthController extends Controller
             'email' => 'Invalid credentials.',
         ])->onlyInput('email');
     }
+    
     public function logout(Request $request)
     {
         $user = Auth::user();

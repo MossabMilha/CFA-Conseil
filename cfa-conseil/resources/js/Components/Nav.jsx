@@ -1,9 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Link, router } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
+import Dropdown from './Dropdown';
+import { LogOut, SquarePen } from 'lucide-react';
 
 export default function Nav() {
+  const { auth } = usePage().props;
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef(null);
+
+  const handleLogout = useCallback((e) => {
+    e.preventDefault();
+    router.post('/logout', {}, {
+      onSuccess: () => {
+        // Optional: You can add any post-logout logic here
+        console.log('Logged out successfully');
+      },
+      onError: (errors) => {
+        console.error('Logout failed:', errors);
+      }
+    });
+  }, []);
 
   // Handle smooth scrolling for hash links
   const scrollToSection = (e, hash) => {
@@ -65,18 +82,29 @@ export default function Nav() {
         </h1>
 
         {/* Desktop menu */}
-        <ul className="hidden md:flex text-white space-x-4 lg:space-x-8 text-sm md:text-base">
+        <ul className="hidden md:flex items-center text-white space-x-4 lg:space-x-8 text-sm md:text-base">
           <li><a href="#about" onClick={(e) => scrollToSection(e, '#about')}>À propos</a></li>
           <li><a href="#services" onClick={(e) => scrollToSection(e, '#services')}>Services</a></li>
           <li><a href="/blogs">Blog</a></li>
-          <li>
-            <a
-              className="text-[#252550] bg-white rounded-full px-3 py-1 font-semibold"
-              href="/contact"
-            >
-              Contact
-            </a>
+          <li><a className="text-[#252550] bg-white rounded-full px-3 py-1 font-semibold" href="/contact">Contact</a>
           </li>
+          {auth?.user?.role === 'admin' && <li>
+              <Dropdown>
+                <Dropdown.Trigger>
+                  <div className='rounded-full w-8 h-8 bg-[#6886ab]'>
+                  <img className='rounded-full w-8 h-8 object-cover' src={auth?.user?.avatar_url || 'storage/images/fallback.png'} alt="" />
+                  </div>
+                </Dropdown.Trigger>
+                <Dropdown.Content width='auto'>
+                  <Dropdown.Link  className='flex items-center gap-2 whitespace-nowrap' as="button" onClick={() => router.visit('/blogs/editor')}>
+                    <SquarePen size={'1em'} /> Editeur de blog
+                  </Dropdown.Link>
+                  <Dropdown.Link className='flex items-center gap-2 whitespace-nowrap' as="button" onClick={handleLogout}>
+                    <LogOut size={'1em'} /> Se déconnecter
+                  </Dropdown.Link>
+                </Dropdown.Content>
+              </Dropdown>
+          </li>}
         </ul>
 
         {/* Mobile button */}

@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import AppLayout from '@/Layouts/AppLayout';
 import { Search, ImageIcon } from 'lucide-react';
 import { Link } from "@inertiajs/react";
+import { useAuth } from '@/contexts/AuthContext';
+import { usePage } from '@inertiajs/react';
 
-export default function Blogs({ blogs = [], auth }) {
+export default function Blogs({ blogs = [] }) {
+    const { auth } = usePage().props;
+    console.log(auth);
+    const { user } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const [onImage, setOnImage] = useState(false);
 

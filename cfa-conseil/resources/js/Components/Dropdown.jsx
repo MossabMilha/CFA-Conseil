@@ -1,19 +1,35 @@
 import { Transition } from '@headlessui/react';
 import { Link } from '@inertiajs/react';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 const DropDownContext = createContext();
 
-const Dropdown = ({className, children }) => {
+const Dropdown = ({ className, children }) => {
     const [open, setOpen] = useState(false);
+    const dropdownRef = useRef(null);
 
     const toggleOpen = () => {
         setOpen((previousState) => !previousState);
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
         <DropDownContext.Provider value={{ open, setOpen, toggleOpen }}>
-            <div className={`relative content-center ${className}`}>{children}</div>
+            <div ref={dropdownRef} className={`relative content-center ${className}`}>
+                {children}
+            </div>
         </DropDownContext.Provider>
     );
 };
@@ -86,9 +102,10 @@ const Content = ({
     );
 };
 
-const DropdownLink = ({ className = '', children, ...props }) => {
+const DropdownLink = ({ as = Link, className = '', children, ...props }) => {
+    const Tag = as;
     return (
-        <Link
+        <Tag
             {...props}
             className={
                 'block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:bg-gray-100 focus:outline-none ' +
@@ -96,7 +113,7 @@ const DropdownLink = ({ className = '', children, ...props }) => {
             }
         >
             {children}
-        </Link>
+        </Tag>
     );
 };
 
