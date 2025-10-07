@@ -4,6 +4,7 @@ import { Search, ImageIcon } from 'lucide-react';
 import { Link } from "@inertiajs/react";
 import { useAuth } from '@/contexts/AuthContext';
 import { usePage } from '@inertiajs/react';
+import { Edit, ArrowRight } from 'lucide-react';
 
 export default function Blogs({ blogs = [] }) {
     const { auth } = usePage().props;
@@ -93,18 +94,18 @@ export default function Blogs({ blogs = [] }) {
                                     <p className='text-gray-600 mb-4 line-clamp-3'>
                                         {blog.excerpt || 'Read this amazing blog post...'}
                                     </p>
-                                    <div className='flex justify-between'>
+                                    <div className='flex justify-between items-center'>
                                         <Link
                                             href={`/blog/${blog.slug}`}
-                                            className='text-[#252550] font-medium hover:underline'
+                                            className='flex items-center gap-2 text-[#252550] font-medium hover:underline'
                                         >
-                                            Read More →
+                                            Read More <ArrowRight size={'1em'} />
                                         </Link>
                                         {auth?.user?.role === 'admin' && <Link
                                             href={`/blog-editor/${blog.slug}`}
-                                            className='text-[#252550] font-medium hover:underline'
+                                            className='flex items-center gap-2 text-[#252550] font-medium hover:underline'
                                         >
-                                            edit-blog
+                                            Edit <Edit size={'1em'} />
                                         </Link>}
                                     </div>
                                 </div>
