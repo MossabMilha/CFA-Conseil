@@ -14,7 +14,6 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-        verification_code: 'CFA_AGENCY_WEB'
     });
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(false);
@@ -140,7 +139,6 @@ export default function Register() {
                         id="verification_code"
                         type="text"
                         name="verification_code"
-                        value={formData.verification_code}
                         className="mt-1 block w-full"
                         onChange={handleChange}
                         disabled={processing}
