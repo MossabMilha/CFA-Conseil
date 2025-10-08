@@ -4,12 +4,15 @@ import IconTwo from '@/assets/two.svg?react';
 import IconThree from '@/assets/three.svg?react';
 import IconFour from '@/assets/four.svg?react';
 import { MapPin, Phone, Mail, Rocket, Heart, User2, Star } from 'lucide-react';
-
+import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
+
+
 
 export default function Home() {
     return (
         <div className="relative">
+            <Head title="CFA Conseil - Accueil" />
             <main>
                 <section className='relative min-h-screen from-[#92afc9] from-0% via-[#6886ab] via-50% to-[#6886ab] bg-gradient-to-br'>
                     <div className='absolute w-full h-full -z-9' 
@@ -105,54 +108,63 @@ export default function Home() {
                                 title="Missions Comptables"
                                 description="Nous assurons la tenue et le suivi complet de votre comptabilité, avec des états financiers fiables et conformes aux normes en vigueur."
                                 bgColor="#d7d7d7"
+                                buttonLink={`/services/missions-comptables`} 
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/business-team-discussing-their-ideas-office.webp'
                                 title="Missions de conseil-gestion"
                                 description="Un conseil stratégique et opérationnel pour optimiser la performance de votre entreprise et renforcer vos outils de pilotage."
                                 bgColor="#92aec8"
+                                buttonLink={`/services/conseil-gestion`} 
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/working-process-startup-businessman-working-wood-table-with-new-finance-project-modern-notebook-table-pen-holding-hand.webp'
                                 title="Missions d'audit"
                                 description="Nous réalisons des audits financiers et organisationnels approfondis afin d'identifier les risques et garantir la fiabilité de vos données."
                                 bgColor="#252550"
+                                buttonLink={`/services/audit`} 
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/female-applicant-interviewed-by-hr-mangers.webp'
                                 title="Missions sociales et RH"
                                 description="Un accompagnement personnalisé dans la gestion de vos ressources humaines : contrats, paie, déclarations sociales et obligations légales."
                                 bgColor="#92aec8"
+                                buttonLink={`/services/sociales-rh`} 
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/closeup-gavel-judgement-concept.webp'
                                 title="Missions juridiques"
                                 description="Nous vous accompagnons dans vos démarches juridiques : création d'entreprise, rédaction de statuts, assemblées générales et formalités."
                                 bgColor="#252550"
+                                buttonLink={`/services/juridiques`} 
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/mid-section-anonymous-male-accountant-calculating-financial-data.webp'
                                 title="Missions fiscales"
                                 description="Un suivi rigoureux de vos obligations fiscales et l'optimisation de votre fiscalité pour sécuriser et alléger vos charges."
                                 bgColor="#d7d7d7"
+                                buttonLink={`/services/fiscales`} 
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/reading-business-report.webp'
                                 title="Mise en place S.M.Q"
                                 description="Nous vous guidons dans la mise en place et le suivi d'un Systéme de Management de la Qualité, adapté a vos objectifs et exigences."
                                 bgColor="#252550"
+                                buttonLink={`/services/smq`} 
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/team-businessmen-listening-business-lecture-briefing.webp'
                                 title="Formation"
                                 description="Des programmes de formation ciblés et pratiques, destinés a renforcer les compétences de vos équipes dans leurs domaines d'expertise."
                                 bgColor="#d7d7d7"
+                                buttonLink={`/services/formation`} 
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/business-people-are-brainstorming.webp'
                                 title="Gestion des projets"
                                 description="Nous vous assistons dans la planification, le suivi et la réussite de vos projets, en assurant qualité, respect des délais et efficacité."
                                 bgColor="#92aec8"
+                                buttonLink={`/services/gestion-projets`} 
                             />
                         </div>
                     </div>
