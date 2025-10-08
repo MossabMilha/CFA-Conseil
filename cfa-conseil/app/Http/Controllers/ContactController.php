@@ -12,18 +12,20 @@ class ContactController extends Controller
     public function contact(Request $request)
     {
         $validated = $request->validate([
-            'nom_complet' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email'       => 'required|email|max:255',
-            'Telephone'   => 'required|string|max:20',
-            'Société'     => 'nullable|string|max:255',
-            'Poste'       => 'nullable|string|max:255',
-            'Pays'        => 'required|string|max:100',
-            'Ville'       => 'required|string|max:100',
-            'Message'     => 'required|string|max:2000',
+            'phone'   => 'required|string|max:20',
+            'company'     => 'nullable|string|max:255',
+            'post'       => 'nullable|string|max:255',
+            'country'        => 'required|string|max:100',
+            'city'       => 'required|string|max:100',
+            'message'     => 'required|string|max:2000',
+
         ]);
 
         try {
-            Mail::to('yourrealemail@example.com')->send(new ContactMessage($validated));
+            // TODO:Change Email
+            Mail::to('mossabmilha.m@gmail.com')->send(new ContactMessage($validated));
 
             return response()->json([
                 'status' => 'success',

@@ -31,14 +31,12 @@ class ContactMessage extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
+            //TODO :CHANGE SUBJECT
             subject: 'New Contact Message',
             from: $this->data['email']
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(

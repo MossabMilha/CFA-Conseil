@@ -12,7 +12,7 @@ import AppLayout from '@/Layouts/AppLayout';
 
 
 export default function Home() {
-    
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -25,7 +25,7 @@ export default function Home() {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState({ success: null, message: '' });
-    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -33,12 +33,12 @@ export default function Home() {
             [name]: value
         }));
     };
-    
+
     const handleContactSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setSubmitStatus({ success: null, message: '' });
-    
+
         try {
             const response = await axios.post('/api/contact-form', formData);
             setSubmitStatus({
@@ -72,13 +72,13 @@ export default function Home() {
             <Head title="CFA Conseil - Accueil" />
             <main>
                 <section className='relative min-h-screen from-[#92afc9] from-0% via-[#6886ab] via-50% to-[#6886ab] bg-gradient-to-br'>
-                    <div className='absolute w-full h-full -z-9' 
+                    <div className='absolute w-full h-full -z-9'
                     style={{
                         backgroundImage: 'url(/storage/images/asset-4.png)',
                         backgroundSize: 'cover',
                         backgroundPosition: 'left',
                         backgroundRepeat: 'no-repeat',
-                        
+
                     }}/>
                     <div className='relative px-8 flex items-center justify-between h-screen '>
                         <h1 className='2xl:text-8xl xl:text-7xl lg:text-7xl md:text-6xl text-5xl text-white font-bold'>
@@ -88,8 +88,8 @@ export default function Home() {
                             <br/> <i>conformité</i>
                             <br/>et <i>croissance</i>.
                         </h1>
-                        
-                        
+
+
                     </div>
                 </section>
 
@@ -165,63 +165,63 @@ export default function Home() {
                                 title="Missions Comptables"
                                 description="Nous assurons la tenue et le suivi complet de votre comptabilité, avec des états financiers fiables et conformes aux normes en vigueur."
                                 bgColor="#d7d7d7"
-                                buttonLink={`/services/missions-comptables`} 
+                                buttonLink={`/services/missions-comptables`}
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/business-team-discussing-their-ideas-office.webp'
                                 title="Missions de conseil-gestion"
                                 description="Un conseil stratégique et opérationnel pour optimiser la performance de votre entreprise et renforcer vos outils de pilotage."
                                 bgColor="#92aec8"
-                                buttonLink={`/services/conseil-gestion`} 
+                                buttonLink={`/services/conseil-gestion`}
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/working-process-startup-businessman-working-wood-table-with-new-finance-project-modern-notebook-table-pen-holding-hand.webp'
                                 title="Missions d'audit"
                                 description="Nous réalisons des audits financiers et organisationnels approfondis afin d'identifier les risques et garantir la fiabilité de vos données."
                                 bgColor="#252550"
-                                buttonLink={`/services/audit`} 
+                                buttonLink={`/services/audit`}
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/female-applicant-interviewed-by-hr-mangers.webp'
                                 title="Missions sociales et RH"
                                 description="Un accompagnement personnalisé dans la gestion de vos ressources humaines : contrats, paie, déclarations sociales et obligations légales."
                                 bgColor="#92aec8"
-                                buttonLink={`/services/sociales-rh`} 
+                                buttonLink={`/services/sociales-rh`}
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/closeup-gavel-judgement-concept.webp'
                                 title="Missions juridiques"
                                 description="Nous vous accompagnons dans vos démarches juridiques : création d'entreprise, rédaction de statuts, assemblées générales et formalités."
                                 bgColor="#252550"
-                                buttonLink={`/services/juridiques`} 
+                                buttonLink={`/services/juridiques`}
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/mid-section-anonymous-male-accountant-calculating-financial-data.webp'
                                 title="Missions fiscales"
                                 description="Un suivi rigoureux de vos obligations fiscales et l'optimisation de votre fiscalité pour sécuriser et alléger vos charges."
                                 bgColor="#d7d7d7"
-                                buttonLink={`/services/fiscales`} 
+                                buttonLink={`/services/fiscales`}
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/reading-business-report.webp'
                                 title="Mise en place S.M.Q"
                                 description="Nous vous guidons dans la mise en place et le suivi d'un Systéme de Management de la Qualité, adapté a vos objectifs et exigences."
                                 bgColor="#252550"
-                                buttonLink={`/services/smq`} 
+                                buttonLink={`/services/smq`}
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/team-businessmen-listening-business-lecture-briefing.webp'
                                 title="Formation"
                                 description="Des programmes de formation ciblés et pratiques, destinés a renforcer les compétences de vos équipes dans leurs domaines d'expertise."
                                 bgColor="#d7d7d7"
-                                buttonLink={`/services/formation`} 
+                                buttonLink={`/services/formation`}
                             />
                             <ServiceCard
                                 imageUrl='storage/images/services/business-people-are-brainstorming.webp'
                                 title="Gestion des projets"
                                 description="Nous vous assistons dans la planification, le suivi et la réussite de vos projets, en assurant qualité, respect des délais et efficacité."
                                 bgColor="#92aec8"
-                                buttonLink={`/services/gestion-projets`} 
+                                buttonLink={`/services/gestion-projets`}
                             />
                         </div>
                     </div>
@@ -359,99 +359,99 @@ export default function Home() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-4">
                                         <div className="col-span-1 sm:col-span-2 flex flex-col">
                                             <label className="mb-2" htmlFor="name">Nom et Prenom</label>
-                                            <input 
-                                                className="p-2 border-0 bg-[#eaeaea] rounded-md" 
-                                                type="text" 
-                                                id="name" 
-                                                name="name" 
+                                            <input
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md"
+                                                type="text"
+                                                id="name"
+                                                name="name"
                                                 value={formData.name}
                                                 onChange={handleChange}
-                                                placeholder="Nom et Prenom" 
+                                                placeholder="Nom et Prenom"
                                                 required
                                             />
                                         </div>
                                         <div className="flex flex-col">
                                             <label className="mb-2" htmlFor="email">Email</label>
-                                            <input 
-                                                className="p-2 border-0 bg-[#eaeaea] rounded-md" 
-                                                type="email" 
-                                                id="email" 
-                                                name="email" 
+                                            <input
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md"
+                                                type="email"
+                                                id="email"
+                                                name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                placeholder="Email" 
+                                                placeholder="Email"
                                                 required
                                             />
                                         </div>
                                         <div className="flex flex-col">
                                             <label className="mb-2" htmlFor="phone">Téléphone</label>
-                                            <input 
-                                                className="p-2 border-0 bg-[#eaeaea] rounded-md" 
-                                                type="tel" 
-                                                id="phone" 
-                                                name="phone" 
+                                            <input
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md"
+                                                type="tel"
+                                                id="phone"
+                                                name="phone"
                                                 value={formData.phone}
                                                 onChange={handleChange}
-                                                placeholder="Téléphone" 
+                                                placeholder="Téléphone"
                                                 required
                                             />
                                         </div>
                                         <div className="flex flex-col">
                                             <label className="mb-2" htmlFor="company">Société</label>
-                                            <input 
-                                                className="p-2 border-0 bg-[#eaeaea] rounded-md" 
-                                                type="text" 
-                                                id="company" 
-                                                name="company" 
+                                            <input
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md"
+                                                type="text"
+                                                id="company"
+                                                name="company"
                                                 value={formData.company}
                                                 onChange={handleChange}
-                                                placeholder="Société" 
+                                                placeholder="Société"
                                             />
                                         </div>
                                         <div className="flex flex-col">
                                             <label className="mb-2" htmlFor="post">Poste</label>
-                                            <input 
-                                                className="p-2 border-0 bg-[#eaeaea] rounded-md" 
-                                                type="text" 
-                                                id="post" 
-                                                name="post" 
+                                            <input
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md"
+                                                type="text"
+                                                id="post"
+                                                name="post"
                                                 value={formData.post}
                                                 onChange={handleChange}
-                                                placeholder="Poste" 
+                                                placeholder="Poste"
                                             />
                                         </div>
                                         <div className="flex flex-col">
                                             <label className="mb-2" htmlFor="country">Pays</label>
-                                            <input 
-                                                className="p-2 border-0 bg-[#eaeaea] rounded-md" 
-                                                type="text" 
-                                                id="country" 
-                                                name="country" 
+                                            <input
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md"
+                                                type="text"
+                                                id="country"
+                                                name="country"
                                                 value={formData.country}
                                                 onChange={handleChange}
-                                                placeholder="Pays" 
+                                                placeholder="Pays"
                                                 required
                                             />
                                         </div>
                                         <div className="flex flex-col">
                                             <label className="mb-2" htmlFor="city">Ville</label>
-                                            <input 
-                                                className="p-2 border-0 bg-[#eaeaea] rounded-md" 
-                                                type="text" 
-                                                id="city" 
-                                                name="city" 
+                                            <input
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md"
+                                                type="text"
+                                                id="city"
+                                                name="city"
                                                 value={formData.city}
                                                 onChange={handleChange}
-                                                placeholder="Ville" 
+                                                placeholder="Ville"
                                                 required
                                             />
                                         </div>
                                         <div className="col-span-1 sm:col-span-2 flex flex-col">
                                             <label className="mb-2" htmlFor="message">Message</label>
-                                            <textarea 
-                                                className="p-2 border-0 bg-[#eaeaea] rounded-md min-h-32" 
-                                                id="message" 
-                                                name="message" 
+                                            <textarea
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md min-h-32"
+                                                id="message"
+                                                name="message"
                                                 value={formData.message}
                                                 onChange={handleChange}
                                                 placeholder="Message"
@@ -459,8 +459,8 @@ export default function Home() {
                                             ></textarea>
                                         </div>
                                         <div className="col-span-1 sm:col-span-2 mt-2">
-                                            <button 
-                                                type="submit" 
+                                            <button
+                                                type="submit"
                                                 className="py-2 px-6 border-0 bg-[#92aec8] text-white rounded-md hover:bg-[#7aa3c0] transition-colors duration-200 disabled:opacity-50"
                                                 disabled={isSubmitting}
                                             >
@@ -514,7 +514,7 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
-                
+
             </main>
         </div>
     );

@@ -13,7 +13,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::get('/contact-form',[ContactController::class,'contact']);
+Route::post('/contact-form',[ContactController::class,'contact']);
 
 Route::post('/blogs', [BlogController::class, 'store']);
 Route::post('/blogs/{slug}', [BlogController::class, 'update']);
