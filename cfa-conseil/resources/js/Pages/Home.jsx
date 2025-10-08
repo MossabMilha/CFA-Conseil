@@ -21,7 +21,8 @@ export default function Home() {
         post: '',
         country: '',
         city: '',
-        message: ''
+        message: '',
+        subject: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState({ success: null, message: '' });
@@ -54,7 +55,8 @@ export default function Home() {
                 post: '',
                 country: '',
                 city: '',
-                message: ''
+                message: '',
+                subject: ''
             });
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -443,6 +445,19 @@ export default function Home() {
                                                 value={formData.city}
                                                 onChange={handleChange}
                                                 placeholder="Ville"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-span-1 sm:col-span-2 flex flex-col">
+                                            <label className="mb-2" htmlFor="subject">Sujet</label>
+                                            <input
+                                                className="p-2 border-0 bg-[#eaeaea] rounded-md"
+                                                type="text"
+                                                id="subject"
+                                                name="subject"
+                                                value={formData.subject}
+                                                onChange={handleChange}
+                                                placeholder="Sujet"
                                                 required
                                             />
                                         </div>

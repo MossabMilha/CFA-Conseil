@@ -74,7 +74,7 @@ const ServiceCard = memo(({
         
           href={buttonLink}
           key={buttonLink.split('/').pop()}
-          className={`${textColors.title} inline-flex items-center justify-center py-3 rounded-lg font-medium transition-colors duration-200 mt-4 hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#252550]`}
+          className={`${textColors.title} inline-flex items-center justify-center py-3 rounded-lg font-medium transition-colors duration-200 mt-4 hover:opacity-80 `}
           aria-label={`En savoir plus sur ${title}`}
         >
           {buttonText}
