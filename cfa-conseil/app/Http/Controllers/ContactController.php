@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
+
     public function contact(Request $request)
     {
         $validated = $request->validate([
@@ -20,7 +21,7 @@ class ContactController extends Controller
             'country'        => 'required|string|max:100',
             'city'       => 'required|string|max:100',
             'message'     => 'required|string|max:2000',
-
+            'subject'     => 'required|string|max:255',
         ]);
 
         try {
