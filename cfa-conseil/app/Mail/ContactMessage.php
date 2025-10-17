@@ -32,7 +32,7 @@ class ContactMessage extends Mailable
     {
         return new Envelope(
             //TODO :CHANGE SUBJECT
-            subject: 'New Contact Message',
+            subject: $this->data['subject'],
             from: $this->data['email']
         );
     }
