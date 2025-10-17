@@ -26,6 +26,7 @@ Route::get('/contact', function () {return Inertia::render('Contact'); });
 Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
 
 Route::get('/contact-form',[ContactController::class,'contact']);
+Route::get('/contact-email',[ContactController::class,'contact']);
 
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
