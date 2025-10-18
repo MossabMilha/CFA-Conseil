@@ -142,9 +142,16 @@
                                     </td>
                                 </tr>
                             </table>
-                            <p style="margin: 10px 0 0 0; font-size: 14px; color: #6b7280; text-align: left;">
-                                {{ now()->format('F j, Y \a\t g:i A') }}
-                            </p>
+                            <table width="100%" style="margin-top: 10px; font-size: 14px; color: #6b7280;">
+                                <tr>
+                                    <td align="left" style="width: 50%;">
+                                    {{ now()->format('F j, Y \a\t g:i A') }}
+                                    </td>
+                                    <td align="right" style="width: 50%;">
+                                    CFA Conseil
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                     

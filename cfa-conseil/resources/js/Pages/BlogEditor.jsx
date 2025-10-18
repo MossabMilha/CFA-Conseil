@@ -7,11 +7,12 @@ import { TextAlign } from '@tiptap/extension-text-align';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { Underline } from "@tiptap/extension-underline";
 import { Color } from '@tiptap/extension-color';
+import PdfAttachment from "@/Components/PdfAttachment";
 import Dropdown from "@/Components/Dropdown";
 import {
     Bold, Italic, List, ListOrdered, Heading,
     Heading1, Heading2, Heading3, Heading4, Heading5, Heading6,
-    Baseline, ImagePlus, X, ArrowLeft, Underline as UnderlineIcon
+    Baseline, ImagePlus, X, ArrowLeft, Underline as UnderlineIcon, File as FileIcon
 } from "lucide-react";
 
 import "@/../css/tiptap/editor-content.css";
@@ -28,10 +29,13 @@ export default function BlogEditor({ blog: initialBlog = null }) {
     // Refs & State
     // --------------------
     const fileInputRef = useRef(null);
+    const pdfInputRef = useRef(null);
     const featuredImageRef = useRef(null);
     const imagesRef = useRef(new Map());
+    const pdfsRef = useRef(new Map());
     const [featuredImage, setFeaturedImage] = useState(initialBlog?.featured_image || null);
 
+    console.log("initialBlog: ", initialBlog);
     // Inertia form state
     const { data, setData, reset } = useForm({
         id: initialBlog?.id || null,
@@ -40,6 +44,7 @@ export default function BlogEditor({ blog: initialBlog = null }) {
         content_html: initialBlog?.content_html || '',
         featured_image: initialBlog?.featured_image || null,
         images: initialBlog?.images || [],
+        pdfs: initialBlog?.pdfs || [],
         excerpt: initialBlog?.excerpt || ''
     });
 
@@ -50,18 +55,18 @@ export default function BlogEditor({ blog: initialBlog = null }) {
         extensions: [
             StarterKit.configure({ 
                 heading: { levels: [1, 2, 3, 4, 5, 6] },
-                // Disable the default underline extension since we're adding it separately
                 underline: false
             }),
-            Image.extend({
+            Image
+            .extend({
                 addAttributes() {
                     return {
                         ...this.parent?.(),
-                        "data-temp-id": {
+                        dataTempId: {
                             default: null,
                             parseHTML: el => el.getAttribute("data-temp-id"),
-                            renderHTML: attrs => attrs["data-temp-id"]
-                                ? { "data-temp-id": attrs["data-temp-id"] }
+                            renderHTML: attrs => attrs.dataTempId
+                                ? { "data-temp-id": attrs.dataTempId }
                                 : {},
                         },
                     };
@@ -71,6 +76,7 @@ export default function BlogEditor({ blog: initialBlog = null }) {
             Color.configure({ types: ['textStyle'] }),
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
             Underline,
+            PdfAttachment,
         ],
         content: initialBlog?.content_html || "<p>Start writing your blog here...</p>",
         editorProps: {
@@ -79,7 +85,12 @@ export default function BlogEditor({ blog: initialBlog = null }) {
                     'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none',
             },
         },
-        onUpdate: ({ editor }) => syncImages(editor),
+        onUpdate: ({ editor }) => {
+            syncImages(editor);
+            syncPdfs(editor);
+            console.log("pdfsRef: ", pdfsRef.current);
+            console.log("imagesRef: ", imagesRef.current);
+        }
 });
 
     if (!editor) return null;
@@ -97,7 +108,11 @@ export default function BlogEditor({ blog: initialBlog = null }) {
         return () => {
             imagesRef.current.forEach(({ blobUrl }) => blobUrl && URL.revokeObjectURL(blobUrl));
             imagesRef.current.clear();
+
+            pdfsRef.current.forEach(({ blobUrl }) => blobUrl && URL.revokeObjectURL(blobUrl));
+            pdfsRef.current.clear();
         };
+
     }, [initialBlog]);
 
     // Handle editor initialization
@@ -115,9 +130,11 @@ export default function BlogEditor({ blog: initialBlog = null }) {
     const syncImages = (editor) => {
         const currentIds = new Set();
         editor.state.doc.descendants((node) => {
-            if (node.type.name === "image" && node.attrs["data-temp-id"]) {
-                currentIds.add(node.attrs["data-temp-id"]);
-                console.log(node.attrs["data-temp-id"]);
+            console.log(node.type.name);
+            console.log(node.attrs);
+            if (node.type.name === "image" && node.attrs.dataTempId) {
+                currentIds.add(node.attrs.dataTempId);
+                console.log(node.attrs.dataTempId);
             }
         });
 
@@ -129,34 +146,56 @@ export default function BlogEditor({ blog: initialBlog = null }) {
         }
     };
 
+    const syncPdfs = (editor) => {
+        const currentIds = new Set();
+        editor.state.doc.descendants((node) => {
+            if (node.type.name === "pdfAttachment" && node.attrs.dataTempId) {
+                currentIds.add(node.attrs.dataTempId);
+            }
+        });
+
+        for (const [id, { blobUrl }] of pdfsRef.current.entries()) {
+            if (!currentIds.has(id) && blobUrl) {
+                URL.revokeObjectURL(blobUrl);
+                pdfsRef.current.delete(id);
+            }
+        }
+    };
+
+
+
     // Handle inserting image into editor
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Validate
+        // Validate type and size
         if (!file.type.startsWith('image/')) {
             alert('Please select an image file');
             return;
         }
-        if (file.size > 5 * 1024 * 1024) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
             alert('Image size should be less than 5MB');
             return;
         }
 
         try {
-            const formData = new FormData();
-            formData.append('image', file);
+            const tempId = generateId(); // temporary ID
+            const blobUrl = URL.createObjectURL(file); // temporary blob URL
 
-            // Upload immediately to backend
-            const res = await axios.post('/api/upload-image', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
+            // Store in temporary map
+            imagesRef.current.set(tempId, { file, blobUrl });
+            console.log("imagesRef: ", imagesRef.current);
 
-            const realUrl = res.data.url;
-
-            // Insert image directly with real URL
-            editor.chain().focus().setImage({ src: realUrl }).run();
+            // Insert image in editor with temporary blob URL
+            editor.chain().focus().insertContent({
+                type: 'image',
+                attrs: {
+                    src: blobUrl,
+                    alt: file.name,
+                    dataTempId: tempId,
+                },
+            }).run();
 
         } catch (err) {
             console.error('Image upload failed:', err);
@@ -202,55 +241,163 @@ export default function BlogEditor({ blog: initialBlog = null }) {
         e.target.value = '';
     };
 
+    // Handle PDF upload
+    const handlePdfUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
+        if (file.type !== "application/pdf") {
+            alert("Please upload a PDF file");
+            return;
+        }
+        if (file.size > 10 * 1024 * 1024) { // limit 10MB
+            alert("PDF must be less than 10MB");
+            return;
+        }
 
-    // Trigger hidden file input
-    const triggerFileInput = () => fileInputRef.current?.click();
-    const triggerFeaturedImageInput = () => featuredImageRef.current?.click();
+        try {
+            const tempId = generateId();
+            const blobUrl = URL.createObjectURL(file);
+            console.log("blobUrl: ", blobUrl);
+            
+            // Store in temporary map
+            pdfsRef.current.set(tempId, { file, blobUrl });
+            console.log("pdfsRef: ", pdfsRef.current);
+
+            // Insert PDF with temporary ID and blob URL
+            editor.chain().focus().insertContent({
+                type: 'pdfAttachment',
+                attrs: {
+                    url: blobUrl,
+                    name: file.name,
+                    dataTempId: tempId
+                }
+            }).run();
+
+        } catch (err) {
+            console.error("PDF upload failed:", err);
+            alert("Failed to upload PDF");
+        }
+
+        e.target.value = '';
+    };
 
     // Handle blog submit
     const handleBlogUpload = async () => {
-        const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('content_html', editor.getHTML());
-        formData.append('excerpt', data.excerpt);
-    
-        if (data.featured_image instanceof File) {
-            // only append if it’s a new upload (a File)
-            formData.append('featured_image', data.featured_image);
-        }
-    
         try {
-            let response;
-            if (isEditMode) {
-                // console.log(formData.get('title'));
-                response = await axios.post(`/api/blogs/${data.slug}`, formData, {
+            // Step 1: Create the blog first (without content_html)
+            const blogFormData = new FormData();
+            blogFormData.append('title', data.title);
+            blogFormData.append('excerpt', data.excerpt);
+            
+            // Upload featured image if it's a new file
+            if (data.featured_image instanceof File) {
+                blogFormData.append('featured_image', data.featured_image);
+            }
+
+            // Create the blog and get the ID
+            const blogResponse = isEditMode
+                ? await axios.post(`/api/blogs/${data.slug}`, blogFormData, { 
+                    headers: { 'Content-Type': 'multipart/form-data' } 
+                })
+                : await axios.post('/api/blogs', blogFormData, { 
+                    headers: { 'Content-Type': 'multipart/form-data' } 
+                });
+
+            const blog = blogResponse.data.data;
+            console.log("Blog created with ID:", blog);
+
+            // Step 2: Upload images and get real URLs
+            let uploadedImagesMap = {};
+            if (imagesRef.current.size > 0) {
+                const imgFormData = new FormData();
+                imgFormData.append('blog_id', blog.id);
+                
+                for (const [tempId, { file }] of imagesRef.current.entries()) {
+                    imgFormData.append('images[]', file);
+                    imgFormData.append('temp_ids[]', tempId);
+                }
+
+                const imgResponse = await axios.post('/api/upload-images', imgFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                console.log('Success:', response);
-
-            } else {
-                response = await axios.post('/api/blogs', formData, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-                console.log('Success:', response.data);
+                
+                uploadedImagesMap = imgResponse.data.data;
+                console.log("Uploaded images map:", uploadedImagesMap);
             }
-    
-    
+
+            // Step 3: Upload PDFs and get real URLs
+            let uploadedPdfsMap = {};
+            if (pdfsRef.current.size > 0) {
+                const pdfFormData = new FormData();
+                pdfFormData.append('blog_id', blog.id);
+                
+                for (const [tempId, { file }] of pdfsRef.current.entries()) {
+                    pdfFormData.append('pdfs[]', file);
+                    pdfFormData.append('temp_ids[]', tempId);
+                }
+
+                const pdfResponse = await axios.post('/api/upload-pdfs', pdfFormData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                
+                uploadedPdfsMap = pdfResponse.data.data;
+                console.log("Uploaded PDFs map:", uploadedPdfsMap);
+            }
+
+            // Step 4: Replace blob URLs in content with real URLs
+            let finalContent = editor.getHTML();
+            
+            // Replace image blob URLs with real URLs
+            for (const [tempId, realUrl] of Object.entries(uploadedImagesMap)) {
+                const tempData = imagesRef.current.get(tempId);
+                if (tempData && tempData.blobUrl) {
+                    finalContent = finalContent.replaceAll(tempData.blobUrl, realUrl);
+                }
+            }
+
+            // Replace PDF blob URLs with real URLs (if PDFs are embedded in content)
+            for (const [tempId, realUrl] of Object.entries(uploadedPdfsMap)) {
+                const tempData = pdfsRef.current.get(tempId);
+                if (tempData && tempData.blobUrl) {
+                    finalContent = finalContent.replaceAll(tempData.blobUrl, realUrl);
+                }
+            }
+
+            // Step 5: Update the blog with the final content
+            const updateFormData = new FormData();
+            updateFormData.append('content_html', finalContent);
+
+            const updateResponse = await axios.post(`/api/blogs/content/${blog.slug}`, updateFormData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            console.log('Blog updated with final content:', updateResponse.data);
+
+            // Cleanup blob URLs
+            imagesRef.current.forEach(({ blobUrl }) => blobUrl && URL.revokeObjectURL(blobUrl));
+            imagesRef.current.clear();
+            pdfsRef.current.forEach(({ blobUrl }) => blobUrl && URL.revokeObjectURL(blobUrl));
+            pdfsRef.current.clear();
+
+            // Reset form
             reset();
             editor.commands.setContent('<p>Start writing your blog here...</p>');
             setFeaturedImage(null);
-    
-            // window.location.href = '/blogs';
+
+            alert('Blog saved successfully!');
+
         } catch (err) {
             console.error('Error saving blog:', err);
-            if (err.response?.data?.message) alert('Error: ' + err.response.data.message);
-            else alert('Something went wrong while saving blog.');
+            alert(err.response?.data?.message || 'Something went wrong while saving the blog.');
         }
     };
+
     
-
-
+    // Trigger hidden file input
+    const triggerFileInput = () => fileInputRef.current?.click();
+    const triggerFeaturedImageInput = () => featuredImageRef.current?.click();
+    const triggerPdfInput = () => pdfInputRef.current?.click();
 
     // --------------------
     // JSX Render
@@ -397,6 +544,25 @@ export default function BlogEditor({ blog: initialBlog = null }) {
                         >
                             <ImagePlus />
                         </button>
+
+                        {/* Upload PDF */}
+                        <input
+                        type="file"
+                        name="pdf"
+                        ref={pdfInputRef}
+                        onChange={handlePdfUpload}
+                        accept="application/pdf"
+                        className="hidden"
+                        />
+                        <button
+                        type="button"
+                        onClick={triggerPdfInput}
+                        className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
+                        title="Attach PDF"
+                        >
+                         <FileIcon/>
+                        </button>
+
                     </div>
 
                     {/*Featured Image */}

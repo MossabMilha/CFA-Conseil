@@ -17,4 +17,6 @@ Route::post('/contact-form',[ContactController::class,'contact']);
 
 Route::post('/blogs', [BlogController::class, 'store']);
 Route::post('/blogs/{slug}', [BlogController::class, 'update']);
-Route::post('/upload-image', [BlogController::class, 'uploadImage']);
+Route::post('/blogs/content/{slug}', [BlogController::class, 'updateContent']);
+Route::post('/upload-images', [BlogController::class, 'uploadImages']);
+Route::post('/upload-pdfs', [BlogController::class, 'uploadPdfs']);

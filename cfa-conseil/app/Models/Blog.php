@@ -27,4 +27,9 @@ class Blog extends Model
     {
         return $this->hasMany(BlogImages::class);
     }
+
+    public function pdfs()
+    {
+        return $this->hasMany(BlogPdfs::class);
+    }
 }

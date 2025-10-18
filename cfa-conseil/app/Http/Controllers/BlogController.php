@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Validation\Rule;
+use App\Models\BlogImages;
 
 class BlogController extends Controller
 {
@@ -64,19 +65,16 @@ class BlogController extends Controller
     {
         $request->validate([
             'title'          => 'required|string|max:255|unique:blogs,title',
-            'content_html'   => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'images'         => 'nullable',
-            'images.*'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'excerpt'        => 'nullable|string|max:500'
+            'excerpt'        => 'nullable|string|max:500',
         ]);
 
         $blog = new Blog();
-        $blog->user_id = 2;
+        $blog->user_id = auth()->id() ?? 5;
         $blog->title = $request->title;
         $blog->slug = Str::slug($request->title);
         $blog->excerpt = $request->excerpt ?? null;
-        $blog->content_html = $request->content_html;
+        $blog->content_html = "";
 
         // Featured image
         if ($request->hasFile('featured_image')) {
@@ -84,52 +82,31 @@ class BlogController extends Controller
             $blog->featured_image = $path;
         }
 
-        // Save the blog first to ensure it has an ID for related images
         $blog->save();
-
-        $replacementMap = [];
-
-        // Save images
-        if ($request->hasFile('images')) {
-            foreach ((array) $request->file('images') as $index => $image) {
-                $path = $image->store('images/blogs', 'public');
-
-                // Create DB record
-                $blog->images()->create([
-                    'file_path' => $path,
-                    'alt_text'  => null,
-                ]);
-
-                // Map data-temp-id to real file path
-                $tempId = $request->input("images_temp_ids.$index");
-                if ($tempId) {
-                    $replacementMap[$tempId] = asset('storage/' . $path);
-                }
-            }
-        }
-
-        // Replace blob src with correct storage paths in content_html
-        // Replace blob src with correct public storage paths in content_html
-        $content = $blog->content_html;
-        foreach ($replacementMap as $tempId => $realUrl) {
-            $content = preg_replace(
-                '/(<img[^>]+data-temp-id="' . preg_quote($tempId, '/') . '"[^>]+src=")[^"]+(")/',
-                '$1' . $realUrl . '$2',
-                $content
-            );
-        }
-
-        // Only update content_html if we made replacements
-        if ($content !== $blog->content_html) {
-            $blog->content_html = $content;
-            $blog->save();
-        }
 
         return response()->json([
             'success' => true,
             'message' => 'Blog created successfully!',
-            'data'    => $blog->load('images')
+            'data'    => $blog
         ], 201);
+    }
+
+    public function updateContent(Request $request, $slug)
+    {
+        $blog = Blog::where('slug', $slug)->firstOrFail();
+
+        $request->validate([
+            'content_html' => 'required|string',
+        ]);
+
+        $blog->content_html = $request->content_html;
+        $blog->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Blog content updated successfully!',
+            'data'    => $blog->load('images', 'pdfs')
+        ]);
     }
 
     public function update(Request $request)
@@ -142,6 +119,8 @@ class BlogController extends Controller
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'images'         => 'nullable',
             'images.*'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'pdfs'           => 'nullable',
+            'pdfs.*'         => 'file|mimes:pdf|max:2048',
             'excerpt'        => 'nullable|string|max:500',
         ]);
 
@@ -173,10 +152,22 @@ class BlogController extends Controller
             }
         }
 
+        // Remove old PDFs & save new ones
+        $blog->pdfs()->delete();
+        if ($request->hasFile('pdfs')) {
+            foreach ((array) $request->file('pdfs') as $pdf) {
+                $path = $pdf->store('pdfs/blogs', 'public');
+                $blog->pdfs()->create([
+                    'file_path' => '/storage/' . $path,
+                    'file_name' => $pdf->getClientOriginalName(),
+                ]);
+            }
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Blog updated successfully!',
-            'data'    => $blog->load('images')
+            'data'    => $blog->load('images','pdfs')
         ], 200);
     }
 
@@ -202,17 +193,79 @@ class BlogController extends Controller
         ], 200);
     }
 
-    public function uploadImage(Request $request)
+    public function uploadImages(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'blog_id'   => 'required|exists:blogs,id',
+            'images'    => 'required|array',
+            'images.*'  => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'temp_ids'  => 'required|array',
         ]);
 
-        $path = $request->file('image')->store('images/blogs', 'public');
+        $uploadedImages = [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('images/blogs', 'public');
+                $realUrl = asset('storage/' . $path);
+
+                // Save in DB
+                $record = BlogImages::create([
+                    'blog_id' => $request->blog_id,
+                    'file_path' => $path,
+                    'alt_text'  => null,
+                ]);
+
+                // Map temp ID to real URL
+                $tempId = $request->temp_ids[$index] ?? null;
+                if ($tempId) {
+                    $uploadedImages[$tempId] = $realUrl;
+                }
+            }
+        }
 
         return response()->json([
-            'url' => asset('storage/' . $path),
+            'success' => true,
+            'message' => 'Images uploaded successfully',
+            'data'    => $uploadedImages, // { tempId: realUrl }
         ]);
     }
 
+    public function uploadPdfs(Request $request)
+    {
+        $request->validate([
+            'blog_id'   => 'required|exists:blogs,id',
+            'pdfs'      => 'required|array',
+            'pdfs.*'    => 'file|mimes:pdf|max:2048',
+            'temp_ids'  => 'required|array',
+        ]);
+
+        $uploadedPdfs = [];
+
+        if ($request->hasFile('pdfs')) {
+            foreach ($request->file('pdfs') as $index => $pdf) {
+                $path = $pdf->store('pdfs/blogs', 'public');
+                $realUrl = asset('storage/' . $path);
+
+                // Save in DB
+                $record = BlogPdf::create([
+                    'blog_id' => $request->blog_id,
+                    'file_path' => $path,
+                    'file_name' => $pdf->getClientOriginalName(),
+                ]);
+
+                // Map temp ID to real URL
+                $tempId = $request->temp_ids[$index] ?? null;
+                if ($tempId) {
+                    $uploadedPdfs[$tempId] = $realUrl;
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'PDFs uploaded successfully',
+            'data'    => $uploadedPdfs, // { tempId: realUrl }
+        ]);
+    }
 }
