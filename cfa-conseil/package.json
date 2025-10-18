@@ -3,13 +3,14 @@
     "private": true,
     "type": "module",
     "scripts": {
-    "optimize:images": "node optimize-images.js",
+        "optimize:images": "node optimize-images.js",
         "build": "vite build",
         "dev": "vite"
     },
     "dependencies": {
         "@headlessui/react": "^2.0.0",
         "@inertiajs/react": "^2.0.0",
+        "@radix-ui/react-slot": "^1.2.3",
         "@tiptap/extension-color": "^3.6.1",
         "@tiptap/extension-image": "^3.6.1",
         "@tiptap/extension-text-align": "^3.6.1",
@@ -17,11 +18,16 @@
         "@tiptap/react": "^3.6.1",
         "@tiptap/starter-kit": "^3.6.1",
         "axios": "^1.11.0",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "embla-carousel-react": "^8.6.0",
         "lucide-react": "^0.544.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-router-dom": "^7.9.3",
-        "sharp": "^0.34.4"
+        "sharp": "^0.34.4",
+        "tailwind-merge": "^3.3.1",
+        "tailwindcss-animate": "^1.0.7"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.3",

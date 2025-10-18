@@ -35,9 +35,9 @@ const scrollToSection = (e, hash) => {
 export default function Footer() {
     return (
         <div className="bg-[#252550] text-white">
-            <footer className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-16 py-8 flex flex-col lg:flex-row gap-8 lg:gap-16">
+            <footer className="">
                 {/* Left content */}
-                <div className="flex-1 flex flex-col gap-8">
+                <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-16 py-8 flex flex-col lg:flex-row gap-8 lg:gap-16">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {/* About */}
                         <div className="flex flex-col gap-2">
@@ -140,11 +140,11 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* Footer note */}
-                    <p className="text-sm sm:text-base md:text-lg text-center lg:text-left mt-4">
-                        © {new Date().getFullYear()} CFA Conseil. Tous droits réservés.
-                    </p>
                 </div>
+                {/* Footer note */}
+                <p className="px-4 py-4 bg-[#6885ab] text-sm md:text-lg text-center mt-4">
+                    © {new Date().getFullYear()} CFA Conseil. Tous droits réservés.
+                </p>
             </footer>
         </div>
     )

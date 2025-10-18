@@ -8,7 +8,7 @@ import IconFour from '@/assets/four.svg?react';
 import { MapPin, Phone, Mail, Rocket, Heart, User2, Star } from 'lucide-react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
-
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/Components/ui/carousel';
 
 
 export default function Home() {
@@ -118,7 +118,7 @@ export default function Home() {
                     </div>
                     <div className='flex flex-col items-center container mx-auto'>
                         <h2 className='md:text-5xl text-3xl font-bold text-[#252550] mb-4'>Qui sommes-nous ?</h2>
-                        <p className='text-[#252550] md:text-lg text-md lg:max-w-3xl md:max-w-xl sm:max-w-md max-w-xs text-justify'>
+                        <p className='text-[#252550] md:text-lg text-md lg:max-w-3xl md:max-w-xl sm:max-w-lg mx-6 sm:mx-0 max-w-md text-justify'>
                         Fondé en 2006 par Monsieur Radouane EL KHALTI, CFA Conseil est un cabinet comptable agréé installé au coeur de Casablanca, capitale
                         économique du Royaume.
                         <br/>
@@ -133,21 +133,21 @@ export default function Home() {
                 </section>
 
                 <section className='flex py-16 bg-[#92afc9]'>
-                    <div className='flex flex-col justify-center sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 px-8 md:px-16 mx-auto'>
-                        <div className='flex sm:flex-col sm:border-l-8 sm:border-[#6392b6] sm:pl-8'>
-                            <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 min-w-[172px]'><Rocket className="mr-2"/> Plus Rapide</h3>
+                    <div className='flex flex-col justify-center sm:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-8 md:px-16 mx-auto'>
+                        <div className='flex flex-col-reverse sm:flex-col border-l-8 border-[#6392b6] pl-4 sm:pl-6'>
+                            <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 gap-2 min-w-32'><Rocket size={'1rem'} stroke="#457da8"/><span className='whitespace-nowrap'>Plus Rapide</span></h3>
                             <h2 className='flex items-end text-4xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[#252550]'>100<span className='text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl'>%</span></h2>
                         </div>
-                        <div className='flex sm:flex-col sm:border-l-8 sm:border-[#6392b6] sm:pl-8'>
-                            <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 min-w-[172px]'><Star className="mr-2"/> Expérience</h3>
+                        <div className='flex flex-col-reverse sm:flex-col border-l-8 border-[#6392b6] pl-4 sm:pl-6'>
+                            <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 gap-2 min-w-32'><Star size={'1rem'} stroke="#457da8"/><span className='whitespace-nowrap'>Expérience</span></h3>
                             <h2 className='flex items-end text-4xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[#252550]'>30<span className='text-2xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl'>ans</span></h2>
                         </div>
-                        <div className='flex sm:flex-col sm:border-l-8 sm:border-[#6392b6] sm:pl-8'>
-                            <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 min-w-[172px]'><User2 className="mr-2"/>Consultants</h3>
+                        <div className='flex flex-col-reverse sm:flex-col border-l-8 border-[#6392b6] pl-4 sm:pl-6'>
+                            <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 gap-2 min-w-32'><User2 size={'1rem'} stroke="#457da8"/><span className='whitespace-nowrap'>Consultants</span></h3>
                             <h2 className='flex items-end text-4xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[#252550]'>10<span className='text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl'>k+</span></h2>
                         </div>
-                        <div className='flex sm:flex-col sm:border-l-8 sm:border-[#6392b6] sm:pl-8'>
-                            <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 min-w-[172px]'><Heart className="mr-2"/>Satisfaits</h3>
+                        <div className='flex flex-col-reverse sm:flex-col border-l-8 border-[#6392b6] pl-4 sm:pl-6'>
+                            <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 gap-2 min-w-32'><Heart size={'1rem'} stroke="#457da8"/><span className='whitespace-nowrap'>Satisfaits</span></h3>
                             <h2 className='flex items-end text-4xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[#252550]'>1.7<span className='text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl'>k+</span></h2>
                         </div>
                     </div>
@@ -279,64 +279,71 @@ export default function Home() {
                 </section>
 
                 <section className='flex justify-center py-8 bg-[#eaeaea]'>
-                    <div className='flex mx-auto px-4'>
-                        <div className='flex justify-center items-center p-4'>
+                    <div className='flex mx-auto px-4 gap-4 md:gap-16'>
+                        <div className='flex justify-center items-center'>
                             <div className='grid grid-cols-2'>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-tl-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-tr-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-tl-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-tr-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-bl-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-br-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-tl-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-tr-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-tl-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-tr-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-bl-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-br-none'></div>
 
                             </div>
                         </div>
 
                         <div className='flex flex-col justify-center items-center p-4'>
                             <h2 className='text-3xl sm:text-5xl text-center font-bold text-[#252550] mb-4'>Nos References</h2>
-                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>
-                                <div className="flex items-center justify-center h-24 p-4">
-                                    <img
-                                        src="storage/images/logos/dimaPlast.webp"
-                                        alt="DimaPlast"
-                                        className="h-16 w-auto object-contain"
-                                    />
-                                </div>
-
-                                <div className="flex items-center justify-center h-24 p-4">
-                                    <img
-                                        src="storage/images/logos/villa-des-Lilas.webp"
-                                        alt="Villa des Lilas"
-                                        className="h-16 w-auto object-contain"
-                                    />
-                                </div>
-
-                                <div className="flex items-center justify-center h-24 p-4">
-                                    <img
-                                        src="storage/images/logos/first4com.webp"
-                                        alt="First4com"
-                                        className="h-16 w-auto object-contain"
-                                    />
-                                </div>
-
-                                <div className="flex items-center justify-center h-24 p-4">
-                                    <img
-                                        src="storage/images/logos/networker.webp"
-                                        alt="Networker"
-                                        className="h-16 w-auto object-contain"
-                                    />
-                                </div>
-                            </div>
+                            <Carousel
+                                className="max-w-xs md:max-w-md lg:max-w-3xl"
+                                 opts={{
+                                    loop: true,
+                                    align: "start",
+                                }}
+                            >
+                                <CarouselContent>
+                                    <CarouselItem className="flex items-center justify-center h-24 p-4 md:basis-1/2 lg:basis-1/3">
+                                        <img
+                                            src="storage/images/logos/dimaPlast.webp"
+                                            alt="DimaPlast"
+                                            className="h-14 w-auto object-contain select-none"
+                                        />
+                                    </CarouselItem>
+                                    <CarouselItem className="flex items-center justify-center h-24 p-4 md:basis-1/2 lg:basis-1/3">
+                                        <img
+                                            src="storage/images/logos/villa-des-Lilas.webp"
+                                            alt="Villa des Lilas"
+                                            className="h-16 w-auto object-contain select-none"
+                                        />
+                                    </CarouselItem>
+                                    <CarouselItem className="flex items-center justify-center h-24 p-4 md:basis-1/2 lg:basis-1/3">
+                                        <img
+                                            src="storage/images/logos/first4com.webp"
+                                            alt="First4com"
+                                            className="h-12 w-auto object-contain select-none"
+                                        />
+                                    </CarouselItem>
+                                    <CarouselItem className="flex items-center justify-center h-24 p-4 md:basis-1/2 lg:basis-1/3">
+                                        <img
+                                            src="storage/images/logos/networker.webp"
+                                            alt="Networker"
+                                            className="h-10 w-auto object-contain select-none"
+                                        />
+                                    </CarouselItem>
+                                </CarouselContent>
+                                <CarouselPrevious className="bg-[#92aec8] text-white cursor-pointer translate-x-1/2 h-6 w-6 hidden md:inline-flex" />
+                                <CarouselNext className="bg-[#92aec8] text-white cursor-pointer -translate-x-1/2 h-6 w-6 hidden md:inline-flex" />
+                            </Carousel>
                         </div>
 
-                        <div className='flex justify-center items-center p-4'>
+                        <div className='flex justify-center items-center'>
                             <div className='grid grid-cols-2'>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-tl-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-tr-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-tl-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-tr-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-bl-none'></div>
-                                <div className='bg-[#92aec8] w-6 h-6 sm:w-16 sm:h-16 rounded-full rounded-br-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-tl-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-tr-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-tl-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-tr-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-bl-none'></div>
+                                <div className='bg-[#92aec8] w-6 h-6 sm:w-8 sm:h-8 rounded-full rounded-br-none'></div>
 
                             </div>
                         </div>
@@ -344,7 +351,7 @@ export default function Home() {
                 </section>
 
                 <section id='contact' className='flex justify-center py-8'>
-                    <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-16 xl:px-20 2xl:px-32 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="container mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 2xl:px-32 grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-start font-bold text-[#252550] mb-4">
                                 Contactez-nous <br /> dès aujourd'hui
