@@ -23,8 +23,9 @@ import "@/../css/tiptap/editor-content.css";
 const generateId = () =>
     Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 
-export default function BlogEditor({ blog: initialBlog = null }) {
+export default function BlogEditor({ blog: initialBlog = null, auth }) {
     const isEditMode = !!initialBlog;
+    const user = auth.user;
     // --------------------
     // Refs & State
     // --------------------
@@ -33,9 +34,8 @@ export default function BlogEditor({ blog: initialBlog = null }) {
     const featuredImageRef = useRef(null);
     const imagesRef = useRef(new Map());
     const pdfsRef = useRef(new Map());
-    const [featuredImage, setFeaturedImage] = useState(initialBlog?.featured_image || null);
+    const [featuredImagePath, setFeaturedImagePath] = useState(initialBlog?.featured_image_path || null);
 
-    console.log("initialBlog: ", initialBlog);
     // Inertia form state
     const { data, setData, reset } = useForm({
         id: initialBlog?.id || null,
@@ -43,9 +43,11 @@ export default function BlogEditor({ blog: initialBlog = null }) {
         slug: initialBlog?.slug || '',
         content_html: initialBlog?.content_html || '',
         featured_image: initialBlog?.featured_image || null,
+        featured_image_path: initialBlog?.featured_image_path || null,
         images: initialBlog?.images || [],
         pdfs: initialBlog?.pdfs || [],
-        excerpt: initialBlog?.excerpt || ''
+        excerpt: initialBlog?.excerpt || '',
+        has_featured_image: initialBlog?.featured_image_path ? true : false
     });
 
     // --------------------
@@ -88,8 +90,7 @@ export default function BlogEditor({ blog: initialBlog = null }) {
         onUpdate: ({ editor }) => {
             syncImages(editor);
             syncPdfs(editor);
-            console.log("pdfsRef: ", pdfsRef.current);
-            console.log("imagesRef: ", imagesRef.current);
+ 
         }
 });
 
@@ -99,8 +100,8 @@ export default function BlogEditor({ blog: initialBlog = null }) {
     useEffect(() => {
         if (initialBlog) {
             // Set featured image if exists
-            if (initialBlog.featured_image) {
-                setFeaturedImage(initialBlog.featured_image);
+            if (initialBlog.featured_image_path) {
+                setFeaturedImagePath(initialBlog.featured_image_path);
             }
         }
 
@@ -130,11 +131,8 @@ export default function BlogEditor({ blog: initialBlog = null }) {
     const syncImages = (editor) => {
         const currentIds = new Set();
         editor.state.doc.descendants((node) => {
-            console.log(node.type.name);
-            console.log(node.attrs);
             if (node.type.name === "image" && node.attrs.dataTempId) {
                 currentIds.add(node.attrs.dataTempId);
-                console.log(node.attrs.dataTempId);
             }
         });
 
@@ -185,7 +183,6 @@ export default function BlogEditor({ blog: initialBlog = null }) {
 
             // Store in temporary map
             imagesRef.current.set(tempId, { file, blobUrl });
-            console.log("imagesRef: ", imagesRef.current);
 
             // Insert image in editor with temporary blob URL
             editor.chain().focus().insertContent({
@@ -219,24 +216,8 @@ export default function BlogEditor({ blog: initialBlog = null }) {
             return;
         }
 
-        try {
-            const formData = new FormData();
-            formData.append('image', file);
-
-            const res = await axios.post('/api/upload-image', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-
-            const realUrl = res.data.url;
-
-            // Save real URL directly for preview and submission
-            setData('featured_image', file);
-            setFeaturedImage(realUrl); // optional: to show real URL preview
-
-        } catch (err) {
-            console.error('Featured image upload failed:', err);
-            alert('Failed to upload featured image');
-        }
+        setData('featured_image', file);
+        setFeaturedImagePath(URL.createObjectURL(file));
 
         e.target.value = '';
     };
@@ -258,11 +239,9 @@ export default function BlogEditor({ blog: initialBlog = null }) {
         try {
             const tempId = generateId();
             const blobUrl = URL.createObjectURL(file);
-            console.log("blobUrl: ", blobUrl);
             
             // Store in temporary map
             pdfsRef.current.set(tempId, { file, blobUrl });
-            console.log("pdfsRef: ", pdfsRef.current);
 
             // Insert PDF with temporary ID and blob URL
             editor.chain().focus().insertContent({
@@ -289,10 +268,16 @@ export default function BlogEditor({ blog: initialBlog = null }) {
             const blogFormData = new FormData();
             blogFormData.append('title', data.title);
             blogFormData.append('excerpt', data.excerpt);
-            
+            blogFormData.append('has_featured_image', data.has_featured_image);
+
             // Upload featured image if it's a new file
-            if (data.featured_image instanceof File) {
-                blogFormData.append('featured_image', data.featured_image);
+            if (isEditMode) {
+                data.featured_image && blogFormData.append('featured_image', data.featured_image);
+                blogFormData.append('featured_image_path', data.featured_image_path);
+            } else {
+                if (data.featured_image instanceof File) {
+                    blogFormData.append('featured_image', data.featured_image);
+                }
             }
 
             // Create the blog and get the ID
@@ -305,50 +290,75 @@ export default function BlogEditor({ blog: initialBlog = null }) {
                 });
 
             const blog = blogResponse.data.data;
-            console.log("Blog created with ID:", blog);
 
             // Step 2: Upload images and get real URLs
             let uploadedImagesMap = {};
-            if (imagesRef.current.size > 0) {
-                const imgFormData = new FormData();
-                imgFormData.append('blog_id', blog.id);
-                
-                for (const [tempId, { file }] of imagesRef.current.entries()) {
-                    imgFormData.append('images[]', file);
-                    imgFormData.append('temp_ids[]', tempId);
-                }
+            const imgFormData = new FormData();
+            imgFormData.append('blog_id', blog.id);
 
-                const imgResponse = await axios.post('/api/upload-images', imgFormData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                });
-                
-                uploadedImagesMap = imgResponse.data.data;
-                console.log("Uploaded images map:", uploadedImagesMap);
+            for (const [tempId, { file }] of imagesRef.current.entries()) {
+                imgFormData.append('images[]', file);
+                imgFormData.append('temp_ids[]', tempId);
             }
 
-            // Step 3: Upload PDFs and get real URLs
+            const html = editor.getHTML();
+
+            // Extract existing image paths
+            const allImageSrcs = Array.from(html.matchAll(/src="([^"]+)"/g))
+                .map(match => match[1]);
+
+            const existingImagePaths = allImageSrcs
+                .filter(url => url.includes('/storage/images/blogs/'))
+                .map(url => {
+                    const parts = url.split('/storage/');
+                    return parts.length > 1 ? parts[1] : url;
+                });
+
+            existingImagePaths.forEach(path => {
+                imgFormData.append('existing_paths[]', path);
+            });
+
+            // Always call upload-images, even if no new images to upload
+            const imgResponse = await axios.post('/api/upload-images', imgFormData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            uploadedImagesMap = imgResponse.data.data || {};
+
+            // Step 3: Upload PDFs and get real URLs (same logic as images)
             let uploadedPdfsMap = {};
-            if (pdfsRef.current.size > 0) {
-                const pdfFormData = new FormData();
-                pdfFormData.append('blog_id', blog.id);
-                
-                for (const [tempId, { file }] of pdfsRef.current.entries()) {
-                    pdfFormData.append('pdfs[]', file);
-                    pdfFormData.append('temp_ids[]', tempId);
-                }
+            const pdfFormData = new FormData();
+            pdfFormData.append('user_id', user.id);
+            pdfFormData.append('blog_id', blog.id);
 
-                const pdfResponse = await axios.post('/api/upload-pdfs', pdfFormData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                });
-                
-                uploadedPdfsMap = pdfResponse.data.data;
-                console.log("Uploaded PDFs map:", uploadedPdfsMap);
+            for (const [tempId, { file }] of pdfsRef.current.entries()) {
+                pdfFormData.append('pdfs[]', file);
+                pdfFormData.append('temp_ids[]', tempId);
             }
+            
+            // Extract existing PDF paths (same logic as images)
+            const allPdfHrefs = Array.from(html.matchAll(/href="([^"]+)"/g))
+                .map(match => match[1]);
+
+            const existingPdfPaths = allPdfHrefs
+                .filter(url => url.includes('/storage/pdfs/blogs/'))
+                .map(url => {
+                    const parts = url.split('/storage/');
+                    return parts.length > 1 ? parts[1] : url;
+                });
+
+            existingPdfPaths.forEach(path => {
+                pdfFormData.append('existing_paths[]', path);
+            });
+
+            // Always call upload-pdfs, even if no new PDFs to upload
+            const pdfResponse = await axios.post('/api/upload-pdfs', pdfFormData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            uploadedPdfsMap = pdfResponse.data.data || {};
 
             // Step 4: Replace blob URLs in content with real URLs
             let finalContent = editor.getHTML();
-            
-            // Replace image blob URLs with real URLs
+
             for (const [tempId, realUrl] of Object.entries(uploadedImagesMap)) {
                 const tempData = imagesRef.current.get(tempId);
                 if (tempData && tempData.blobUrl) {
@@ -356,7 +366,6 @@ export default function BlogEditor({ blog: initialBlog = null }) {
                 }
             }
 
-            // Replace PDF blob URLs with real URLs (if PDFs are embedded in content)
             for (const [tempId, realUrl] of Object.entries(uploadedPdfsMap)) {
                 const tempData = pdfsRef.current.get(tempId);
                 if (tempData && tempData.blobUrl) {
@@ -368,11 +377,9 @@ export default function BlogEditor({ blog: initialBlog = null }) {
             const updateFormData = new FormData();
             updateFormData.append('content_html', finalContent);
 
-            const updateResponse = await axios.post(`/api/blogs/content/${blog.slug}`, updateFormData, {
+            await axios.post(`/api/blogs/content/${blog.slug}`, updateFormData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-
-            console.log('Blog updated with final content:', updateResponse.data);
 
             // Cleanup blob URLs
             imagesRef.current.forEach(({ blobUrl }) => blobUrl && URL.revokeObjectURL(blobUrl));
@@ -383,7 +390,7 @@ export default function BlogEditor({ blog: initialBlog = null }) {
             // Reset form
             reset();
             editor.commands.setContent('<p>Start writing your blog here...</p>');
-            setFeaturedImage(null);
+            setFeaturedImagePath(null);
 
             alert('Blog saved successfully!');
 
@@ -392,6 +399,7 @@ export default function BlogEditor({ blog: initialBlog = null }) {
             alert(err.response?.data?.message || 'Something went wrong while saving the blog.');
         }
     };
+
 
     
     // Trigger hidden file input
@@ -568,19 +576,23 @@ export default function BlogEditor({ blog: initialBlog = null }) {
                     {/*Featured Image */}
                     <div className="relative flex flex-col gap-2 mb-4 w-full">
                         {/* Show preview if featuredImage exists */}
-                        {featuredImage ? (
+                        {featuredImagePath ? (
                             <div className="relative">
                                 <img
-                                    src={featuredImage.startsWith('http') ? featuredImage : `/storage/${featuredImage}`}
+                                    src={featuredImagePath?.startsWith('blob') ? featuredImagePath : `/storage/${featuredImagePath}`}
                                     alt="Featured preview"
                                     className="w-full h-64 object-cover rounded border"
                                     onError={(e) => {
                                         e.target.onerror = null;
-                                        e.target.src = '/images/placeholder.jpg'; // Add a fallback image
+                                        e.target.src = 'storage/images/fallback.png'; // Add a fallback image
                                     }}
                                 />
                                 <div className="absolute top-3 right-3 bg-gray-50 rounded-full p-1"
-                                    onClick={(e) => { e.stopPropagation(); setFeaturedImage(null); setData('featured_image', null); }}
+                                    onClick={(e) => { 
+                                        e.stopPropagation(); 
+                                        setData('has_featured_image', false); 
+                                        setFeaturedImagePath(null); 
+                                    }}
                                 ><X/></div>
                             </div>
                         ) : (

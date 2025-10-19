@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('blog_pdfs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('blog_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('blog_id')->constrained()->cascadeOnDelete();
             $table->string('file_path', 500);
             $table->string('file_name', 255);
             $table->timestamps();

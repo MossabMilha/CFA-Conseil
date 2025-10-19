@@ -40,7 +40,7 @@ class BlogController extends Controller
     
     public function edit($slug)
     {
-        $blog = Blog::with('images')->where('slug', $slug)->firstOrFail();
+        $blog = Blog::with('images', 'pdfs')->where('slug', $slug)->firstOrFail();
 
         return Inertia::render('BlogEditor', [
             'blog' => [
@@ -49,14 +49,24 @@ class BlogController extends Controller
                 'content_html' => $blog->content_html,
                 'excerpt' => $blog->excerpt,
                 'slug' => $blog->slug,
-                'featured_image' => $blog->featured_image,
+                'featured_image_path' => $blog->featured_image,
                 'images' => $blog->images->map(function($image) {
                     return [
                         'id' => $image->id,
                         'url' => $image->file_path ? asset('storage/' . $image->file_path) : null,
                         'is_featured' => $image->is_featured
                     ];
+                })->toArray(),
+                'pdfs' => $blog->pdfs->map(function($pdf) {
+                    return [
+                        'id' => $pdf->id,
+                        'url' => $pdf->file_path ? asset('storage/' . $pdf->file_path) : null,
+                        'name' => $pdf->file_name
+                    ];
                 })->toArray()
+            ],
+            'auth' => [
+                'user' => auth()->user()
             ]
         ]);
     }
@@ -105,7 +115,7 @@ class BlogController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Blog content updated successfully!',
-            'data'    => $blog->load('images', 'pdfs')
+            'data'    => $blog
         ]);
     }
 
@@ -114,60 +124,41 @@ class BlogController extends Controller
         $blog = Blog::with('images')->where('slug', $request->slug)->firstOrFail();
 
         $validated = $request->validate([
-            'title'          => ['required','string','max:255',Rule::unique('blogs', 'title')->ignore($blog->id)],
-            'content_html'   => 'required|string',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'images'         => 'nullable',
-            'images.*'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'pdfs'           => 'nullable',
-            'pdfs.*'         => 'file|mimes:pdf|max:2048',
-            'excerpt'        => 'nullable|string|max:500',
+            'title'               => ['required', 'string', 'max:255', Rule::unique('blogs', 'title')->ignore($blog->id)],
+            'excerpt'             => 'nullable|string|max:500',
+            'featured_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'featured_image_path' => 'nullable|string',
+            'has_featured_image'    => 'nullable|string',
         ]);
 
         $blog->title = $request->title;
-        $blog->slug = Str::slug($request->title);
-        $blog->content_html = $request->content_html;
+        $blog->slug  = Str::slug($request->title);
         $blog->excerpt = $request->excerpt ?? null;
 
-        // Replace featured image
+        // --- Featured image logic ---
+        $oldPath = $request->featured_image_path;
+
         if ($request->hasFile('featured_image')) {
-            if ($blog->featured_image && Storage::disk('public')->exists(str_replace('/storage/', '', $blog->featured_image))) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $blog->featured_image));
+            // Replace old image if it exists
+            if ($oldPath !== null && Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('featured_image')->store('images/blogs', 'public');
-            $blog->featured_image = '/storage/' . $path;
+            $blog->featured_image = $path;
+        } elseif ($request->has_featured_image === 'false') {
+            // Explicit removal
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            }
+            $blog->featured_image = null;
         }
 
         $blog->save();
 
-        // Remove old images & save new ones
-        $blog->images()->delete();
-        if ($request->hasFile('images')) {
-            foreach ((array) $request->file('images') as $image) {
-                $path = $image->store('images/blogs', 'public');
-                $blog->images()->create([
-                    'file_path' => '/storage/' . $path,
-                    'alt_text'  => null,
-                ]);
-            }
-        }
-
-        // Remove old PDFs & save new ones
-        $blog->pdfs()->delete();
-        if ($request->hasFile('pdfs')) {
-            foreach ((array) $request->file('pdfs') as $pdf) {
-                $path = $pdf->store('pdfs/blogs', 'public');
-                $blog->pdfs()->create([
-                    'file_path' => '/storage/' . $path,
-                    'file_name' => $pdf->getClientOriginalName(),
-                ]);
-            }
-        }
-
         return response()->json([
             'success' => true,
             'message' => 'Blog updated successfully!',
-            'data'    => $blog->load('images','pdfs')
+            'data'    => $blog,
         ], 200);
     }
 
@@ -195,28 +186,47 @@ class BlogController extends Controller
 
     public function uploadImages(Request $request)
     {
-        $request->validate([
-            'blog_id'   => 'required|exists:blogs,id',
-            'images'    => 'required|array',
-            'images.*'  => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'temp_ids'  => 'required|array',
+        $validated = $request->validate([
+            'blog_id'        => 'required|exists:blogs,id',
+            'images'         => 'nullable|array',
+            'images.*'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'temp_ids'       => 'nullable|array',
+            'existing_paths' => 'nullable|array',
         ]);
+
+        $blog = Blog::with('images')->findOrFail($validated['blog_id']);
+        $existingPaths = $validated['existing_paths'] ?? [];
+
+        // Extract just filenames from existing paths
+        $existingFilenames = array_map('basename', $existingPaths);
+
+        // Step 1: Delete images no longer referenced
+        foreach ($blog->images as $image) {
+            $imageFilename = basename($image->file_path);
+            $shouldDelete = empty($existingPaths) || !in_array($imageFilename, $existingFilenames);
+
+            if ($shouldDelete) {
+                if (Storage::disk('public')->exists($image->file_path)) {
+                    Storage::disk('public')->delete($image->file_path);
+                }
+                $image->delete();
+            }
+        }
 
         $uploadedImages = [];
 
+        // Step 2: Save new images
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('images/blogs', 'public');
+            foreach ($request->file('images') as $index => $imageFile) {
+                $path = $imageFile->store('images/blogs', 'public');
                 $realUrl = asset('storage/' . $path);
 
-                // Save in DB
-                $record = BlogImages::create([
-                    'blog_id' => $request->blog_id,
+                $blog->images()->create([
+                    'blog_id'   => $validated['blog_id'],
                     'file_path' => $path,
                     'alt_text'  => null,
                 ]);
 
-                // Map temp ID to real URL
                 $tempId = $request->temp_ids[$index] ?? null;
                 if ($tempId) {
                     $uploadedImages[$tempId] = $realUrl;
@@ -226,35 +236,57 @@ class BlogController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Images uploaded successfully',
-            'data'    => $uploadedImages, // { tempId: realUrl }
+            'message' => 'Images synchronized successfully!',
+            'data'    => $uploadedImages,
         ]);
     }
 
+
     public function uploadPdfs(Request $request)
     {
-        $request->validate([
-            'blog_id'   => 'required|exists:blogs,id',
-            'pdfs'      => 'required|array',
-            'pdfs.*'    => 'file|mimes:pdf|max:2048',
-            'temp_ids'  => 'required|array',
+        $validated = $request->validate([
+            'user_id'        => 'required|exists:users,id',
+            'blog_id'        => 'required|exists:blogs,id',
+            'pdfs'           => 'nullable|array',
+            'pdfs.*'         => 'file|mimes:pdf|max:2048',
+            'temp_ids'       => 'nullable|array',
+            'existing_paths' => 'nullable|array',
         ]);
+
+        $blog = Blog::with('pdfs')->findOrFail($validated['blog_id']);
+        $existingPaths = $validated['existing_paths'] ?? [];
+
+        // Extract just filenames from existing paths
+        $existingFilenames = array_map('basename', $existingPaths);
+
+        // Step 1: Delete PDFs no longer referenced
+        foreach ($blog->pdfs as $pdf) {
+            $pdfFilename = basename($pdf->file_path);
+            $shouldDelete = empty($existingPaths) || !in_array($pdfFilename, $existingFilenames);
+
+            if ($shouldDelete) {
+                if (Storage::disk('public')->exists($pdf->file_path)) {
+                    Storage::disk('public')->delete($pdf->file_path);
+                }
+                $pdf->delete();
+            }
+        }
 
         $uploadedPdfs = [];
 
+        // Step 2: Save new PDFs
         if ($request->hasFile('pdfs')) {
-            foreach ($request->file('pdfs') as $index => $pdf) {
-                $path = $pdf->store('pdfs/blogs', 'public');
+            foreach ($request->file('pdfs') as $index => $pdfFile) {
+                $path = $pdfFile->store('pdfs/blogs', 'public');
                 $realUrl = asset('storage/' . $path);
 
-                // Save in DB
-                $record = BlogPdf::create([
-                    'blog_id' => $request->blog_id,
+                $blog->pdfs()->create([
+                    'user_id'   => $validated['user_id'],
+                    'blog_id'   => $validated['blog_id'],
                     'file_path' => $path,
-                    'file_name' => $pdf->getClientOriginalName(),
+                    'file_name' => $pdfFile->getClientOriginalName(),
                 ]);
 
-                // Map temp ID to real URL
                 $tempId = $request->temp_ids[$index] ?? null;
                 if ($tempId) {
                     $uploadedPdfs[$tempId] = $realUrl;
@@ -264,8 +296,9 @@ class BlogController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'PDFs uploaded successfully',
-            'data'    => $uploadedPdfs, // { tempId: realUrl }
+            'message' => 'PDFs synchronized successfully!',
+            'data'    => $uploadedPdfs,
         ]);
     }
+
 }

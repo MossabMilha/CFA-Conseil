@@ -15,11 +15,15 @@ Route::get('/blogs', [BlogController::class, 'index']);
 Route::get('/blog/{slug}', [BlogController::class, 'show'] );
 Route::middleware(['auth'])->group(function () {
     Route::get('/blog-editor', function () {
-        return Inertia::render('BlogEditor');
+        return Inertia::render('BlogEditor', [
+            'auth' => [
+                'user' => auth()->user()
+            ]
+        ]);
     });
+    
+    Route::get('/blog-editor/{slug}', [BlogController::class, 'edit']);
 });
-Route::get('/blog-editor/{slug}', [BlogController::class, 'edit']);
-
 Route::get('/contact', function () {return Inertia::render('Contact'); });
 
 // Service routes
