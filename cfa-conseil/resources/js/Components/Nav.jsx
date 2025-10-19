@@ -92,7 +92,7 @@ export default function Nav() {
               <Dropdown className='cursor-pointer'>
                 <Dropdown.Trigger>
                   <div className='rounded-full w-8 h-8 bg-[#6886ab]'>
-                  <img className='rounded-full w-8 h-8 object-cover' src={auth?.user?.avatar_url || 'storage/images/fallback.png'} alt="" />
+                  <img className='rounded-full w-8 h-8 object-cover' src={auth?.user?.avatar_url || 'http://localhost:8000/storage/images/fallback.png'} alt="" />
                   </div>
                 </Dropdown.Trigger>
                 <Dropdown.Content width='auto'>

@@ -268,15 +268,16 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
             const blogFormData = new FormData();
             blogFormData.append('title', data.title);
             blogFormData.append('excerpt', data.excerpt);
-            blogFormData.append('has_featured_image', data.has_featured_image);
+            blogFormData.append('has_featured_image', data.has_featured_image); 
 
-            // Upload featured image if it's a new file
-            if (isEditMode) {
-                data.featured_image && blogFormData.append('featured_image', data.featured_image);
-                blogFormData.append('featured_image_path', data.featured_image_path);
-            } else {
+            // Handle featured image upload
+            if (data.featured_image) {
                 if (data.featured_image instanceof File) {
-                    blogFormData.append('featured_image', data.featured_image);
+                    // If it's a new file, append it with the correct field name and filename
+                    blogFormData.append('featured_image', data.featured_image, data.featured_image.name);
+                } else if (data.featured_image_path && !data.featured_image_path.startsWith('blob:')) {
+                    // If it's an existing image, just send the path
+                    blogFormData.append('featured_image_path', data.featured_image_path);
                 }
             }
 

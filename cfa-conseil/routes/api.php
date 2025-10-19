@@ -2,6 +2,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', function () {
@@ -20,3 +21,6 @@ Route::post('/blogs/{slug}', [BlogController::class, 'update']);
 Route::post('/blogs/content/{slug}', [BlogController::class, 'updateContent']);
 Route::post('/upload-images', [BlogController::class, 'uploadImages']);
 Route::post('/upload-pdfs', [BlogController::class, 'uploadPdfs']);
+
+Route::get('/blogs/{blog}/comments', [CommentController::class, 'index'])->name('comments.index');
+Route::post('/blogs/{blog}/comments', [CommentController::class, 'store'])->name('comments.store');

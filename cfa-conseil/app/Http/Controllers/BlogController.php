@@ -75,7 +75,7 @@ class BlogController extends Controller
     {
         $request->validate([
             'title'          => 'required|string|max:255|unique:blogs,title',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             'excerpt'        => 'nullable|string|max:500',
         ]);
 
@@ -126,7 +126,7 @@ class BlogController extends Controller
         $validated = $request->validate([
             'title'               => ['required', 'string', 'max:255', Rule::unique('blogs', 'title')->ignore($blog->id)],
             'excerpt'             => 'nullable|string|max:500',
-            'featured_image'      => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'featured_image'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'featured_image_path' => 'nullable|string',
             'has_featured_image'    => 'nullable|string',
         ]);
@@ -189,7 +189,7 @@ class BlogController extends Controller
         $validated = $request->validate([
             'blog_id'        => 'required|exists:blogs,id',
             'images'         => 'nullable|array',
-            'images.*'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'images.*'       => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'temp_ids'       => 'nullable|array',
             'existing_paths' => 'nullable|array',
         ]);

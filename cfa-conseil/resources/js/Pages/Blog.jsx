@@ -3,6 +3,7 @@ import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { Calendar, Clock, ArrowLeft, ImageIcon } from 'lucide-react';
 import AppLayout from '@/Layouts/AppLayout';
+import Comments from '@/Components/Comments';
 import  '../../css/tiptap/editor-content.css'
 
 export default function Blog({ blog, auth }) {
@@ -129,8 +130,10 @@ export default function Blog({ blog, auth }) {
                             </Link>}
                         </div>
                     </div>
+                    <div className="w-full flex justify-center">
+                        <Comments blogId={blog.id} userId={auth?.user?.id || null} />
+                    </div>
                 </div>
-
             </main>
         </>
     );
