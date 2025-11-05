@@ -22,7 +22,7 @@ class AuthController extends Controller
             'layout' => 'guest'
         ]);
     }
-    public function register(Request $request){
+    public function registerAdmin(Request $request){
         $fixedCode = "CFA_AGENCY_WEB";
         $request->validate([
             'first_name' => 'required|string|max:255',
@@ -46,6 +46,34 @@ class AuthController extends Controller
             'role'=>'admin'
         ]);
         Log::track($user, 'register', 'New admin registered', $request);
+        Auth::login($user);
+
+        // Redirect with session
+        return response()->json([
+            'message' => 'Login successful',
+            'redirect' => '/blogs',
+            'user' => $user,
+        ], 200);
+    }
+    public function register(Request $request){
+
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed',
+
+        ]);
+
+
+        $user = User::create([
+            'first_name'=>$request->first_name,
+            'last_name'=>$request->last_name,
+            'email'=>$request->email,
+            'password'=>Hash::make($request->password),
+            'role'=>'user'
+        ]);
+        Log::track($user, 'register', 'New user registered', $request);
         Auth::login($user);
 
         // Redirect with session

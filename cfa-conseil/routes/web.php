@@ -21,7 +21,7 @@ Route::middleware(['auth'])->group(function () {
             ]
         ]);
     });
-    
+
     Route::get('/blog-editor/{slug}', [BlogController::class, 'edit']);
 });
 Route::get('/contact', function () {return Inertia::render('Contact'); });
@@ -31,8 +31,15 @@ Route::get('/services/{service}', [ServiceController::class, 'show'])->name('ser
 
 Route::get('/contact-form',[ContactController::class,'contact']);
 Route::get('/contact-email',[ContactController::class,'contact']);
-
+/*
+    You /register ghadi tweli /registerAdmin Where Admins Will signup
+        ->It will call signupAdmin (API)
+    And Register Will Stay The Same We Will Only Delete The Code Section
+        ->It will call signup (API) Is the Same As The OLD One Only dont work with code
+*/
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::get('/registerAdmin', [AuthController::class, 'showRegisterForm'])->name('register');
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::post('/register', [AuthController::class, 'register']);
