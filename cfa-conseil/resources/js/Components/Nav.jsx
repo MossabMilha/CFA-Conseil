@@ -26,7 +26,7 @@ export default function Nav() {
   const scrollToSection = (e, hash) => {
     e.preventDefault();
     setIsOpen(false);
-    
+
     // Navigate to the home page first if we're not already there
     if (!window.location.pathname.endsWith('/')) {
       router.visit('/', {
@@ -88,7 +88,7 @@ export default function Nav() {
           <li><a href="/blogs">Blog</a></li>
           <li><a className="text-[#252550] bg-white rounded-full px-3 py-1 font-semibold" href="/contact">Contact</a>
           </li>
-          {auth?.user?.role === 'admin' && <li>
+          {(auth?.user?.role === 'admin' || auth?.user?.role === 'user') && <li>
               <Dropdown className='cursor-pointer'>
                 <Dropdown.Trigger>
                   <div className='rounded-full w-8 h-8 bg-[#6886ab]'>
@@ -96,9 +96,10 @@ export default function Nav() {
                   </div>
                 </Dropdown.Trigger>
                 <Dropdown.Content width='auto'>
-                  <Dropdown.Link  className='flex items-center gap-2 whitespace-nowrap text-[#252550]' as="button" onClick={() => router.visit('/blog-editor')}>
-                    <SquarePen size={'1em'} /> Editeur de blog
-                  </Dropdown.Link>
+                    { auth?.user?.role === 'admin' && <Dropdown.Link className='flex items-center gap-2 whitespace-nowrap text-[#252550]' as="button"
+                                    onClick={() => router.visit('/blog-editor')}>
+                        <SquarePen size={'1em'}/> Editeur de blog
+                    </Dropdown.Link>}
                   <Dropdown.Link className='flex items-center gap-2 whitespace-nowrap text-[#252550]' as="button" onClick={handleLogout}>
                     <LogOut size={'1em'} /> Se déconnecter
                   </Dropdown.Link>
@@ -127,7 +128,7 @@ export default function Nav() {
             <li className="flex items-center justify-center"><a className="w-full" href="#services" onClick={(e) => scrollToSection(e, '#services')}>Services</a></li>
             <li className="flex items-center justify-center"><a className="w-full" href="/blogs">Blog</a></li>
             <li className="flex items-center justify-center"><a className="w-full" href="/contact"> Contact</a></li>
-            {auth?.user?.role === 'admin' && 
+            {auth?.user?.role === 'admin' &&
             <>
               <li className="flex items-center justify-center"><a className="w-full" href="/blog-editor">Editeur de blog</a></li>
               <li className="flex items-center justify-center"><a className='w-full text-[#252550] bg-white rounded-full px-3 py-1 font-semibold' href="/logout">Se deconnecter</a></li>

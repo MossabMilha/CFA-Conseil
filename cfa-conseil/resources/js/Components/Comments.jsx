@@ -103,12 +103,23 @@ export default function Comments({ blogId, userId }) {
   };
 
   return (
-    <div className="mt-12 w-full bg-gray-50 border border-gray-200 p-4 rounded-lg">
-      <h2 className="text-xl font-bold mb-4 text-[#252550]">Comments</h2>
+    <div className="mt-12 w-full">
+      {!userId &&
+        <div className="flex items-center gap-2 mb-4">
+          <Button className="bg-[#252550] hover:bg-[#1d1d45]">
+            <a href="/login" className="text-white">
+              Login to comment
+            </a>
+          </Button>
+        </div>
+      }
 
-      {/* Add new comment only if logged in */}
-      {userId && (
-        <Card className="mb-4 shadow-none">
+      <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+        <h2 className="text-xl font-bold mb-4 text-[#252550]">Comments</h2>
+
+        {/* Add new comment only if logged in */}
+
+        {userId && <Card className="mb-4 shadow-none">
           <CardContent className="p-4">
             <Textarea
               value={newComment}
@@ -119,19 +130,18 @@ export default function Comments({ blogId, userId }) {
             <Button
               className="bg-[#252550] hover:bg-[#1d1d45]"
               onClick={() => handleAddComment()}
-            >
-              Post Comment
+            > Post Comment
             </Button>
           </CardContent>
-        </Card>
-      )}
+        </Card>}
 
-      {/* Comments list */}
-      {comments.length > 0 ? (
-        renderComments(comments)
-      ) : (
-        <p className="text-gray-500">No comments yet</p>
-      )}
+        {/* Comments list */}
+        {comments.length > 0 ? (
+          renderComments(comments)
+        ) : (
+          <p className="text-gray-500">No comments yet</p>
+        )}
+      </div>
     </div>
   );
 }

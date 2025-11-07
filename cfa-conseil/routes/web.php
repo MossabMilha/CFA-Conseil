@@ -38,10 +38,11 @@ Route::get('/contact-email',[ContactController::class,'contact']);
         ->It will call signup (API) Is the Same As The OLD One Only dont work with code
 */
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::get('/registerAdmin', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::get('/registerAdmin', [AuthController::class, 'showAdminRegisterForm'])->name('registerAdmin');;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/registerAdmin', [AuthController::class, 'registerAdmin']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);

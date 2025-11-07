@@ -11,7 +11,11 @@ use Inertia\Inertia;
 
 class AuthController extends Controller
 {
-
+    public function showAdminRegisterForm(){
+        return Inertia::render('Auth/AdminRegister', [
+            'layout' => 'guest'
+        ]);
+    }
     public function showRegisterForm(){
         return Inertia::render('Auth/Register', [
             'layout' => 'guest'

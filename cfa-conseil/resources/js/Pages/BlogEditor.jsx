@@ -47,7 +47,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
         images: initialBlog?.images || [],
         pdfs: initialBlog?.pdfs || [],
         excerpt: initialBlog?.excerpt || '',
-        has_featured_image: initialBlog?.featured_image_path ? true : false
+        has_featured_image: !!initialBlog?.featured_image_path
     });
 
     // --------------------
@@ -55,7 +55,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
     // --------------------
     const editor = useEditor({
         extensions: [
-            StarterKit.configure({ 
+            StarterKit.configure({
                 heading: { levels: [1, 2, 3, 4, 5, 6] },
                 underline: false
             }),
@@ -90,7 +90,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
         onUpdate: ({ editor }) => {
             syncImages(editor);
             syncPdfs(editor);
- 
+
         }
 });
 
@@ -239,7 +239,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
         try {
             const tempId = generateId();
             const blobUrl = URL.createObjectURL(file);
-            
+
             // Store in temporary map
             pdfsRef.current.set(tempId, { file, blobUrl });
 
@@ -268,7 +268,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
             const blogFormData = new FormData();
             blogFormData.append('title', data.title);
             blogFormData.append('excerpt', data.excerpt);
-            blogFormData.append('has_featured_image', data.has_featured_image); 
+            blogFormData.append('has_featured_image', data.has_featured_image);
 
             // Handle featured image upload
             if (data.featured_image) {
@@ -283,11 +283,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
             // Create the blog and get the ID
             const blogResponse = isEditMode
-                ? await axios.post(`/api/blogs/${data.slug}`, blogFormData, { 
-                    headers: { 'Content-Type': 'multipart/form-data' } 
+                ? await axios.post(`/api/blogs/${data.slug}`, blogFormData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
                 })
-                : await axios.post('/api/blogs', blogFormData, { 
-                    headers: { 'Content-Type': 'multipart/form-data' } 
+                : await axios.post('/api/blogs', blogFormData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
                 });
 
             const blog = blogResponse.data.data;
@@ -335,7 +335,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                 pdfFormData.append('pdfs[]', file);
                 pdfFormData.append('temp_ids[]', tempId);
             }
-            
+
             // Extract existing PDF paths (same logic as images)
             const allPdfHrefs = Array.from(html.matchAll(/href="([^"]+)"/g))
                 .map(match => match[1]);
@@ -402,7 +402,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
     };
 
 
-    
+
     // Trigger hidden file input
     const triggerFileInput = () => fileInputRef.current?.click();
     const triggerFeaturedImageInput = () => featuredImageRef.current?.click();
@@ -589,10 +589,10 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                     }}
                                 />
                                 <div className="absolute top-3 right-3 bg-gray-50 rounded-full p-1"
-                                    onClick={(e) => { 
-                                        e.stopPropagation(); 
-                                        setData('has_featured_image', false); 
-                                        setFeaturedImagePath(null); 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setData('has_featured_image', false);
+                                        setFeaturedImagePath(null);
                                     }}
                                 ><X/></div>
                             </div>
@@ -661,6 +661,6 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                 </div>
             </div>
         </div>
-        
+
     );
 }

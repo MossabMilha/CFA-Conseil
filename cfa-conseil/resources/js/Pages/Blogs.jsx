@@ -70,7 +70,7 @@ export default function Blogs({ blogs = [] }) {
                         filteredBlogs.map(blog => (
                             <div
                                 key={blog.id}
-                                className='bg-[#eaeaea] rounded-lg overflow-hidden duration-300'>
+                                className='flex flex-col bg-[#eaeaea] rounded-lg overflow-hidden duration-300'>
                                 <div className='h-48 bg-[#92aec8] relative overflow-hidden'>
                                     <img
                                         src={blog.featured_image ? `/storage/${blog.featured_image}` : 'storage/images/fallback.png'}
@@ -82,18 +82,20 @@ export default function Blogs({ blogs = [] }) {
                                         }}
                                     />
                                 </div>
-                                <div className='p-6'>
-                                    <div className='flex items-center text-sm text-gray-500 mb-2'>
+                                <div className='p-6 grow flex flex-col justify-between'>
+                                    <div>
+                                      <div className='flex items-center text-sm text-gray-500 mb-2'>
                                         <span>{formatDate(blog.updated_at)}</span>
                                         <span className='mx-2'>•</span>
                                         <span>{Math.ceil((blog.content_html?.length || 0) / 1000)} min read</span>
-                                    </div>
-                                    <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
+                                      </div>
+                                      <h3 className='text-xl font-bold text-[#252550] mb-3 line-clamp-2'>
                                         {blog.title}
-                                    </h3>
-                                    <p className='text-gray-600 mb-4 line-clamp-3'>
+                                      </h3>
+                                      <p className='text-gray-600 mb-4 line-clamp-3'>
                                         {blog.excerpt || 'Read this amazing blog post...'}
-                                    </p>
+                                      </p>
+                                    </div>
                                     <div className='flex justify-between items-center'>
                                         <Link
                                             href={`/blog/${blog.slug}`}

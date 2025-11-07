@@ -7,7 +7,7 @@ import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import { useState } from 'react';
 
-export default function Register() {
+export default function AdminRegister() {
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
@@ -31,7 +31,7 @@ export default function Register() {
         setProcessing(true);
 
         try {
-            const response = await axios.post('register', formData);
+            const response = await axios.post('registerAdmin', formData);
             // Handle successful registration
             window.location.href = response.data.redirect || '/blogs';
         } catch (error) {
@@ -131,6 +131,19 @@ export default function Register() {
                         onChange={handleChange}
                         disabled={processing}
                     />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="verification_code" value="Verification Code" />
+                    <TextInput
+                        id="verification_code"
+                        type="text"
+                        name="verification_code"
+                        className="mt-1 block w-full"
+                        onChange={handleChange}
+                        disabled={processing}
+                    />
+                    <InputError message={errors.verification_code} className="mt-1" />
                 </div>
 
                 <div className="mt-6 flex items-center justify-between">
