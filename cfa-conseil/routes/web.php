@@ -13,7 +13,7 @@ Route::get('/', function () {
 
 Route::get('/blogs', [BlogController::class, 'index']);
 Route::get('/blog/{slug}', [BlogController::class, 'show'] );
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['role'])->group(function () {
     Route::get('/blog-editor', function () {
         return Inertia::render('BlogEditor', [
             'auth' => [
