@@ -37,7 +37,7 @@ class BlogController extends Controller
             ]
         ]);
     }
-    
+
     public function edit($slug)
     {
         $blog = Blog::with('images', 'pdfs')->where('slug', $slug)->firstOrFail();

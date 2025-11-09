@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AppLayout from '@/Layouts/AppLayout';
-import { Search, ImageIcon } from 'lucide-react';
+import { Search, ImageIcon, Trash } from 'lucide-react';
 import { Link } from "@inertiajs/react";
 import { useAuth } from '@/contexts/AuthContext';
 import { usePage } from '@inertiajs/react';
@@ -8,7 +8,6 @@ import { Edit, ArrowRight } from 'lucide-react';
 
 export default function Blogs({ blogs = [] }) {
     const { auth } = usePage().props;
-    console.log(auth);
     const { user } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const [onImage, setOnImage] = useState(false);
@@ -26,6 +25,26 @@ export default function Blogs({ blogs = [] }) {
             day: 'numeric'
         });
     };
+
+    // Using fetch
+    const deleteBlog = async (id) => {
+        try {
+            const response = await fetch(`/api/blogs/${id}`, {
+                method: 'DELETE',
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Blog deleted successfully');
+                // Refresh the list or redirect
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error deleting blog:', error);
+        }
+    }
 
     return (
         <main className="min-h-screen flex flex-col">
@@ -81,6 +100,20 @@ export default function Blogs({ blogs = [] }) {
                                             e.target.onerror = null;
                                         }}
                                     />
+                                    {auth?.user?.role === 'admin' &&
+                                        <div className='absolute right-4 top-4 flex items-center justify-center text-[#252550] bg-white rounded-full w-8 h-8 cursor-pointer hover:bg-red-500 hover:text-white transition-colors'>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteBlog(blog.id);
+                                                }}
+                                                className="w-full h-full flex items-center justify-center"
+                                                title="Delete blog"
+                                            >
+                                                <Trash size={'1em'}/>
+                                            </button>
+                                        </div>
+                                    }
                                 </div>
                                 <div className='p-6 grow flex flex-col justify-between'>
                                     <div>

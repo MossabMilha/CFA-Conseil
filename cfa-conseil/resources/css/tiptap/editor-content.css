@@ -23,7 +23,7 @@
   font-size: 1.25rem;   /* ~20px */
   font-weight: 600;
   line-height: 1.4;
-  margin: 0.5rem 0; 
+  margin: 0.5rem 0;
 }
 
 .editor-content h5 {
@@ -45,4 +45,43 @@
   height: auto;
   margin: 1rem auto;
   border-radius: 0.5rem;
+}
+
+.editor-content .ProseMirror {
+  ol {
+    list-style-type: decimal;
+    margin-left: 1.5rem;
+  }
+
+  ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+  }
+
+  /* Custom dash style for unordered lists */
+  ul[data-type="taskList"] {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  ul[data-type="taskList"] li {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  ul[data-type="taskList"] li::before {
+    content: "–";
+    margin-right: 0.5rem;
+    color: #6b7280;
+  }
+}
+
+/* Ensure proper spacing and visibility */
+.ProseMirror li {
+  position: relative;
+}
+
+.ProseMirror ol > li,
+.ProseMirror ul > li {
+  margin-bottom: 0.25rem;
 }
