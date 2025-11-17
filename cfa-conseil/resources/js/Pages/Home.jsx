@@ -8,6 +8,8 @@ import IconFour from '@/assets/four.svg?react';
 import { MapPin, Phone, Mail, Rocket, Heart, User2, Star } from 'lucide-react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
+import Autoplay from "embla-carousel-autoplay"
+
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/Components/ui/carousel';
 
 
@@ -300,6 +302,11 @@ export default function Home() {
                                     loop: true,
                                     align: "start",
                                 }}
+                                plugins={[
+                                    Autoplay({
+                                        delay: 3000
+                                    })
+                                ]}
                             >
                                 <CarouselContent>
                                     <CarouselItem className="flex items-center justify-center h-24 p-4 md:basis-1/2 lg:basis-1/3">
