@@ -517,7 +517,7 @@ export default function Home() {
                                         <Phone />
                                         <h3 className="text-[#252550] font-bold">Telephone</h3>
                                     </div>
-                                    <p className="inline mr-2 text-sm sm:text-lg">+212 522210393 / +212 670050447</p>
+                                    <p className="inline mr-2 text-sm sm:text-lg">+212 522210393 / +212 661243146</p>
                                 </div>
                                 <div className="p-3 rounded-md">
                                     <div className="flex items-center gap-2 text-xl sm:text-2xl">

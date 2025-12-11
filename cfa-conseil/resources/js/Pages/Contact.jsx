@@ -222,7 +222,7 @@ export default function Contact() {
                                 <h3 className="text-[#252550] font-bold">Telephone</h3>
                             </div>
                             <p className="text-sm sm:text-lg">+212 5 22 21 03 93</p>
-                            <p className="text-sm sm:text-lg">+212 6 70 05 04 47</p>
+                            <p className="text-sm sm:text-lg">+212 6 61 24 31 46</p>
                         </div>
                         <div className="p-3 rounded-md">
                             <div className="flex items-center gap-2 text-xl sm:text-2xl pb-2">

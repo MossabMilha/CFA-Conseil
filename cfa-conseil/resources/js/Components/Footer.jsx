@@ -8,7 +8,7 @@ import GoogleIcon from '@/assets/icons-google-plus.svg?react';
 // Handle smooth scrolling for hash links
 const scrollToSection = (e, hash) => {
   e.preventDefault();
-  
+
   // Navigate to the home page first if we're not already there
   if (!window.location.pathname.endsWith('/')) {
     router.visit('/', {
@@ -66,7 +66,7 @@ export default function Footer() {
                             <div className="flex flex-col gap-0.5">
                                 <h4 className="text-sm sm:text-base md:text-lg font-bold">Telephone</h4>
                                 <p className="text-sm sm:text-base md:text-lg">+212 5 22 21 03 93</p>
-                                <p className="text-sm sm:text-base md:text-lg">+212 6 70 05 04 47</p>
+                                <p className="text-sm sm:text-base md:text-lg">+212 6 61 24 31 46</p>
                             </div>
 
                             <div className="flex flex-col gap-0.5">
@@ -103,7 +103,7 @@ export default function Footer() {
                                     </a> */}
                                 </div>
                             </div>
-                            
+
                             <div className=" flex flex-col justify-end items-start gap-4 mt-8">
                                <div className="grid grid-cols-4">
                                    <div className="bg-[#6885ab] w-12 h-12 rounded-full rounded-br-none"></div>
