@@ -151,12 +151,13 @@ export default function Blogs({ blogs = [] }) {
                             <p className="text-gray-500 text-lg">
                                 {searchTerm ? 'No blogs found matching your search.' : 'No blogs available yet.'}
                             </p>
+                            {auth?.user?.role === 'admin' &&
                             <Link
                                 href="/blog-editor"
                                 className="mt-4 inline-block bg-[#252550] text-white px-6 py-2 rounded-lg hover:bg-[#1a1a3a] transition-colors"
                             >
                                 Create First Blog
-                            </Link>
+                            </Link>}
                         </div>
                     )}
                 </div>
