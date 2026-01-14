@@ -49,7 +49,7 @@ export default function Footer() {
 
                         {/* Short Links */}
                         <div className="flex flex-col gap-2">
-                            <h3 className="text-xl sm:text-2xl font-bold">Short links</h3>
+                            <h3 className="text-xl sm:text-2xl font-bold">Liens courts</h3>
                             <ul className="list-inside text-sm sm:text-base md:text-lg flex flex-col gap-1">
                                 <li><Link href="/" className="hover:underline">Accueil</Link></li>
                                 <li><a href="#about" onClick={(e) => scrollToSection(e, '#about')} className="hover:underline">Qui sommes-nous</a></li>
@@ -87,7 +87,7 @@ export default function Footer() {
                         {/* Social */}
                         <div className="flex flex-col gap-2 justify-between">
                             <div className="flex flex-col gap-2">
-                                <h3 className="text-xl sm:text-2xl font-bold">Follow us</h3>
+                                <h3 className="text-xl sm:text-2xl font-bold">Suivez-nous</h3>
                                 <div className="flex gap-2">
                                     {/* <a href="#" rel="noopener noreferrer">
                                         <FacebookIcon className="w-6 h-6 sm:w-8 sm:h-8" style={{ '--fill-color': '#fff' }} />

@@ -78,7 +78,7 @@ export default function Home() {
                 <section className='relative min-h-screen from-[#92afc9] from-0% via-[#6886ab] via-50% to-[#6886ab] bg-gradient-to-br'>
                     <div className='absolute w-full h-full -z-9'
                     style={{
-                        backgroundImage: 'url(/storage/images/asset-4.png)',
+                        backgroundImage: 'url(/storage/images/asset-pattern.png)',
                         backgroundSize: 'cover',
                         backgroundPosition: 'left',
                         backgroundRepeat: 'no-repeat',
@@ -150,7 +150,7 @@ export default function Home() {
                         </div>
                         <div className='flex flex-col-reverse sm:flex-col border-l-8 border-[#6392b6] pl-4 sm:pl-6'>
                             <h3 className='flex items-center text-2xl md:text-lg lg:text-xl font-bold text-[#252550] sm:mb-4 gap-2 min-w-32'><Heart size={'1rem'} stroke="#457da8"/><span className='whitespace-nowrap'>Satisfaits</span></h3>
-                            <h2 className='flex items-end text-4xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[#252550]'>1.7<span className='text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl'>k+</span></h2>
+                            <h2 className='flex items-end text-4xl sm:text-6xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[#252550]'>90<span className='text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl'>%</span></h2>
                         </div>
                     </div>
                 </section>

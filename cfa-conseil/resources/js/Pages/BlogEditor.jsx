@@ -8,7 +8,7 @@ import { TextStyle } from '@tiptap/extension-text-style';
 import { Underline } from "@tiptap/extension-underline";
 import { Color } from '@tiptap/extension-color';
 import PdfAttachment from "@/Components/PdfAttachment";
-import Dropdown from "@/Components/Dropdown";
+import Dropdown from "@/Components/ui/Dropdown.jsx";
 import {
     Bold, Italic, List, ListOrdered, Heading,
     Heading1, Heading2, Heading3, Heading4, Heading5, Heading6,

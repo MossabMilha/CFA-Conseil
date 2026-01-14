@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Link, router } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import Dropdown from './Dropdown';
+import Dropdown from './ui/Dropdown.jsx';
 import { LogOut, SquarePen } from 'lucide-react';
 
 export default function Nav() {
