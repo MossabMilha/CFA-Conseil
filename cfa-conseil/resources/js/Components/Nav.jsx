@@ -85,8 +85,8 @@ export default function Nav() {
         <ul className="hidden md:flex items-center text-white space-x-4 lg:space-x-8 text-sm md:text-base">
           <li><a href="#about" onClick={(e) => scrollToSection(e, '#about')}>À propos</a></li>
           <li><a href="#services" onClick={(e) => scrollToSection(e, '#services')}>Services</a></li>
-          <li><a href="/blogs">Blog</a></li>
-          <li><a className="text-[#252550] bg-white rounded-full px-3 py-1 font-semibold" href="/contact">Contact</a>
+          <li><Link href="/blogs">Blog</Link></li>
+          <li><Link className="text-[#252550] bg-white rounded-full px-3 py-1 font-semibold" href="/contact">Contact</Link>
           </li>
           {(auth?.user?.role === 'admin' || auth?.user?.role === 'user') && <li>
               <Dropdown className='cursor-pointer'>

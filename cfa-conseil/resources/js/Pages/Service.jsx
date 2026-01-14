@@ -1,7 +1,8 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 import {CheckCircle} from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
+
 
 const Service = ({ service }) => {
     // Service data - in a real app, this would come from your backend
@@ -17,10 +18,10 @@ const Service = ({ service }) => {
     return (
         <div className="min-h-screen bg-white">
             <Head title={serviceData.title} />
-            
+
             {/* Hero Section */}
             <div className="relative h-96 w-full">
-                <div 
+                <div
                     className="absolute inset-0 bg-cover bg-center z-0"
                     style={{
                         backgroundImage: `url(${serviceData.image})`,
@@ -84,16 +85,16 @@ const Service = ({ service }) => {
                                     </li>
                                 ))}
                             </ul>
-                            
+
                             <div className="mt-8">
                                 <h3 className="text-xl font-bold text-[#252550] mb-4">Vous avez des questions ?</h3>
                                 <p className="text-gray-700 mb-4">Notre équipe est à votre disposition pour répondre à toutes vos questions.</p>
-                                <a 
-                                    href="/contact" 
+                                <Link
+                                    href="/contact"
                                     className="inline-block bg-[#252550] text-white px-6 py-3 rounded-md font-medium hover:bg-[#1a1a3d] transition-colors"
                                 >
                                     Nous contacter
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -108,14 +109,14 @@ const Service = ({ service }) => {
                         Contactez-nous dès aujourd'hui pour discuter de vos besoins et découvrir comment nous pouvons vous aider à atteindre vos objectifs financiers.
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <a 
-                            href="/contact" 
+                        <Link
+                            href="/contact"
                             className="bg-white text-[#252550] px-8 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors"
                         >
                             Demander un devis
-                        </a>
-                        <a 
-                            href="tel:+212522000000" 
+                        </Link>
+                        <a
+                            href="tel:+212522210393"
                             className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-md font-medium hover:bg-white hover:text-[#252550] transition-colors"
                         >
                             Appelez-nous

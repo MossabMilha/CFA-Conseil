@@ -7,42 +7,39 @@ use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Home');
-});
+// Home page
+Route::get('/', fn() => Inertia::render('Home'))->name('home');
 
-Route::get('/blogs', [BlogController::class, 'index']);
-Route::get('/blog/{slug}', [BlogController::class, 'show'] );
+// Blog pages
+Route::get('/blogs', [BlogController::class, 'index'])
+    ->name('blogs.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])
+    ->name('blogs.show');
+
+// Editor pages (protected)
 Route::middleware(['role'])->group(function () {
-    Route::get('/blog-editor', function () {
-        return Inertia::render('BlogEditor', [
-            'auth' => [
-                'user' => auth()->user()
-            ]
-        ]);
-    });
+    Route::get('/blog-editor', fn() => Inertia::render('BlogEditor', [
+        'auth' => ['user' => auth()->user()]
+    ]))->name('blog.editor');
 
-    Route::get('/blog-editor/{slug}', [BlogController::class, 'edit']);
+    Route::get('/blog-editor/{slug}', [BlogController::class, 'edit'])
+        ->name('blog.editor.edit');
 });
-Route::get('/contact', function () {return Inertia::render('Contact'); });
 
-// Service routes
-Route::get('/services/{service}', [ServiceController::class, 'show'])->name('services.show');
+// Contact page
+Route::get('/contact', fn() => Inertia::render('Contact'))
+    ->name('contact');
 
-Route::get('/contact-form',[ContactController::class,'contact']);
-Route::get('/contact-email',[ContactController::class,'contact']);
-/*
-    You /register ghadi tweli /registerAdmin Where Admins Will signup
-        ->It will call signupAdmin (API)
-    And Register Will Stay The Same We Will Only Delete The Code Section
-        ->It will call signup (API) Is the Same As The OLD One Only dont work with code
-*/
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::get('/registerAdmin', [AuthController::class, 'showAdminRegisterForm'])->name('registerAdmin');;
+// Service pages
+Route::get('/services/{service}', [ServiceController::class, 'show'])
+    ->name('services.show');
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+// Auth pages
+Route::get('/register', [AuthController::class, 'showRegisterForm'])
+    ->name('register');
+Route::get('/login', [AuthController::class, 'showLoginForm'])
+    ->name('login');
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/registerAdmin', [AuthController::class, 'registerAdmin']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+// Login/Logout endpoints (must match what's in your axios call)
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

@@ -12,8 +12,6 @@ Route::get('/ping', function () {
 });
 Route::post('/registerAdmin', [AuthController::class, 'registerAdmin']);
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::post('/contact-form',[ContactController::class,'contact']);
 

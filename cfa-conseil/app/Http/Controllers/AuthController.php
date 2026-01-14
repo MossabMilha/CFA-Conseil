@@ -7,122 +7,78 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class AuthController extends Controller
 {
-    public function showAdminRegisterForm(){
-        return Inertia::render('Auth/AdminRegister', [
-            'layout' => 'guest'
-        ]);
-    }
     public function showRegisterForm(){
         return Inertia::render('Auth/Register', [
             'layout' => 'guest'
         ]);
     }
+
     public function showLoginForm(){
         return Inertia::render('Auth/Login', [
             'layout' => 'guest'
         ]);
     }
-    public function registerAdmin(Request $request){
+
+    public function register(Request $request){
         $fixedCode = "CFA_AGENCY_WEB";
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
-            'verification_code'=>'required|string'
+            'verification_code' => 'required|string'
         ]);
-        // Check verification code
+
         if ($request->verification_code !== $fixedCode) {
-            return response()->json([
-                'message' => 'Invalid Verification Code.',
-            ], 401);
+            throw ValidationException::withMessages([
+                'verification_code' => ['Invalid Verification Code.'],
+            ]);
         }
 
         $user = User::create([
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password),
-            'role'=>'admin'
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'admin'
         ]);
+
         Log::track($user, 'register', 'New admin registered', $request);
         Auth::login($user);
 
-        // Redirect with session
-        return response()->json([
-            'message' => 'Login successful',
-            'redirect' => '/blogs',
-            'user' => $user,
-        ], 200);
-    }
-    public function register(Request $request){
-
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
-
-        ]);
-
-
-        $user = User::create([
-            'first_name'=>$request->first_name,
-            'last_name'=>$request->last_name,
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password),
-            'role'=>'user'
-        ]);
-        Log::track($user, 'register', 'New user registered', $request);
-        Auth::login($user);
-
-        // Redirect with session
-        return response()->json([
-            'message' => 'Login successful',
-            'redirect' => '/blogs',
-            'user' => $user,
-        ], 200);
+        return redirect()->route('blogs.index');
     }
 
     public function login(Request $request)
     {
-
-        $credentials = $request->validate([
-            'email'    => 'required|email',
+        $request->validate([
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $request->session()->regenerate();
-            $user = Auth::user();
-            Log::track($user, 'login', 'Admin logged in', $request);
+        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
 
-            return response()->json([
-                'message' => 'Login successful',
-                'redirect' => '/blogs',
-                'user' => $user,
-            ], 200);
+            throw ValidationException::withMessages([
+                'email' => 'These credentials do not match our records.',
+            ]);
         }
 
+        $request->session()->regenerate();
 
-        return response()->json([
-            'message' => 'Invalid credentials.',
-        ], 401);
+        return redirect()->intended(route('blogs.index'));
     }
 
     public function logout(Request $request)
     {
-        $user = Auth::user();
-        Log::track($user, 'logout', 'Admin logged out', $request);
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login')
-            ->with('success', 'You have been logged out.');
-    }
 
+        return redirect()->route('login');
+    }
 }
