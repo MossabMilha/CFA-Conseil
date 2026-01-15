@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Link, router } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 import Dropdown from './ui/Dropdown.jsx';
-import { LogOut, SquarePen } from 'lucide-react';
+import { LogOut, SquarePen, Bubbles } from 'lucide-react';
+import {Comment} from "postcss";
 
 export default function Nav() {
   const { auth } = usePage().props;
@@ -100,6 +101,9 @@ export default function Nav() {
                                     onClick={() => router.visit('/blog-editor')}>
                         <SquarePen size={'1em'}/> Editeur de blog
                     </Dropdown.Link>}
+                  <Dropdown.Link className='flex items-center gap-2 whitespace-nowrap text-[#252550]' as="button" onClick={() => router.visit('/admin/comments')}>
+                    <Bubbles size={'1em'} /> Gérer les commentaires
+                  </Dropdown.Link>
                   <Dropdown.Link className='flex items-center gap-2 whitespace-nowrap text-[#252550]' as="button" onClick={handleLogout}>
                     <LogOut size={'1em'} /> Se déconnecter
                   </Dropdown.Link>
@@ -126,12 +130,13 @@ export default function Nav() {
           <ul className="flex flex-col space-y-4 text-white text-center">
             <li className="flex items-center justify-center"><a className="w-full" href="#about" onClick={(e) => scrollToSection(e, '#about')}>À propos</a></li>
             <li className="flex items-center justify-center"><a className="w-full" href="#services" onClick={(e) => scrollToSection(e, '#services')}>Services</a></li>
-            <li className="flex items-center justify-center"><a className="w-full" href="/blogs">Blog</a></li>
-            <li className="flex items-center justify-center"><a className="w-full" href="/contact"> Contact</a></li>
+            <li className="flex items-center justify-center"><Link className="w-full" href="/blogs">Blog</Link></li>
+            <li className="flex items-center justify-center"><Link className="w-full" href="/contact"> Contact</Link></li>
             {auth?.user?.role === 'admin' &&
             <>
-              <li className="flex items-center justify-center"><a className="w-full" href="/blog-editor">Editeur de blog</a></li>
-              <li className="flex items-center justify-center"><a className='w-full text-[#252550] bg-white rounded-full px-3 py-1 font-semibold' href="/logout">Se deconnecter</a></li>
+              <li className="flex items-center justify-center"><Link className="w-full" href="/blog-editor">Editeur de blog</Link></li>
+              <li className="flex items-center justify-center"><Link className='w-full' href="/admin/comments">Gérer les commentaires</Link></li>
+              <li className="flex items-center justify-center"><Link className='w-full text-[#252550] bg-white rounded-full px-3 py-1 font-semibold' href="/logout">Se deconnecter</Link></li>
             </>
             }
           </ul>

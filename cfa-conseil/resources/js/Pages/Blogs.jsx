@@ -47,7 +47,7 @@ export default function Blogs({ blogs = [] }) {
     }
 
     return (
-        <main className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col">
             <div className="flex flex-col justify-center">
                 <div className="flex justify-between mb-32">
                     <div className='absolute left-0 top-0 -z-10 grid grid-cols-3 '>
@@ -162,7 +162,7 @@ export default function Blogs({ blogs = [] }) {
                     )}
                 </div>
             </div>
-        </main>
+        </div>
     );
 }
 

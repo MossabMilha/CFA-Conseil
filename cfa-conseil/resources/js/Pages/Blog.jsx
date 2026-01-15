@@ -97,7 +97,7 @@ export default function Blog({ blog, auth }) {
                                     alt={blog.title}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
-                                        e.target.src = "/storage/images/blogs/fallback.png";
+                                        e.target.src = "/storage/images/fallback.png";
                                     }}
                                 />
                             </div>

@@ -16,7 +16,6 @@ Route::get('/blogs', [BlogController::class, 'index'])
 Route::get('/blog/{slug}', [BlogController::class, 'show'])
     ->name('blogs.show');
 
-// Editor pages (protected)
 Route::middleware(['role'])->group(function () {
     Route::get('/blog-editor', fn() => Inertia::render('BlogEditor', [
         'auth' => ['user' => auth()->user()]
@@ -24,6 +23,17 @@ Route::middleware(['role'])->group(function () {
 
     Route::get('/blog-editor/{slug}', [BlogController::class, 'edit'])
         ->name('blog.editor.edit');
+
+    Route::get('/admin/comments', function() {
+        $pendingComments = \App\Models\Comment::with('user')
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return Inertia::render('Admin/Comments', [
+            'pendingComments' => $pendingComments,
+        ]);
+    })->name('admin.comments');
 });
 
 // Contact page
@@ -40,6 +50,9 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])
 Route::get('/login', [AuthController::class, 'showLoginForm'])
     ->name('login');
 
-// Login/Logout endpoints (must match what's in your axios call)
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register');
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');

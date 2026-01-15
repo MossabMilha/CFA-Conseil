@@ -14,6 +14,12 @@ class Comment extends Model
         'user_id',
         'content',
         'parent_id',
+        'status', // Add this
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     // A comment belongs to a user
@@ -38,5 +44,17 @@ class Comment extends Model
     public function parent()
     {
         return $this->belongsTo(Comment::class, 'parent_id');
+    }
+
+    // Scope for approved comments
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+
+    // Scope for pending comments
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
     }
 }

@@ -13,8 +13,6 @@ use App\Models\BlogImages;
 
 class BlogController extends Controller
 {
-  //Normally, we should use Inertia::render() to send data from Laravel to the frontend, like in our web project.
-  //Here, we didn’t use it and instead used Laravel’s default API routes, fetching data manually from the frontend.
     public function index()
     {
         $blogs = Blog::orderBy('updated_at', 'desc')->get();
