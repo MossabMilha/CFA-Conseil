@@ -3,12 +3,12 @@ import { Link, router } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 import Dropdown from './ui/Dropdown.jsx';
 import { LogOut, SquarePen, Bubbles } from 'lucide-react';
-import {Comment} from "postcss";
 
 export default function Nav() {
   const { auth } = usePage().props;
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef(null);
+  const fallbackImg = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`;
 
   const handleLogout = useCallback((e) => {
     e.preventDefault();
@@ -93,7 +93,7 @@ export default function Nav() {
               <Dropdown className='cursor-pointer'>
                 <Dropdown.Trigger>
                   <div className='rounded-full w-8 h-8 bg-[#6886ab]'>
-                  <img className='rounded-full w-8 h-8 object-cover' src={auth?.user?.avatar_url || 'http://localhost:8000/storage/images/fallback.png'} alt="" />
+                  <img className='rounded-full w-8 h-8 object-cover' src={auth?.user?.avatar_url || `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`} alt="" />
                   </div>
                 </Dropdown.Trigger>
                 <Dropdown.Content width='auto'>

@@ -64,7 +64,7 @@ class AuthController extends Controller
         if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
 
             throw ValidationException::withMessages([
-                'email' => 'These credentials do not match our records.',
+                'email' => 'Email or password is incorrect.',
             ]);
         }
 

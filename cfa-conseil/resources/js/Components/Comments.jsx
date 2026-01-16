@@ -1,14 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Send, User, Clock, CheckCircle, XCircle, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+    Send,
+    Clock,
+    XCircle,
+    MessageSquare,
+    ChevronDown,
+    ChevronUp,
+} from "lucide-react";
+import Toast from "@/Components/ui/Toast.jsx";
 
 const Comments = ({ blogId, auth }) => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [newComment, setNewComment] = useState('');
+    const [newComment, setNewComment] = useState("");
+    const [guestName, setGuestName] = useState("");
+    const [guestEmail, setGuestEmail] = useState("");
     const [replyTo, setReplyTo] = useState(null);
-    const [replyContent, setReplyContent] = useState('');
+    const [replyContent, setReplyContent] = useState("");
     const [expandedReplies, setExpandedReplies] = useState({});
+    const [toast, setToast] = useState({ message: "", type: "info" });
+
+    const showToast = (message, type = "info") => {
+        setToast({ message, type });
+    };
 
     useEffect(() => {
         fetchComments();
@@ -19,62 +34,102 @@ const Comments = ({ blogId, auth }) => {
             const response = await axios.get(`/api/blogs/${blogId}/comments`);
             setComments(response.data);
         } catch (error) {
-            console.error('Error fetching comments:', error);
+            console.error("Error fetching comments:", error);
+            showToast("Failed to load comments.", "error");
         } finally {
             setLoading(false);
         }
     };
 
+    const isValidEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+
     const submitComment = async () => {
         if (!newComment.trim()) return;
 
-        try {
-            const response = await axios.post(`/api/blogs/${blogId}/comments`, {
-                content: newComment.trim()
-            });
+        if (!auth?.user) {
+            if (!guestName.trim() || !guestEmail.trim()) {
+                showToast("Veuillez entrer votre nom et email.", "error");
+                return;
+            }
+            if (!isValidEmail(guestEmail.trim())) {
+                showToast("Veuillez entrer un email valide.", "error");
+                return;
+            }
+        }
 
-            alert(response.data.message);
-            setNewComment('');
-            fetchComments(); // Always refresh to show pending comments
+        const payload = { content: newComment.trim() };
+        if (!auth?.user) {
+            payload.name = guestName.trim();
+            payload.email = guestEmail.trim();
+        }
+
+        try {
+            const response = await axios.post(`/api/blogs/${blogId}/comments`, payload);
+            showToast(response.data.message || "Comment posted successfully!", "success");
+            setNewComment("");
+            setGuestName("");
+            setGuestEmail("");
+            fetchComments();
         } catch (error) {
-            console.error('Error posting comment:', error);
-            alert('Failed to post comment');
+            console.error("Error posting comment:", error);
+            showToast("Failed to post comment.", "error");
         }
     };
 
     const submitReply = async (parentId) => {
         if (!replyContent.trim()) return;
 
-        try {
-            const response = await axios.post(`/api/blogs/${blogId}/comments`, {
-                content: replyContent.trim(),
-                parent_id: parentId
-            });
+        if (!auth?.user) {
+            if (!guestName.trim() || !guestEmail.trim()) {
+                showToast("Veuillez entrer votre nom et email avant de répondre.", "error");
+                return;
+            }
+            if (!isValidEmail(guestEmail.trim())) {
+                showToast("Veuillez entrer un email valide.", "error");
+                return;
+            }
+        }
 
-            alert(response.data.message);
-            setReplyContent('');
+        const payload = {
+            content: replyContent.trim(),
+            parent_id: parentId,
+        };
+
+        if (!auth?.user) {
+            payload.name = guestName.trim();
+            payload.email = guestEmail.trim();
+        }
+
+        try {
+            const response = await axios.post(`/api/blogs/${blogId}/comments`, payload);
+            showToast(response.data.message || "Reply posted successfully!", "success");
+            setReplyContent("");
             setReplyTo(null);
             fetchComments();
         } catch (error) {
-            console.error('Error posting reply:', error);
-            alert('Failed to post reply');
+            console.error("Error posting reply:", error);
+            showToast("Failed to post reply.", "error");
         }
     };
 
     const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
+        return new Date(dateString).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
         });
     };
 
     const toggleReplies = (commentId) => {
-        setExpandedReplies(prev => ({
+        setExpandedReplies((prev) => ({
             ...prev,
-            [commentId]: !prev[commentId]
+            [commentId]: !prev[commentId],
         }));
     };
 
@@ -83,16 +138,25 @@ const Comments = ({ blogId, auth }) => {
         const isExpanded = expandedReplies[comment.id];
 
         return (
-            <div key={comment.id} className={`${isReply ? 'ml-8 mt-4 border-l-2 border-gray-200 pl-4' : 'mb-6'}`}>
-                <div className={`bg-white rounded-lg p-4 shadow-sm ${isReply ? 'border border-gray-100' : ''}`}>
+            <div
+                key={comment.id}
+                className={`${isReply ? "ml-8 mt-4 border-l-2 border-gray-200 pl-4" : "mb-6"}`}
+            >
+                <div
+                    className={`bg-white rounded-lg p-4 shadow-sm ${isReply ? "border border-gray-100" : ""}`}
+                >
                     <div className="flex items-start justify-between">
                         <div className="flex items-center space-x-2 mb-2">
                             <div className="w-8 h-8 bg-[#252550] text-white rounded-full flex items-center justify-center">
-                                {comment.user?.first_name?.charAt(0) || 'G'}
+                                {comment.user?.first_name?.charAt(0) ||
+                                    comment.name?.charAt(0) ||
+                                    "G"}
                             </div>
                             <div>
                                 <h4 className="font-semibold text-gray-800">
-                                    {comment.user ? `${comment.user.first_name} ${comment.user.last_name}` : 'Guest'}
+                                    {comment.user
+                                        ? `${comment.user.first_name} ${comment.user.last_name}`
+                                        : comment.name || "Guest"}
                                 </h4>
                                 <div className="flex items-center space-x-2 text-sm text-gray-500">
                                     <Clock size={12} />
@@ -100,12 +164,6 @@ const Comments = ({ blogId, auth }) => {
                                 </div>
                             </div>
                         </div>
-
-                        {auth?.user?.role === 'admin' && (
-                            <div className="flex items-center space-x-2">
-                                <span className="text-xs text-gray-500">ID: {comment.id}</span>
-                            </div>
-                        )}
                     </div>
 
                     <p className="text-gray-700 mb-3">{comment.content}</p>
@@ -116,16 +174,20 @@ const Comments = ({ blogId, auth }) => {
                                 onClick={() => {
                                     if (replyTo === comment.id) {
                                         setReplyTo(null);
-                                        setReplyContent('');
+                                        setReplyContent("");
                                     } else {
                                         setReplyTo(comment.id);
-                                        setReplyContent('');
+                                        setReplyContent("");
                                     }
                                 }}
-                                className={`flex items-center space-x-1 text-sm ${replyTo === comment.id ? 'text-[#252550] font-medium' : 'text-gray-600 hover:text-[#252550]'}`}
+                                className={`flex items-center space-x-1 text-sm ${
+                                    replyTo === comment.id
+                                        ? "text-[#252550] font-medium"
+                                        : "text-gray-600 hover:text-[#252550]"
+                                }`}
                             >
                                 <MessageSquare size={14} />
-                                <span>{replyTo === comment.id ? 'Cancel Reply' : 'Reply'}</span>
+                                <span>{replyTo === comment.id ? "Cancel Reply" : "Reply"}</span>
                             </button>
 
                             {hasReplies && (
@@ -134,7 +196,13 @@ const Comments = ({ blogId, auth }) => {
                                     className="flex items-center space-x-1 text-sm text-gray-600 hover:text-[#252550]"
                                 >
                                     {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                                    <span>{hasReplies ? `${comment.replies.length} ${comment.replies.length === 1 ? 'reply' : 'replies'}` : ''}</span>
+                                    <span>
+                    {hasReplies
+                        ? `${comment.replies.length} ${
+                            comment.replies.length === 1 ? "reply" : "replies"
+                        }`
+                        : ""}
+                  </span>
                                 </button>
                             )}
                         </div>
@@ -143,18 +211,18 @@ const Comments = ({ blogId, auth }) => {
                     {/* Reply Form */}
                     {replyTo === comment.id && (
                         <div className="mt-4 pl-2 border-l-2 border-[#252550]">
-                            <textarea
-                                value={replyContent}
-                                onChange={(e) => setReplyContent(e.target.value)}
-                                placeholder="Write your reply here..."
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
-                                rows="2"
-                            />
+              <textarea
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  placeholder="Write your reply here..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                  rows="2"
+              />
                             <div className="mt-2 flex justify-end space-x-2">
                                 <button
                                     onClick={() => {
                                         setReplyTo(null);
-                                        setReplyContent('');
+                                        setReplyContent("");
                                     }}
                                     className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
                                 >
@@ -165,7 +233,7 @@ const Comments = ({ blogId, auth }) => {
                                     className="px-4 py-2 bg-[#252550] text-white text-sm rounded-lg hover:bg-[#1a1a3d] disabled:opacity-50"
                                     disabled={!replyContent.trim()}
                                 >
-                                    Post Reply
+                                    Reply
                                 </button>
                             </div>
                         </div>
@@ -174,7 +242,7 @@ const Comments = ({ blogId, auth }) => {
                     {/* Replies */}
                     {hasReplies && isExpanded && (
                         <div className="mt-4">
-                            {comment.replies.map(reply => renderComment(reply, true))}
+                            {comment.replies.map((reply) => renderComment(reply, true))}
                         </div>
                     )}
                 </div>
@@ -193,23 +261,19 @@ const Comments = ({ blogId, auth }) => {
         );
     }
 
-    // Organize comments into parent and child relationships
-    const topLevelComments = comments.filter(comment => !comment.parent_id);
-    const replies = comments.filter(comment => comment.parent_id);
-
-    // Group replies by parent comment
+    // Organize comments
+    const topLevelComments = comments.filter((c) => !c.parent_id);
+    const replies = comments.filter((c) => c.parent_id);
     const repliesByParent = {};
-    replies.forEach(reply => {
+    replies.forEach((reply) => {
         if (!repliesByParent[reply.parent_id]) {
             repliesByParent[reply.parent_id] = [];
         }
         repliesByParent[reply.parent_id].push(reply);
     });
-
-    // Add replies to their parent comments
-    const organizedComments = topLevelComments.map(comment => ({
-        ...comment,
-        replies: repliesByParent[comment.id] || []
+    const organizedComments = topLevelComments.map((c) => ({
+        ...c,
+        replies: repliesByParent[c.id] || [],
     }));
 
     return (
@@ -219,8 +283,26 @@ const Comments = ({ blogId, auth }) => {
                     Comments ({organizedComments.length + replies.length})
                 </h3>
 
-                {/* Main Comment Form */}
+                {/* Comment Form */}
                 <div className="mb-6 bg-white rounded-lg p-4 shadow-sm">
+                    {!auth?.user && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <input
+                                type="text"
+                                placeholder="Your name"
+                                value={guestName}
+                                onChange={(e) => setGuestName(e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                            />
+                            <input
+                                type="email"
+                                placeholder="Your email"
+                                value={guestEmail}
+                                onChange={(e) => setGuestEmail(e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                            />
+                        </div>
+                    )}
                     <textarea
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
@@ -228,22 +310,17 @@ const Comments = ({ blogId, auth }) => {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
                         rows="3"
                     />
-                    <div className="mt-3 flex justify-between items-center">
-                        <div className="text-sm text-gray-500">
-                            {auth?.user ? (
-                                <CheckCircle className="inline mr-1" size={16} />
-                            ) : (
-                                <Clock className="inline mr-1" size={16} />
-                            )}
-                            {auth?.user ? 'Comments post immediately' : 'Comments require admin approval'}
-                        </div>
+                    <div className="mt-3 flex justify-end items-center">
                         <button
                             onClick={submitComment}
                             className="px-6 py-2 bg-[#252550] text-white rounded-lg hover:bg-[#1a1a3d] disabled:opacity-50"
-                            disabled={!newComment.trim()}
+                            disabled={
+                                !newComment.trim() ||
+                                (!auth?.user && (!guestName.trim() || !guestEmail.trim()))
+                            }
                         >
                             <Send className="inline mr-2" size={18} />
-                            Post Comment
+                            Comment
                         </button>
                     </div>
                 </div>
@@ -252,14 +329,24 @@ const Comments = ({ blogId, auth }) => {
                 {organizedComments.length === 0 ? (
                     <div className="text-center py-8 bg-gray-50 rounded-lg">
                         <XCircle className="mx-auto text-gray-400" size={48} />
-                        <p className="mt-3 text-gray-600">No comments yet. Be the first to comment!</p>
+                        <p className="mt-3 text-gray-600">
+                            No comments yet. Be the first to comment!
+                        </p>
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        {organizedComments.map(comment => renderComment(comment))}
+                        {organizedComments.map((comment) => renderComment(comment))}
                     </div>
                 )}
             </div>
+
+            {toast.message && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast({ message: "", type: "info" })}
+                />
+            )}
         </div>
     );
 };

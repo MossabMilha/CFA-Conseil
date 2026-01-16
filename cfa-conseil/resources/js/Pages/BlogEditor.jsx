@@ -585,7 +585,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                     className="w-full h-64 object-cover rounded border"
                                     onError={(e) => {
                                         e.target.onerror = null;
-                                        e.target.src = 'storage/images/fallback.png'; // Add a fallback image
+                                        e.target.src = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`; // Add a fallback image
                                     }}
                                 />
                                 <div className="absolute top-3 right-3 bg-gray-50 rounded-full p-1"

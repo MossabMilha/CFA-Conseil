@@ -1,12 +1,13 @@
 
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { Calendar, Clock, ArrowLeft, ImageIcon } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 import AppLayout from '@/Layouts/AppLayout';
 import Comments from '@/Components/Comments';
 import  '../../css/tiptap/editor-content.css'
 
 export default function Blog({ blog, auth }) {
+    const fallbackImg = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`;
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -97,7 +98,7 @@ export default function Blog({ blog, auth }) {
                                     alt={blog.title}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
-                                        e.target.src = "/storage/images/fallback.png";
+                                        e.target.src = fallbackImg;
                                     }}
                                 />
                             </div>
@@ -139,4 +140,19 @@ export default function Blog({ blog, auth }) {
     );
 }
 
-Blog.layout = page => <AppLayout children={page} />;
+Blog.layout = page => {
+    const { blog } = page.props;
+
+    return (
+        <AppLayout
+            children={page}
+            seo={{
+                title: blog?.title,
+                description: blog?.excerpt || blog?.content_html?.substring(0, 160) || "Article de blog sur la comptabilité et la gestion financière.",
+                image: blog?.featured_image ? `/storage/${blog.featured_image}` : null,
+                slug: `blog/${blog?.slug}`,
+                keywords: blog?.title ? `${blog.title}, comptabilité, finance, entreprise` : "comptabilité, gestion financière",
+            }}
+        />
+    )
+};

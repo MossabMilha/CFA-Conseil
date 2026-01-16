@@ -3,13 +3,13 @@ import AppLayout from '@/Layouts/AppLayout';
 import {CheckCircle} from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 
-
 const Service = ({ service }) => {
-    // Service data - in a real app, this would come from your backend
+
     const serviceData = {
-        title: service?.title || "Missions Comptables",
+        slug: service?.slug,
+        title: service?.title,
         description: service?.description || "Nous assurons la tenue et le suivi complet de votre comptabilité, avec des états financiers fiables et conformes aux normes en vigueur.",
-        image: service?.image || "/images/accounting-service.jpg",
+        image: service?.image,
         longDescription: service?.longDescription,
         features: service?.features || [],
         benefits: service?.benefits || []
@@ -17,8 +17,6 @@ const Service = ({ service }) => {
 
     return (
         <div className="min-h-screen bg-white">
-            <Head title={serviceData.title} />
-
             {/* Hero Section */}
             <div className="relative h-96 w-full">
                 <div
@@ -55,20 +53,20 @@ const Service = ({ service }) => {
                             <h2 className="text-3xl font-bold text-[#252550] mb-6">Nos engagements</h2>
                             <div className="grid md:grid-cols-2 gap-6">
                                 {serviceData.benefits.map((benefit, index) => {
-                                const IconComponent = LucideIcons[benefit.icon] || LucideIcons.HelpCircle;
-                                return (
-                                    <div key={index} className="bg-gray-50 p-6 rounded-lg hover:shadow-md transition-shadow">
-                                        <div className="flex items-start space-x-4">
-                                            <div className="flex-shrink-0">
-                                                <IconComponent/>
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-semibold text-[#252550] mb-2">{benefit.title}</h3>
-                                                <p className="text-gray-600">{benefit.description}</p>
+                                    const IconComponent = LucideIcons[benefit.icon] || LucideIcons.HelpCircle;
+                                    return (
+                                        <div key={index} className="bg-gray-50 p-6 rounded-lg hover:shadow-md transition-shadow">
+                                            <div className="flex items-start space-x-4">
+                                                <div className="flex-shrink-0">
+                                                    <IconComponent/>
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-xl font-semibold text-[#252550] mb-2">{benefit.title}</h3>
+                                                    <p className="text-gray-600">{benefit.description}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )})}
+                                    )})}
                             </div>
                         </div>
                     </div>
@@ -128,6 +126,16 @@ const Service = ({ service }) => {
     );
 };
 
-Service.layout = page => <AppLayout children={page} />;
+Service.layout = page => {
+    const { service } = page.props;
 
-export default Service;
+    const seo = {
+        title: service?.title,
+        description: service?.description,
+        image: service?.image,
+        slug: `services/${service?.slug}`,
+    };
+
+    return <AppLayout children={page} seo={seo} />
+};
+export default Service

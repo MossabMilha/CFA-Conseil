@@ -9,6 +9,7 @@ class ServiceController extends Controller
 {
     private $services = [
         'missions-comptables' => [
+            'slug' => 'missions-comptables',
             'title' => 'Missions Comptables',
             'description' => 'Nous assurons la tenue et le suivi complet de votre comptabilité, avec des états financiers fiables et conformes aux normes en vigueur.',
             'image' => '/storage/images/services/business-man-financial-inspector-secretary-making-report-calculating-checking-balance-internal-revenue-service-inspector-checking-document-audit-concept.webp',
@@ -40,6 +41,7 @@ class ServiceController extends Controller
             ]
         ],
         'conseil-gestion' => [
+            'slug' => 'conseil-gestion',
             'title' => 'Missions de conseil-gestion',
             'description' => 'Un conseil stratégique et opérationnel pour optimiser la performance de votre entreprise et renforcer vos outils de pilotage.',
             'image' => '/storage/images/services/business-team-discussing-their-ideas-office.webp',
@@ -71,6 +73,7 @@ class ServiceController extends Controller
             ]
         ],
         'audit' => [
+            'slug' => 'audit',
             'title' => "Missions d'audit",
             'description' => "Nous réalisons des audits financiers et organisationnels approfondis afin d'identifier les risques et garantir la fiabilité de vos données.",
             'image' => '/storage/images/services/working-process-startup-businessman-working-wood-table-with-new-finance-project-modern-notebook-table-pen-holding-hand.webp',
@@ -102,6 +105,7 @@ class ServiceController extends Controller
             ]
         ],
         'sociales-rh' => [
+            'slug' => 'sociales-rh',
             'title' => 'Missions sociales et RH',
             'description' => 'Un accompagnement personnalisé dans la gestion de vos ressources humaines : contrats, paie, déclarations sociales et obligations légales.',
             'image' => '/storage/images/services/female-applicant-interviewed-by-hr-mangers.webp',
@@ -133,6 +137,7 @@ class ServiceController extends Controller
             ]
         ],
         'juridiques' => [
+            'slug' => 'juridiques',
             'title' => 'Missions juridiques',
             'description' => "Nous vous accompagnons dans vos démarches juridiques : création d'entreprise, rédaction de statuts, assemblées générales et formalités.",
             'image' => '/storage/images/services/closeup-gavel-judgement-concept.webp',
@@ -164,6 +169,7 @@ class ServiceController extends Controller
             ]
         ],
         'fiscales' => [
+            'slug' => 'fiscales',
             'title' => 'Missions fiscales',
             'description' => "Un suivi rigoureux de vos obligations fiscales et l'optimisation de votre fiscalité pour sécuriser et alléger vos charges.",
             'image' => '/storage/images/services/mid-section-anonymous-male-accountant-calculating-financial-data.webp',
@@ -195,6 +201,7 @@ class ServiceController extends Controller
             ]
         ],
         'smq' => [
+            'slug' => 'smq',
             'title' => 'Mise en place S.M.Q',
             'description' => "Nous vous guidons dans la mise en place et le suivi d'un Système de Management de la Qualité, adapté à vos objectifs et exigences.",
             'image' => '/storage/images/services/reading-business-report.webp',
@@ -226,6 +233,7 @@ class ServiceController extends Controller
             ]
         ],
         'formation' => [
+            'slug' => 'formation',
             'title' => 'Formation',
             'description' => 'Des programmes de formation ciblés et pratiques, destinés à renforcer les compétences de vos équipes dans leurs domaines d\'expertise.',
             'image' => '/storage/images/services/team-businessmen-listening-business-lecture-briefing.webp',
@@ -257,6 +265,7 @@ class ServiceController extends Controller
             ]
         ],
         'gestion-projets' => [
+            'slug' => 'gestion-projets',
             'title' => 'Gestion des projets',
             'description' => 'Nous vous assistons dans la planification, le suivi et la réussite de vos projets, en assurant qualité, respect des délais et efficacité.',
             'image' => '/storage/images/services/business-people-are-brainstorming.webp',
@@ -293,7 +302,7 @@ class ServiceController extends Controller
     {
         if (!array_key_exists($service, $this->services)) {
             abort(404);
-        }   
+        }
 
         return Inertia::render('Service', [
             'service' => $this->services[$service]

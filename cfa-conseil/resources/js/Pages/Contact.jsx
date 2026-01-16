@@ -227,4 +227,18 @@ export default function Contact() {
     );
 }
 
-Contact.layout = (page) => <AppLayout children={page} />;
+// Add seo to the layout function at the bottom:
+
+Contact.layout = (page) => {
+    return (
+        <AppLayout
+            children={page}
+            seo={{
+                title: "Contactez-nous",
+                description: "Contactez le Cabinet Comptable Agréé CFA pour vos besoins en comptabilité et gestion financière.",
+                slug: "contact",
+                keywords: "contact comptable, devis comptabilité, conseil financier",
+            }}
+        />
+    );
+};

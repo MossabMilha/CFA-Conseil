@@ -1,29 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppLayout from '@/Layouts/AppLayout';
 import axios from 'axios';
+import Modal from '@/Components/ui/Modal';
 
 export default function AdminComments({ pendingComments }) {
-    const approveComment = async (commentId) => {
-        if (confirm('Approve this comment?')) {
-            try {
-                await axios.post(`/api/comments/${commentId}/approve`, {}, {
-                    withCredentials: true
-                });
-                window.location.reload();
-            } catch (error) {
-                console.error('Error approving comment:', error);
-            }
-        }
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalAction, setModalAction] = useState(null); // 'approve' or 'delete'
+    const [selectedComment, setSelectedComment] = useState(null);
+
+    const openModal = (action, comment) => {
+        setModalAction(action);
+        setSelectedComment(comment);
+        setModalOpen(true);
     };
 
-    const deleteComment = async (commentId) => {
-        if (confirm('Delete this comment?')) {
-            try {
-                await axios.delete(`/api/comments/${commentId}`);
-                window.location.reload();
-            } catch (error) {
-                console.error('Error deleting comment:', error);
+    const closeModal = (e) => {
+        if (e) e.stopPropagation();
+        setModalOpen(false);
+        setTimeout(() => {
+            setModalAction(null);
+            setSelectedComment(null);
+        }, 200);
+    };
+
+
+    const handleAction = async () => {
+        if (!selectedComment) return;
+
+        try {
+            if (modalAction === 'approve') {
+                await axios.post(`/api/comments/${selectedComment.id}/approve`, {}, { withCredentials: true });
+            } else if (modalAction === 'delete') {
+                await axios.delete(`/api/comments/${selectedComment.id}`);
             }
+            window.location.reload();
+        } catch (error) {
+            console.error(`Error ${modalAction} comment:`, error);
+        } finally {
+            closeModal();
         }
     };
 
@@ -58,7 +72,8 @@ export default function AdminComments({ pendingComments }) {
                     <table className="min-w-full border-collapse">
                         <thead className="bg-gray-100 text-[#252550] border-b border-[#6886ab]">
                         <tr>
-                            <th className="px-4 py-3 text-left text-sm font-semibold">User</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">Guest Name</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">Guest Email</th>
                             <th className="px-4 py-3 text-left text-sm font-semibold">Blog ID</th>
                             <th className="px-4 py-3 text-left text-sm font-semibold">Comment</th>
                             <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
@@ -69,27 +84,20 @@ export default function AdminComments({ pendingComments }) {
                         {pendingComments.length > 0 ? (
                             pendingComments.map((comment) => (
                                 <tr key={comment.id} className="border-b hover:bg-gray-50">
-                                    <td className="px-4 py-3 text-sm text-gray-700 font-medium">
-                                        {comment.user
-                                            ? `${comment.user.first_name} ${comment.user.last_name}`
-                                            : 'Guest'}
-                                    </td>
+                                    <td className="px-4 py-3 text-sm text-gray-700">{comment.name || '—'}</td>
+                                    <td className="px-4 py-3 text-sm text-gray-700">{comment.email || '—'}</td>
                                     <td className="px-4 py-3 text-sm text-gray-600">{comment.blog_id}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-700 max-w-xs break-words">
-                                        {comment.content}
-                                    </td>
-                                    <td className="px-4 py-3 text-sm text-gray-500">
-                                        {new Date(comment.created_at).toLocaleString()}
-                                    </td>
+                                    <td className="px-4 py-3 text-sm text-gray-700 max-w-xs break-words">{comment.content}</td>
+                                    <td className="px-4 py-3 text-sm text-gray-500">{new Date(comment.created_at).toLocaleString()}</td>
                                     <td className="px-4 py-3 text-center space-x-2">
                                         <button
-                                            onClick={() => approveComment(comment.id)}
+                                            onClick={() => openModal('approve', comment)}
                                             className="px-3 py-1 text-[#6886ab] hover:text-white rounded hover:bg-[#6886ab] transition-colors"
                                         >
                                             Approve
                                         </button>
                                         <button
-                                            onClick={() => deleteComment(comment.id)}
+                                            onClick={() => openModal('delete', comment)}
                                             className="px-3 py-1 text-red-600 hover:text-white rounded hover:bg-red-600 transition-colors"
                                         >
                                             Delete
@@ -99,10 +107,7 @@ export default function AdminComments({ pendingComments }) {
                             ))
                         ) : (
                             <tr>
-                                <td
-                                    colSpan="5"
-                                    className="text-center py-8 text-gray-500 text-sm"
-                                >
+                                <td colSpan="7" className="text-center py-8 text-gray-500 text-sm">
                                     No pending comments
                                 </td>
                             </tr>
@@ -111,6 +116,34 @@ export default function AdminComments({ pendingComments }) {
                     </table>
                 </div>
             </div>
+
+            {/* Modal */}
+            <Modal show={modalOpen} onClose={closeModal} maxWidth="sm">
+                <div className="p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                        {modalAction === 'approve' ? 'Approve Comment' : 'Delete Comment'}
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                        Are you sure you want to {modalAction} this comment?
+                    </p>
+                    <div className="flex justify-end space-x-2">
+                        <button
+                            onClick={(e) => closeModal(e)}
+                            className="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleAction}
+                            className={`px-4 py-2 rounded text-white ${
+                                modalAction === 'approve' ? 'bg-[#6886ab] hover:bg-[#557299]' : 'bg-red-600 hover:bg-red-700'
+                            }`}
+                        >
+                            {modalAction === 'approve' ? 'Approve' : 'Delete'}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </AppLayout>
     );
 }

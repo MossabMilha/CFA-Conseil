@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    // Show only approved comments
+    /**
+     * Show only approved comments for a blog post.
+     */
     public function index($blogId)
     {
-        // Get all approved comments for this blog
         $allComments = Comment::with('user')
             ->where('blog_id', $blogId)
             ->where('status', 'approved')
@@ -21,39 +22,58 @@ class CommentController extends Controller
         return response()->json($allComments);
     }
 
-    // Store a new comment
+    /**
+     * Store a new comment (user or guest).
+     */
     public function store(Request $request, $blogId)
     {
-        $request->validate([
+        $validated = $request->validate([
             'content' => 'required|string|min:3|max:1000',
             'parent_id' => 'nullable|exists:comments,id',
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255',
         ]);
 
-        // Check if parent comment belongs to the same blog
-        if ($request->parent_id) {
-            $parentComment = Comment::findOrFail($request->parent_id);
+        // Validate that the parent comment (if provided) belongs to the same blog
+        if ($validated['parent_id'] ?? false) {
+            $parentComment = Comment::findOrFail($validated['parent_id']);
             if ($parentComment->blog_id != $blogId) {
                 return response()->json([
-                    'message' => 'Invalid parent comment.'
+                    'message' => 'Invalid parent comment.',
                 ], 422);
             }
         }
 
-        $comment = Comment::create([
-            'blog_id' => $blogId,
-            'user_id' => Auth::id(), // Will be null for guests
-            'content' => $request->content,
-            'parent_id' => $request->parent_id,
-            'status' => Auth::check() ? 'approved' : 'pending',
-        ]);
+        $comment = new Comment();
+        $comment->blog_id = $blogId;
+        $comment->content = $validated['content'];
+        $comment->parent_id = $validated['parent_id'] ?? null;
+
+        if (Auth::check()) {
+            // Logged-in user
+            $comment->user_id = Auth::id();
+            $comment->status = 'approved';
+        } else {
+            // Guest user
+            $comment->name = $validated['name'];
+            $comment->email = $validated['email'];
+            $comment->status = 'pending';
+        }
+
+        $comment->save();
 
         return response()->json([
-            'message' => Auth::check() ? 'Comment added!' : 'Comment submitted for approval!',
+            'success' => true,
+            'message' => Auth::check()
+                ? 'Your comment has been added successfully!'
+                : 'Your comment has been submitted',
             'comment' => $comment,
         ], 201);
     }
 
-    // Admin: Approve comment
+    /**
+     * Admin: Approve a pending comment.
+     */
     public function approve($commentId)
     {
         $comment = Comment::findOrFail($commentId);
@@ -61,19 +81,21 @@ class CommentController extends Controller
         $comment->save();
 
         return response()->json([
-            'message' => 'Comment approved',
+            'message' => 'Comment approved successfully.',
             'comment' => $comment,
         ]);
     }
 
-    // Admin: Delete comment
+    /**
+     * Admin: Delete a comment.
+     */
     public function destroy($commentId)
     {
         $comment = Comment::findOrFail($commentId);
         $comment->delete();
 
         return response()->json([
-            'message' => 'Comment deleted',
+            'message' => 'Comment deleted successfully.',
         ]);
     }
 }

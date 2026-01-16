@@ -9,7 +9,11 @@ return new class extends Migration
     public function up()
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'approved'])->default('pending');
+            if (!Schema::hasColumn('comments', 'status')) {
+                $table->enum('status', ['pending', 'approved'])->default('pending');
+            }
+
+            // Ensure user_id is nullable
             $table->foreignId('user_id')->nullable()->change();
         });
     }
@@ -17,7 +21,10 @@ return new class extends Migration
     public function down()
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->dropColumn('status');
+            if (Schema::hasColumn('comments', 'status')) {
+                $table->dropColumn('status');
+            }
+
             $table->foreignId('user_id')->nullable(false)->change();
         });
     }

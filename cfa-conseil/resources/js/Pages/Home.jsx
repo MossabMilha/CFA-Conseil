@@ -1,23 +1,22 @@
-import React, {useState} from 'react';
-import axios from 'axios';
+import React from 'react';
 import ServiceCard from '@/Components/ServiceCard';
 import IconOne from '@/assets/one.svg?react';
 import IconTwo from '@/assets/two.svg?react';
 import IconThree from '@/assets/three.svg?react';
 import IconFour from '@/assets/four.svg?react';
-import { MapPin, Phone, Mail, Rocket, Heart, User2, Star } from 'lucide-react';
-import { Head, Link } from '@inertiajs/react';
+import {Rocket, Heart, User2, Star } from 'lucide-react';
+import { Head } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 import Contact from '@/Pages/Contact.jsx';
 import Autoplay from "embla-carousel-autoplay"
 
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/Components/ui/carousel';
+import SeoHead from "@/Components/SeoHead.jsx";
 
 
 export default function Home() {
     return (
         <div className="relative">
-            <Head title="CFA Conseil - Accueil" />
             <main>
                 <section className='relative min-h-screen from-[#92afc9] from-0% via-[#6886ab] via-50% to-[#6886ab] bg-gradient-to-br'>
                     <div className='absolute w-full h-full -z-9'
