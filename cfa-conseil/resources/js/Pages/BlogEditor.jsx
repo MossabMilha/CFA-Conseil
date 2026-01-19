@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Toast from "@/Components/ui/Toast.jsx";
 import "@/../css/tiptap/editor-content.css";
+import SeoHead from "@/Components/SeoHead.jsx";
 
 // --------------------
 // Utility: generate unique ID for each image
@@ -417,262 +418,292 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
     // JSX Render
     // --------------------
     return (
-        <div className=' relative py-16'>
-            <div className='absolute left-0 top-0 -z-10 grid grid-cols-3'>
-                <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tl-none'></div>
-                <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div></div>
-                <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div>
-                <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
-                <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tl-none'></div></div>
-                <div></div>
-                <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div>
-            </div>
-            <div className='absolute right-0 top-0 -z-10 grid grid-cols-3 '>
-                <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
-                <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div></div>
-                <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
-                <div></div>
-                <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div>
-                <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'><div className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div></div>
-                <div></div>
-                <div></div>
-                <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div>
-            </div>
-            <div >
-                <div className="bg-white max-w-4xl mx-auto p-6 rounded-lg shadow-md">
-                    {/* Toolbar */}
-                    <div className="sticky top-4 z-10 flex flex-wrap gap-2 mb-4 p-2 bg-gray-50 rounded-md border border-gray-200 shadow-sm">
-                        {/* Bold */}
-                        <button
-                            onClick={() => editor.chain().focus().toggleBold().run()}
-                            className={`p-2 rounded hover:bg-gray-200 `}
-                            title="Bold"
-                        >
-                            <Bold />
-                        </button>
+        <>
+            <SeoHead
+                title= "Blog Editor"
+                description="Create, edit, and manage blog posts for your website using the IntelliCache CMS."
+                slug="blog-editor"
+                keywords="blog editor, write post, manage blog, content management"
+            />
+            <div className=' relative py-16'>
+                <div className='absolute left-0 top-0 -z-10 grid grid-cols-3'>
+                    <div
+                        className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tl-none'></div>
+                    <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'>
+                        <div
+                            className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div>
+                    </div>
+                    <div
+                        className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div>
+                    <div
+                        className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
+                    <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'>
+                        <div
+                            className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tl-none'></div>
+                    </div>
+                    <div></div>
+                    <div
+                        className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div>
+                </div>
+                <div className='absolute right-0 top-0 -z-10 grid grid-cols-3 '>
+                    <div
+                        className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
+                    <div className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'>
+                        <div
+                            className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div>
+                    </div>
+                    <div
+                        className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tr-none'></div>
+                    <div></div>
+                    <div
+                        className='bg-[#6886ab] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div>
+                    <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16'>
+                        <div
+                            className='bg-white w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-bl-none'></div>
+                    </div>
+                    <div></div>
+                    <div></div>
+                    <div
+                        className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div>
+                </div>
+                <div>
+                    <div className="bg-white max-w-4xl mx-auto p-6 rounded-lg shadow-md">
+                        {/* Toolbar */}
+                        <div
+                            className="sticky top-4 z-10 flex flex-wrap gap-2 mb-4 p-2 bg-gray-50 rounded-md border border-gray-200 shadow-sm">
+                            {/* Bold */}
+                            <button
+                                onClick={() => editor.chain().focus().toggleBold().run()}
+                                className={`p-2 rounded hover:bg-gray-200 `}
+                                title="Bold"
+                            >
+                                <Bold/>
+                            </button>
 
-                        {/* Italic */}
-                        <button
-                            onClick={() => editor.chain().focus().toggleItalic().run()}
-                            className={`p-2 rounded hover:bg-gray-200 `}
-                            title="Italic"
-                        >
-                            <Italic />
-                        </button>
+                            {/* Italic */}
+                            <button
+                                onClick={() => editor.chain().focus().toggleItalic().run()}
+                                className={`p-2 rounded hover:bg-gray-200 `}
+                                title="Italic"
+                            >
+                                <Italic/>
+                            </button>
 
-                        {/* Underline */}
-                        <button
-                            onClick={() => editor.chain().focus().toggleUnderline().run()}
-                            className={`p-2 rounded hover:bg-gray-200 `}
-                            title="Underline"
-                        >
-                            <UnderlineIcon />
-                        </button>
+                            {/* Underline */}
+                            <button
+                                onClick={() => editor.chain().focus().toggleUnderline().run()}
+                                className={`p-2 rounded hover:bg-gray-200 `}
+                                title="Underline"
+                            >
+                                <UnderlineIcon/>
+                            </button>
 
-                        {/* Headings Dropdown */}
-                        <Dropdown className="hover:bg-gray-200 rounded cursor-pointer">
-                            <Dropdown.Trigger>
-                                <div className="flex items-center px-2"><Heading /></div>
-                            </Dropdown.Trigger>
-                            <Dropdown.Content width="min-w-64">
-                                {[1, 2, 3, 4, 5, 6].map((lvl) => {
-                                    const Icon = [Heading1, Heading2, Heading3, Heading4, Heading5, Heading6][lvl - 1];
-                                    return (
-                                        <button
-                                            key={lvl}
-                                            onClick={() => editor.chain().focus().toggleHeading({ level: lvl }).run()}
-                                            className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', { level: lvl }) ? 'bg-gray-200' : ''}`}
-                                        >
-                                            <Icon />
-                                            <span className="[#eaeaea]space-nowrap">Heading {lvl}</span>
-                                        </button>
-                                    );
-                                })}
-                            </Dropdown.Content>
-                        </Dropdown>
-
-                        {/* Lists */}
-                        <button
-                            onClick={() => editor.chain().focus().toggleBulletList().run()}
-                            className={`p-2 rounded hover:bg-gray-200 `}
-                            title="Bullet List"
-                        >
-                            <List />
-                        </button>
-                        <button
-                            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                            className={`p-2 rounded hover:bg-gray-200 `}
-                            title="Numbered List"
-                        >
-                            <ListOrdered />
-                        </button>
-
-                        {/* Color Picker */}
-                        <Dropdown className="hover:bg-gray-200 rounded cursor-pointer">
-                            <Dropdown.Trigger>
-                                <div className="flex items-center px-2"><Baseline /></div>
-                            </Dropdown.Trigger>
-                            <Dropdown.Content>
-                                <div className="p-2">
-                                    <div className="grid grid-cols-5">
-                                        {[
-                                            '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
-                                            '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080',
-                                            '#800000', '#808000', '#008000', '#800080', '#008080',
-                                            '#000080', '#FFA500', '#A52A2A', '#FFC0CB', '#FFD700'
-                                        ].map((color) => (
+                            {/* Headings Dropdown */}
+                            <Dropdown className="hover:bg-gray-200 rounded cursor-pointer">
+                                <Dropdown.Trigger>
+                                    <div className="flex items-center px-2"><Heading/></div>
+                                </Dropdown.Trigger>
+                                <Dropdown.Content width="min-w-64">
+                                    {[1, 2, 3, 4, 5, 6].map((lvl) => {
+                                        const Icon = [Heading1, Heading2, Heading3, Heading4, Heading5, Heading6][lvl - 1];
+                                        return (
                                             <button
-                                                key={color}
-                                                onClick={() => editor.chain().focus().setColor(color).run()}
-                                                className="h-8 border border-gray-300 hover:border-blue-500"
-                                                style={{ backgroundColor: color }}
-                                                title={color}
-                                            />
-                                        ))}
+                                                key={lvl}
+                                                onClick={() => editor.chain().focus().toggleHeading({level: lvl}).run()}
+                                                className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', {level: lvl}) ? 'bg-gray-200' : ''}`}
+                                            >
+                                                <Icon/>
+                                                <span className="[#eaeaea]space-nowrap">Heading {lvl}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </Dropdown.Content>
+                            </Dropdown>
+
+                            {/* Lists */}
+                            <button
+                                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                                className={`p-2 rounded hover:bg-gray-200 `}
+                                title="Bullet List"
+                            >
+                                <List/>
+                            </button>
+                            <button
+                                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                                className={`p-2 rounded hover:bg-gray-200 `}
+                                title="Numbered List"
+                            >
+                                <ListOrdered/>
+                            </button>
+
+                            {/* Color Picker */}
+                            <Dropdown className="hover:bg-gray-200 rounded cursor-pointer">
+                                <Dropdown.Trigger>
+                                    <div className="flex items-center px-2"><Baseline/></div>
+                                </Dropdown.Trigger>
+                                <Dropdown.Content>
+                                    <div className="p-2">
+                                        <div className="grid grid-cols-5">
+                                            {[
+                                                '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
+                                                '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080',
+                                                '#800000', '#808000', '#008000', '#800080', '#008080',
+                                                '#000080', '#FFA500', '#A52A2A', '#FFC0CB', '#FFD700'
+                                            ].map((color) => (
+                                                <button
+                                                    key={color}
+                                                    onClick={() => editor.chain().focus().setColor(color).run()}
+                                                    className="h-8 border border-gray-300 hover:border-blue-500"
+                                                    style={{backgroundColor: color}}
+                                                    title={color}
+                                                />
+                                            ))}
+                                        </div>
+                                        <div className="mt-2 pt-2 border-t border-gray-200">
+                                            <button
+                                                onClick={() => editor.chain().focus().unsetColor().run()}
+                                                className="w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                                            >
+                                                Reset color
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="mt-2 pt-2 border-t border-gray-200">
-                                        <button
-                                            onClick={() => editor.chain().focus().unsetColor().run()}
-                                            className="w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                                        >
-                                            Reset color
-                                        </button>
-                                    </div>
+                                </Dropdown.Content>
+                            </Dropdown>
+
+                            {/* Insert Image */}
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleImageUpload}
+                                accept="image/*"
+                                className="hidden"
+                            />
+                            <button
+                                type="button"
+                                onClick={triggerFileInput}
+                                className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
+                                title="Insert Image"
+                            >
+                                <ImagePlus/>
+                            </button>
+
+                            {/* Upload PDF */}
+                            <input
+                                type="file"
+                                name="pdf"
+                                ref={pdfInputRef}
+                                onChange={handlePdfUpload}
+                                accept="application/pdf"
+                                className="hidden"
+                            />
+                            <button
+                                type="button"
+                                onClick={triggerPdfInput}
+                                className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
+                                title="Attach PDF"
+                            >
+                                <FileIcon/>
+                            </button>
+
+                        </div>
+
+                        {/*Featured Image */}
+                        <div className="relative flex flex-col gap-2 mb-4 w-full">
+                            {/* Show preview if featuredImage exists */}
+                            {featuredImagePath ? (
+                                <div className="relative">
+                                    <img
+                                        src={featuredImagePath?.startsWith('blob') ? featuredImagePath : `/storage/${featuredImagePath}`}
+                                        alt="Featured preview"
+                                        className="w-full h-64 object-cover rounded border"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`;
+                                        }}
+                                    />
+                                    <div className="absolute top-3 right-3 bg-gray-50 rounded-full p-1"
+                                         onClick={(e) => {
+                                             e.stopPropagation();
+                                             setData('has_featured_image', false);
+                                             setFeaturedImagePath(null);
+                                         }}
+                                    ><X/></div>
                                 </div>
-                            </Dropdown.Content>
-                        </Dropdown>
-
-                        {/* Insert Image */}
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleImageUpload}
-                            accept="image/*"
-                            className="hidden"
-                        />
-                        <button
-                            type="button"
-                            onClick={triggerFileInput}
-                            className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
-                            title="Insert Image"
-                        >
-                            <ImagePlus />
-                        </button>
-
-                        {/* Upload PDF */}
-                        <input
-                        type="file"
-                        name="pdf"
-                        ref={pdfInputRef}
-                        onChange={handlePdfUpload}
-                        accept="application/pdf"
-                        className="hidden"
-                        />
-                        <button
-                        type="button"
-                        onClick={triggerPdfInput}
-                        className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
-                        title="Attach PDF"
-                        >
-                         <FileIcon/>
-                        </button>
-
-                    </div>
-
-                    {/*Featured Image */}
-                    <div className="relative flex flex-col gap-2 mb-4 w-full">
-                        {/* Show preview if featuredImage exists */}
-                        {featuredImagePath ? (
-                            <div className="relative">
-                                <img
-                                    src={featuredImagePath?.startsWith('blob') ? featuredImagePath : `/storage/${featuredImagePath}`}
-                                    alt="Featured preview"
-                                    className="w-full h-64 object-cover rounded border"
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`;
-                                    }}
-                                />
-                                <div className="absolute top-3 right-3 bg-gray-50 rounded-full p-1"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setData('has_featured_image', false);
-                                        setFeaturedImagePath(null);
-                                    }}
-                                ><X/></div>
-                            </div>
-                        ) : (
-                            <>
-                                <input
-                                    type="file"
-                                    ref={featuredImageRef}
-                                    onChange={handleFeaturedImageUpload}
-                                    accept="image/*"
-                                    className="hidden"
-                                />
-                                <button type="button" onClick={triggerFeaturedImageInput} className="grow border border-dashed px-2 py-8 rounded hover:bg-gray-100 border-gray-300 flex items-center justify-center gap-2">
-                                    <ImagePlus /> Add Featured Image
-                                </button>
-                            </>
-                        )}
+                            ) : (
+                                <>
+                                    <input
+                                        type="file"
+                                        ref={featuredImageRef}
+                                        onChange={handleFeaturedImageUpload}
+                                        accept="image/*"
+                                        className="hidden"
+                                    />
+                                    <button type="button" onClick={triggerFeaturedImageInput}
+                                            className="grow border border-dashed px-2 py-8 rounded hover:bg-gray-100 border-gray-300 flex items-center justify-center gap-2">
+                                        <ImagePlus/> Add Featured Image
+                                    </button>
+                                </>
+                            )}
 
 
-                    </div>
+                        </div>
 
-                    {/* Title */}
-                    <div className="flex items-center gap-2 mb-4 w-full">
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            value={data.title}
-                            onChange={(e) => setData('title', e.target.value)}
-                            className="grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
+                        {/* Title */}
+                        <div className="flex items-center gap-2 mb-4 w-full">
+                            <input
+                                type="text"
+                                placeholder="Title"
+                                value={data.title}
+                                onChange={(e) => setData('title', e.target.value)}
+                                className="grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
 
-                    {/* Excerpt */}
-                    <div className="flex items-center gap-2 mb-4 w-full">
+                        {/* Excerpt */}
+                        <div className="flex items-center gap-2 mb-4 w-full">
                         <textarea
                             placeholder="Excerpt"
                             value={data.excerpt}
                             onChange={(e) => setData('excerpt', e.target.value)}
                             className="grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
-                    </div>
+                        </div>
 
-                    {/* Editor */}
-                    <div className="max-w-none">
-                        <EditorContent
-                            editor={editor}
-                            className="editor-content min-h-[300px] p-4 border border-gray-300 focus:outline-none rounded-md prose"
-                        />
-                    </div>
+                        {/* Editor */}
+                        <div className="max-w-none">
+                            <EditorContent
+                                editor={editor}
+                                className="editor-content min-h-[300px] p-4 border border-gray-300 focus:outline-none rounded-md prose"
+                            />
+                        </div>
 
-                    {/* Save Button */}
-                    <div className="mt-6 flex justify-between">
-                        <button
-                            onClick={() => reset()}
-                            className="px-4 py-2 text-[#252550] flex rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                        >
-                        <a href="/blogs" className="flex items-center gap-2"><ArrowLeft/> Blogs</a>
-                        </button>
-                        <button
-                            onClick={handleBlogUpload}
-                            className="px-4 py-2 text-[#eaeaea] bg-[#92aec8] rounded-md hover:bg-[#7aa3c0] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                        >
-                            Save Blog
-                        </button>
+                        {/* Save Button */}
+                        <div className="mt-6 flex justify-between">
+                            <button
+                                onClick={() => reset()}
+                                className="px-4 py-2 text-[#252550] flex rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                            >
+                                <a href="/blogs" className="flex items-center gap-2"><ArrowLeft/> Blogs</a>
+                            </button>
+                            <button
+                                onClick={handleBlogUpload}
+                                className="px-4 py-2 text-[#eaeaea] bg-[#92aec8] rounded-md hover:bg-[#7aa3c0] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                            >
+                                Save Blog
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast({message: "", type: "info"})}
+                />
+
             </div>
-
-            <Toast
-                message={toast.message}
-                type={toast.type}
-                onClose={() => setToast({ message: "", type: "info" })}
-            />
-
-        </div>
+        </>
 
     );
 }

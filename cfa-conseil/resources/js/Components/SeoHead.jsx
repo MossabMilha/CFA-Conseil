@@ -39,7 +39,7 @@ const SeoHead = ({
             <meta key="og:url" property="og:url" content={pageUrl} />
             <meta key="og:site_name" property="og:site_name" content="Cabinet Comptable Agréé CFA" />
 
-            <link key="favicon" rel="icon" href="/favicon.ico" />
+            <link key="favicon" rel="icon" href="/storage/logo.png" type="image/png" />
 
             {structuredData && (
                 <script key="structured-data" type="application/ld+json">

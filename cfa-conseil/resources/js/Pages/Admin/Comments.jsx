@@ -42,7 +42,14 @@ export default function AdminComments({ pendingComments }) {
     };
 
     return (
-        <AppLayout>
+        <AppLayout
+            seo={{
+                title: "Admin Comments",
+                description: "Manage and moderate user comments on your website from the admin dashboard.",
+                slug: "admin/comments",
+                keywords: "admin comments, manage comments, moderate comments, user feedback",
+            }}
+        >
             <div className="flex justify-between mb-48">
                 <div className='absolute left-0 top-0 -z-10 grid grid-cols-3 '>
                     <div className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-tl-none'></div>
