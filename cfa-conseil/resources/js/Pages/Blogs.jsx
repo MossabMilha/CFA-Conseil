@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import AppLayout from '@/Layouts/AppLayout';
 import { Search, Trash } from 'lucide-react';
 import { Link } from "@inertiajs/react";
-import { useAuth } from '@/contexts/AuthContext';
 import { usePage } from '@inertiajs/react';
 import { Edit, ArrowRight } from 'lucide-react';
+import Toast from "@/Components/ui/Toast.jsx";
+import axios from "axios";
+import Modal from "@/Components/ui/Modal.jsx";
 
 export default function Blogs({ blogs = [] }) {
     const { auth } = usePage().props;
-    const { user } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
-    const [onImage, setOnImage] = useState(false);
+    const [blogList, setBlogList] = useState(blogs);
+    const [toast, setToast] = useState({ message: "", type: "info" });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [blogToDelete, setBlogToDelete] = useState(null);
 
     // Filter blogs based on search term
-    const filteredBlogs = blogs.filter(blog =>
+    const filteredBlogs = blogList.filter(blog =>
         blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (blog.excerpt && blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase()))
     );
@@ -26,25 +30,40 @@ export default function Blogs({ blogs = [] }) {
         });
     };
 
-    // Using fetch
-    const deleteBlog = async (id) => {
-        try {
-            const response = await fetch(`/api/blogs/${id}`, {
-                method: 'DELETE',
-            });
+    const showToast = (message, type = "info") => {
+        setToast({ message, type });
+    };
 
-            const result = await response.json();
+    const confirmDeleteBlog = (blog) => {
+        setBlogToDelete(blog);
+        setShowDeleteModal(true);
+    };
+
+    useEffect(() => {
+        setBlogList(blogs);
+    }, [blogs]);
+
+    const deleteBlog = async () => {
+        if (!blogToDelete) return;
+
+        try {
+            const response = await axios.delete(`/blogs/${blogToDelete.id}`);
+            const result = response.data;
 
             if (result.success) {
-                alert('Blog deleted successfully');
-                // Refresh the list or redirect
+                setBlogList((prev) => prev.filter((b) => b.id !== blogToDelete.id));
+                showToast('Blog deleted successfully', 'success');
             } else {
-                alert('Error: ' + result.message);
+                showToast('Error: ' + (result.message || 'Unknown error occurred'), 'error');
             }
         } catch (error) {
             console.error('Error deleting blog:', error);
+            showToast(error.response?.data?.message || 'Error deleting blog', 'error');
+        } finally {
+            setShowDeleteModal(false);
+            setBlogToDelete(null);
         }
-    }
+    };
 
     return (
             <div className="min-h-screen flex flex-col">
@@ -128,12 +147,12 @@ export default function Blogs({ blogs = [] }) {
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        deleteBlog(blog.id);
+                                                        confirmDeleteBlog(blog);
                                                     }}
                                                     className="w-full h-full flex items-center justify-center"
                                                     title="Delete blog"
                                                 >
-                                                    <Trash size={'1em'}/>
+                                                    <Trash size={'1em'} />
                                                 </button>
                                             </div>
                                         }
@@ -185,6 +204,37 @@ export default function Blogs({ blogs = [] }) {
                         )}
                     </div>
                 </div>
+
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast({ message: "", type: "info" })}
+                />
+
+                <Modal show={showDeleteModal} onClose={() => setShowDeleteModal(false)} maxWidth="sm">
+                    <div className="p-6 text-center">
+                        <h3 className="text-lg font-medium text-gray-900 mb-4">Delete Blog</h3>
+                        <p className="text-sm text-gray-500 mb-6">
+                            Are you sure you want to delete the blog <strong>{blogToDelete?.title}</strong>?
+                            This action cannot be undone.
+                        </p>
+                        <div className="flex justify-center gap-4">
+                            <button
+                                onClick={() => setShowDeleteModal(false)}
+                                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={deleteBlog}
+                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+
             </div>
     );
 }

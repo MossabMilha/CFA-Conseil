@@ -14,7 +14,7 @@ import {
     Heading1, Heading2, Heading3, Heading4, Heading5, Heading6,
     Baseline, ImagePlus, X, ArrowLeft, Underline as UnderlineIcon, File as FileIcon
 } from "lucide-react";
-
+import Toast from "@/Components/ui/Toast.jsx";
 import "@/../css/tiptap/editor-content.css";
 
 // --------------------
@@ -49,6 +49,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
         excerpt: initialBlog?.excerpt || '',
         has_featured_image: !!initialBlog?.featured_image_path
     });
+
+    const [toast, setToast] = useState({ message: "", type: "info" });
+    const showToast = (message, type = "info") => {
+        setToast({ message, type });
+    };
 
     // --------------------
     // Editor setup
@@ -169,11 +174,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
         // Validate type and size
         if (!file.type.startsWith('image/')) {
-            alert('Please select an image file');
+            showToast('Please select an image file', 'error');
             return;
         }
         if (file.size > 5 * 1024 * 1024) { // 5MB limit
-            alert('Image size should be less than 5MB');
+            showToast('Image size should be less than 5MB', 'error');
             return;
         }
 
@@ -196,7 +201,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
         } catch (err) {
             console.error('Image upload failed:', err);
-            alert('Failed to upload image');
+            showToast('Failed to upload image', 'error');
         }
 
         e.target.value = ''; // reset input
@@ -208,11 +213,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
         // Validate
         if (!file.type.startsWith("image/")) {
-            alert("Please select an image file");
+            showToast('Please select an image file', 'error');
             return;
         }
         if (file.size > 5 * 1024 * 1024) {
-            alert("Featured image must be less than 5MB");
+            showToast('Featured image size should be less than 5MB', 'error');
             return;
         }
 
@@ -228,11 +233,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
         if (!file) return;
 
         if (file.type !== "application/pdf") {
-            alert("Please upload a PDF file");
+            showToast("Please upload a PDF file", "error");
             return;
         }
         if (file.size > 10 * 1024 * 1024) { // limit 10MB
-            alert("PDF must be less than 10MB");
+            showToast("PDF file must be less than 10MB", "error");
             return;
         }
 
@@ -255,7 +260,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
         } catch (err) {
             console.error("PDF upload failed:", err);
-            alert("Failed to upload PDF");
+            showToast("Failed to upload PDF", "error");
         }
 
         e.target.value = '';
@@ -283,10 +288,10 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
             // Create the blog and get the ID
             const blogResponse = isEditMode
-                ? await axios.post(`/api/blogs/${data.slug}`, blogFormData, {
+                ? await axios.post(`/blogs/${data.slug}`, blogFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 })
-                : await axios.post('/api/blogs', blogFormData, {
+                : await axios.post('/blogs', blogFormData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
 
@@ -320,7 +325,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
             });
 
             // Always call upload-images, even if no new images to upload
-            const imgResponse = await axios.post('/api/upload-images', imgFormData, {
+            const imgResponse = await axios.post('/upload-images', imgFormData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             uploadedImagesMap = imgResponse.data.data || {};
@@ -352,7 +357,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
             });
 
             // Always call upload-pdfs, even if no new PDFs to upload
-            const pdfResponse = await axios.post('/api/upload-pdfs', pdfFormData, {
+            const pdfResponse = await axios.post('/upload-pdfs', pdfFormData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             uploadedPdfsMap = pdfResponse.data.data || {};
@@ -378,7 +383,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
             const updateFormData = new FormData();
             updateFormData.append('content_html', finalContent);
 
-            await axios.post(`/api/blogs/content/${blog.slug}`, updateFormData, {
+            await axios.post(`/blogs/content/${blog.slug}`, updateFormData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
@@ -393,11 +398,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
             editor.commands.setContent('<p>Start writing your blog here...</p>');
             setFeaturedImagePath(null);
 
-            alert('Blog saved successfully!');
+            showToast('Blog saved successfully!', "success");
 
         } catch (err) {
             console.error('Error saving blog:', err);
-            alert(err.response?.data?.message || 'Something went wrong while saving the blog.');
+            showToast(err.response?.data?.message || 'Something went wrong while saving the blog.', "error");
         }
     };
 
@@ -585,7 +590,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                     className="w-full h-64 object-cover rounded border"
                                     onError={(e) => {
                                         e.target.onerror = null;
-                                        e.target.src = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`; // Add a fallback image
+                                        e.target.src = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`;
                                     }}
                                 />
                                 <div className="absolute top-3 right-3 bg-gray-50 rounded-full p-1"
@@ -660,6 +665,13 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                     </div>
                 </div>
             </div>
+
+            <Toast
+                message={toast.message}
+                type={toast.type}
+                onClose={() => setToast({ message: "", type: "info" })}
+            />
+
         </div>
 
     );

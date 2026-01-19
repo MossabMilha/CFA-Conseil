@@ -53,6 +53,8 @@ class Blog extends Model
                 }
             }
             $blog->pdfs()->delete();
+
+            $blog->comments()->delete();
         });
     }
 
@@ -69,5 +71,10 @@ class Blog extends Model
     public function pdfs()
     {
         return $this->hasMany(BlogPdfs::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
