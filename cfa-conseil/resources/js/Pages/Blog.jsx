@@ -8,7 +8,7 @@ import  '../../css/tiptap/editor-content.css'
 export default function Blog({ blog, auth }) {
     const fallbackImg = `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/storage/images/fallback.png`;
     const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString('fr-FR', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'

@@ -23,7 +23,7 @@ export default function Blogs({ blogs = [] }) {
     );
 
     const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString('fr-FR', {
             year: 'numeric',
             month: 'short',
             day: 'numeric'
