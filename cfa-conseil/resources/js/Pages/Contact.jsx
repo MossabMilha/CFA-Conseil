@@ -116,7 +116,7 @@ export default function Contact() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-4">
                             {[
-                                { name: 'name', label: 'Nom et prénom', type: 'text', placeholder: 'Nom et prénom' },
+                                { name: 'name', label: 'Nom et prénom', type: 'text', placeholder: 'Nom et prénom'},
                                 { name: 'email', label: 'Email', type: 'email', placeholder: 'Email' },
                                 { name: 'phone', label: 'Téléphone', type: 'tel', placeholder: 'Téléphone' },
                                 { name: 'company', label: 'Société', type: 'text', placeholder: 'Société' },
@@ -131,8 +131,8 @@ export default function Contact() {
                                         name === 'name' || name === 'subject' ? 'sm:col-span-2' : ''
                                     }`}
                                 >
-                                    <label className="mb-2" htmlFor={name}>
-                                        {label}
+                                    <label className="mb-2 text-[#252550]" htmlFor={name}>
+                                        {label + (requiredFields.includes(name) ? ' *' : '')}
                                     </label>
                                     <input
                                         className={`p-2 border ${
@@ -185,7 +185,7 @@ export default function Contact() {
 
                 <div className="flex flex-col gap-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div className="p-3 rounded-md">
+                        <div className="p-2 rounded-md">
                             <div className="flex items-center gap-2 text-xl sm:text-2xl pb-2">
                                 <MapPin size="1em" color="#252550" />
                                 <h3 className="text-[#252550] font-bold">Adresse</h3>
@@ -194,7 +194,7 @@ export default function Contact() {
                                 HORIZON BUSINESS <br /> CENTER, Avenue YAFA N3,<br /> AIN CHOK-CASABLANCA
                             </p>
                         </div>
-                        <div className="p-3 rounded-md">
+                        <div className="p-2 rounded-md">
                             <div className="flex items-center gap-2 text-xl sm:text-2xl pb-2">
                                 <Phone />
                                 <h3 className="text-[#252550] font-bold">Téléphone</h3>
@@ -202,12 +202,12 @@ export default function Contact() {
                             <p className="text-sm sm:text-lg">+212 5 22 21 03 93</p>
                             <p className="text-sm sm:text-lg">+212 6 61 24 31 46</p>
                         </div>
-                        <div className="p-3 rounded-md">
+                        <div className="p-2 rounded-md">
                             <div className="flex items-center gap-2 text-xl sm:text-2xl pb-2">
                                 <Mail />
                                 <h3 className="text-[#252550] font-bold">Email</h3>
                             </div>
-                            <p className="text-sm sm:text-lg">contact@cfa-conseil.com</p>
+                            <p className="text-sm sm:text-lg text-nowrap">contact@cfa-conseil.com</p>
                         </div>
                     </div>
 

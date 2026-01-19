@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
 import axios from 'axios';
 import Modal from '@/Components/ui/Modal';
@@ -81,7 +82,7 @@ export default function AdminComments({ pendingComments }) {
                         <tr>
                             <th className="px-4 py-3 text-left text-sm font-semibold">Nom du visiteur</th>
                             <th className="px-4 py-3 text-left text-sm font-semibold">Email du visiteur</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold">ID de l'article</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">titre de l'article</th>
                             <th className="px-4 py-3 text-left text-sm font-semibold">Commentaire</th>
                             <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
                             <th className="px-4 py-3 text-center text-sm font-semibold">Actions</th>
@@ -93,7 +94,7 @@ export default function AdminComments({ pendingComments }) {
                                 <tr key={comment.id} className="border-b hover:bg-gray-50">
                                     <td className="px-4 py-3 text-sm text-gray-700">{comment.name || '—'}</td>
                                     <td className="px-4 py-3 text-sm text-gray-700">{comment.email || '—'}</td>
-                                    <td className="px-4 py-3 text-sm text-gray-600">{comment.blog_id}</td>
+                                    <td className="px-4 py-3 text-sm text-gray-600 max-w-[180px]"><Link href={`/blog/${comment.blog.slug}`} className="underline">{comment.blog.title}</Link></td>
                                     <td className="px-4 py-3 text-sm text-gray-700 max-w-xs break-words">{comment.content}</td>
                                     <td className="px-4 py-3 text-sm text-gray-500">{new Date(comment.created_at).toLocaleString()}</td>
                                     <td className="px-4 py-3 text-center space-x-2">

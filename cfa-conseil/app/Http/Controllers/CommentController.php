@@ -12,7 +12,7 @@ class CommentController extends Controller
 
     public function adminPending()
     {
-        $pendingComments = Comment::with('user')
+        $pendingComments = Comment::with(['user', 'blog:id,title,slug'])
             ->where('status', 'pending')
             ->orderBy('created_at', 'desc')
             ->get();

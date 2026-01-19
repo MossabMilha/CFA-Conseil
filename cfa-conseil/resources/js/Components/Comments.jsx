@@ -32,23 +32,16 @@ const Comments = ({ blogId, auth }) => {
     const fetchComments = async () => {
         try {
             const response = await axios.get(`/blogs/${blogId}/comments`);
-            // Ensure it's always an array
             setComments(Array.isArray(response.data) ? response.data : []);
-            console.log(comments);
         } catch (error) {
-            console.error("Error fetching comments:", error);
+            console.error("Erreur lors du chargement :", error);
             showToast("Échec du chargement des commentaires.", "error");
         } finally {
             setLoading(false);
         }
     };
 
-
-    const isValidEmail = (email) => {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    };
-
+    const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     const submitComment = async () => {
         if (!newComment.trim()) return;
@@ -74,16 +67,13 @@ const Comments = ({ blogId, auth }) => {
             const response = await axios.post(`/blogs/${blogId}/comments`, payload);
             showToast(response.data.message || "Commentaire publié avec succès !", "success");
             setNewComment("");
-            setGuestName("");
-            setGuestEmail("");
             if (response.status === 201) fetchComments();
         } catch (error) {
-            console.error("Error posting comment:", error);
-
-            const message =
-                error.response?.data?.data?.message ||
-                "Échec de la publication du commentaire.";
-            showToast(message, "error");
+            console.error("Erreur lors de la publication :", error);
+            showToast(
+                error.response?.data?.data?.message || "Échec de la publication du commentaire.",
+                "error"
+            );
         }
     };
 
@@ -118,20 +108,19 @@ const Comments = ({ blogId, auth }) => {
             setReplyTo(null);
             fetchComments();
         } catch (error) {
-            console.error("Error posting reply:", error);
+            console.error("Erreur lors de la réponse :", error);
             showToast("Échec de la publication de la réponse.", "error");
         }
     };
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString("fr-FR", {
+    const formatDate = (dateString) =>
+        new Date(dateString).toLocaleDateString("fr-FR", {
             year: "numeric",
             month: "short",
             day: "numeric",
             hour: "2-digit",
             minute: "2-digit",
         });
-    };
 
     const toggleReplies = (commentId) => {
         setExpandedReplies((prev) => ({
@@ -150,7 +139,9 @@ const Comments = ({ blogId, auth }) => {
                 className={`${isReply ? "ml-8 mt-4 border-l-2 border-gray-200 pl-4" : "mb-6"}`}
             >
                 <div
-                    className={`bg-white rounded-lg p-4 shadow-sm ${isReply ? "border border-gray-100" : ""}`}
+                    className={`bg-white rounded-lg p-4 shadow-sm ${
+                        isReply ? "border border-gray-100" : ""
+                    }`}
                 >
                     <div className="flex items-start justify-between">
                         <div className="flex items-center space-x-2 mb-2">
@@ -163,7 +154,7 @@ const Comments = ({ blogId, auth }) => {
                                 <h4 className="font-semibold text-gray-800">
                                     {comment.user
                                         ? `${comment.user.first_name} ${comment.user.last_name}`
-                                        : comment.name || "Guest"}
+                                        : comment.name || "Invité"}
                                 </h4>
                                 <div className="flex items-center space-x-2 text-sm text-gray-500">
                                     <Clock size={12} />
@@ -194,7 +185,9 @@ const Comments = ({ blogId, auth }) => {
                                 }`}
                             >
                                 <MessageSquare size={14} />
-                                <span>{replyTo === comment.id ? "Annuler la réponse" : "Répondre"}</span>
+                                <span>
+                  {replyTo === comment.id ? "Annuler la réponse" : "Répondre"}
+                </span>
                             </button>
 
                             {hasReplies && (
@@ -206,7 +199,9 @@ const Comments = ({ blogId, auth }) => {
                                     <span>
                     {hasReplies
                         ? `${comment.replies.length} ${
-                            comment.replies.length === 1 ? "réponse" : "réponses"
+                            comment.replies.length === 1
+                                ? "réponse"
+                                : "réponses"
                         }`
                         : ""}
                   </span>
@@ -218,13 +213,32 @@ const Comments = ({ blogId, auth }) => {
                     {/* Reply Form */}
                     {replyTo === comment.id && (
                         <div className="mt-4 pl-2 border-l-2 border-[#252550]">
-              <textarea
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Écrivez votre réponse ici..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
-                  rows="2"
-              />
+                            {!auth?.user && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Votre nom"
+                                        value={guestName}
+                                        onChange={(e) => setGuestName(e.target.value)}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                                    />
+                                    <input
+                                        type="email"
+                                        placeholder="Votre email"
+                                        value={guestEmail}
+                                        onChange={(e) => setGuestEmail(e.target.value)}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                                    />
+                                </div>
+                            )}
+
+                            <textarea
+                                value={replyContent}
+                                onChange={(e) => setReplyContent(e.target.value)}
+                                placeholder="Écrivez votre réponse ici..."
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                                rows="2"
+                            />
                             <div className="mt-2 flex justify-end space-x-2">
                                 <button
                                     onClick={() => {
@@ -238,7 +252,11 @@ const Comments = ({ blogId, auth }) => {
                                 <button
                                     onClick={() => submitReply(comment.id)}
                                     className="px-4 py-2 bg-[#252550] text-white text-sm rounded-lg hover:bg-[#1a1a3d] disabled:opacity-50"
-                                    disabled={!replyContent.trim()}
+                                    disabled={
+                                        !replyContent.trim() ||
+                                        (!auth?.user &&
+                                            (!guestName.trim() || !guestEmail.trim()))
+                                    }
                                 >
                                     Répondre
                                 </button>
@@ -290,47 +308,50 @@ const Comments = ({ blogId, auth }) => {
                     Commentaires ({organizedComments.length + replies.length})
                 </h3>
 
-                {/* Comment Form */}
-                <div className="mb-6 bg-white rounded-lg p-4 shadow-sm">
-                    {!auth?.user && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                            <input
-                                type="text"
-                                placeholder="Votre nom"
-                                value={guestName}
-                                onChange={(e) => setGuestName(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
-                            />
-                            <input
-                                type="email"
-                                placeholder="Votre email"
-                                value={guestEmail}
-                                onChange={(e) => setGuestEmail(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
-                            />
+                {/* Main Comment Form (hidden when replying) */}
+                {!replyTo && (
+                    <div className="mb-6 bg-white rounded-lg p-4 shadow-sm">
+                        {!auth?.user && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                <input
+                                    type="text"
+                                    placeholder="Votre nom"
+                                    value={guestName}
+                                    onChange={(e) => setGuestName(e.target.value)}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                                />
+                                <input
+                                    type="email"
+                                    placeholder="Votre email"
+                                    value={guestEmail}
+                                    onChange={(e) => setGuestEmail(e.target.value)}
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                                />
+                            </div>
+                        )}
+                        <textarea
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="Écrivez votre commentaire ici..."
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
+                            rows="3"
+                        />
+                        <div className="mt-3 flex justify-end items-center">
+                            <button
+                                onClick={submitComment}
+                                className="px-6 py-2 bg-[#6885ab] text-white rounded-lg hover:bg-[#485d77] disabled:opacity-50"
+                                disabled={
+                                    !newComment.trim() ||
+                                    (!auth?.user &&
+                                        (!guestName.trim() || !guestEmail.trim()))
+                                }
+                            >
+                                <Send className="inline mr-2" size={18} />
+                                Commenter
+                            </button>
                         </div>
-                    )}
-                    <textarea
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Écrivez votre commentaire ici..."
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
-                        rows="3"
-                    />
-                    <div className="mt-3 flex justify-end items-center">
-                        <button
-                            onClick={submitComment}
-                            className="px-6 py-2 bg-[#6885ab] text-white rounded-lg hover:bg-[#485d77] disabled:opacity-50"
-                            disabled={
-                                !newComment.trim() ||
-                                (!auth?.user && (!guestName.trim() || !guestEmail.trim()))
-                            }
-                        >
-                            <Send className="inline mr-2" size={18} />
-                            Commenter
-                        </button>
                     </div>
-                </div>
+                )}
 
                 {/* Comments List */}
                 {organizedComments.length === 0 ? (
