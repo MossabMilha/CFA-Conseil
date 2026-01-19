@@ -5,9 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class CommentController extends Controller
 {
+
+    public function adminPending()
+    {
+        $pendingComments = Comment::with('user')
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return Inertia::render('Admin/Comments', [
+            'pendingComments' => $pendingComments,
+        ]);
+    }
+
     /**
      * Show only approved comments for a blog post.
      */

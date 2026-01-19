@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
         // Check if user is already authenticated
         const checkAuth = async () => {
             try {
-                const response = await axios.get('/api/user');
+                const response = await axios.get('/user');
                 setUser(response.data);
             } catch (error) {
                 setUser(null);
@@ -29,9 +29,9 @@ export const AuthProvider = ({ children }) => {
             setUser(response.data.user);
             return { success: true };
         } catch (error) {
-            return { 
-                success: false, 
-                message: error.response?.data?.message || 'Login failed' 
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Login failed'
             };
         }
     };
@@ -42,9 +42,9 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             return { success: true };
         } catch (error) {
-            return { 
-                success: false, 
-                message: error.response?.data?.message || 'Logout failed' 
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Logout failed'
             };
         }
     };

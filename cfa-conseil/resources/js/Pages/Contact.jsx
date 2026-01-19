@@ -65,7 +65,7 @@ export default function Contact() {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('/api/contact-form', formData);
+            const response = await axios.post('/contact-form', formData);
             setSubmitStatus({
                 success: true,
                 message: 'Votre message a été envoyé avec succès !',

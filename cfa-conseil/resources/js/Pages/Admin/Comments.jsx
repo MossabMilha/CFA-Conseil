@@ -29,9 +29,9 @@ export default function AdminComments({ pendingComments }) {
 
         try {
             if (modalAction === 'approve') {
-                await axios.post(`/api/comments/${selectedComment.id}/approve`, {}, { withCredentials: true });
+                await axios.post(`/comments/${selectedComment.id}/approve`, {}, { withCredentials: true });
             } else if (modalAction === 'delete') {
-                await axios.delete(`/api/comments/${selectedComment.id}`);
+                await axios.delete(`/comments/${selectedComment.id}`);
             }
             window.location.reload();
         } catch (error) {

@@ -31,8 +31,10 @@ const Comments = ({ blogId, auth }) => {
 
     const fetchComments = async () => {
         try {
-            const response = await axios.get(`/api/blogs/${blogId}/comments`);
-            setComments(response.data);
+            const response = await axios.get(`/blogs/${blogId}/comments`);
+            // Ensure it's always an array
+            setComments(Array.isArray(response.data) ? response.data : []);
+            console.log(comments);
         } catch (error) {
             console.error("Error fetching comments:", error);
             showToast("Failed to load comments.", "error");
@@ -40,6 +42,7 @@ const Comments = ({ blogId, auth }) => {
             setLoading(false);
         }
     };
+
 
     const isValidEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,15 +71,19 @@ const Comments = ({ blogId, auth }) => {
         }
 
         try {
-            const response = await axios.post(`/api/blogs/${blogId}/comments`, payload);
+            const response = await axios.post(`/blogs/${blogId}/comments`, payload);
             showToast(response.data.message || "Comment posted successfully!", "success");
             setNewComment("");
             setGuestName("");
             setGuestEmail("");
-            fetchComments();
+            if (response.status === 201) fetchComments();
         } catch (error) {
             console.error("Error posting comment:", error);
-            showToast("Failed to post comment.", "error");
+
+            const message =
+                error.response?.data?.data?.message ||
+                "Failed to post comment.";
+            showToast(message, "error");
         }
     };
 
@@ -105,7 +112,7 @@ const Comments = ({ blogId, auth }) => {
         }
 
         try {
-            const response = await axios.post(`/api/blogs/${blogId}/comments`, payload);
+            const response = await axios.post(`/blogs/${blogId}/comments`, payload);
             showToast(response.data.message || "Reply posted successfully!", "success");
             setReplyContent("");
             setReplyTo(null);
