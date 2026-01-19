@@ -227,8 +227,6 @@ export default function Contact() {
     );
 }
 
-// Add seo to the layout function at the bottom:
-
 Contact.layout = (page) => {
     return (
         <AppLayout

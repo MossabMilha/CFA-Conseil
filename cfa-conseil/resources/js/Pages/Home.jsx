@@ -11,7 +11,6 @@ import Contact from '@/Pages/Contact.jsx';
 import Autoplay from "embla-carousel-autoplay"
 
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/Components/ui/carousel';
-import SeoHead from "@/Components/SeoHead.jsx";
 
 
 export default function Home() {
