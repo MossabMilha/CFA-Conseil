@@ -37,7 +37,7 @@ const Comments = ({ blogId, auth }) => {
             console.log(comments);
         } catch (error) {
             console.error("Error fetching comments:", error);
-            showToast("Failed to load comments.", "error");
+            showToast("Échec du chargement des commentaires.", "error");
         } finally {
             setLoading(false);
         }
@@ -72,7 +72,7 @@ const Comments = ({ blogId, auth }) => {
 
         try {
             const response = await axios.post(`/blogs/${blogId}/comments`, payload);
-            showToast(response.data.message || "Comment posted successfully!", "success");
+            showToast(response.data.message || "Commentaire publié avec succès !", "success");
             setNewComment("");
             setGuestName("");
             setGuestEmail("");
@@ -82,7 +82,7 @@ const Comments = ({ blogId, auth }) => {
 
             const message =
                 error.response?.data?.data?.message ||
-                "Failed to post comment.";
+                "Échec de la publication du commentaire.";
             showToast(message, "error");
         }
     };
@@ -113,13 +113,13 @@ const Comments = ({ blogId, auth }) => {
 
         try {
             const response = await axios.post(`/blogs/${blogId}/comments`, payload);
-            showToast(response.data.message || "Reply posted successfully!", "success");
+            showToast(response.data.message || "Réponse publiée avec succès !", "success");
             setReplyContent("");
             setReplyTo(null);
             fetchComments();
         } catch (error) {
             console.error("Error posting reply:", error);
-            showToast("Failed to post reply.", "error");
+            showToast("Échec de la publication de la réponse.", "error");
         }
     };
 
@@ -194,7 +194,7 @@ const Comments = ({ blogId, auth }) => {
                                 }`}
                             >
                                 <MessageSquare size={14} />
-                                <span>{replyTo === comment.id ? "Cancel Reply" : "Reply"}</span>
+                                <span>{replyTo === comment.id ? "Annuler la réponse" : "Répondre"}</span>
                             </button>
 
                             {hasReplies && (
@@ -206,7 +206,7 @@ const Comments = ({ blogId, auth }) => {
                                     <span>
                     {hasReplies
                         ? `${comment.replies.length} ${
-                            comment.replies.length === 1 ? "reply" : "replies"
+                            comment.replies.length === 1 ? "réponse" : "réponses"
                         }`
                         : ""}
                   </span>
@@ -221,7 +221,7 @@ const Comments = ({ blogId, auth }) => {
               <textarea
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Write your reply here..."
+                  placeholder="Écrivez votre réponse ici..."
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
                   rows="2"
               />
@@ -233,14 +233,14 @@ const Comments = ({ blogId, auth }) => {
                                     }}
                                     className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
                                 >
-                                    Cancel
+                                    Annuler
                                 </button>
                                 <button
                                     onClick={() => submitReply(comment.id)}
                                     className="px-4 py-2 bg-[#252550] text-white text-sm rounded-lg hover:bg-[#1a1a3d] disabled:opacity-50"
                                     disabled={!replyContent.trim()}
                                 >
-                                    Reply
+                                    Répondre
                                 </button>
                             </div>
                         </div>
@@ -262,7 +262,7 @@ const Comments = ({ blogId, auth }) => {
             <div className="w-full max-w-4xl mt-12">
                 <div className="text-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#252550] mx-auto"></div>
-                    <p className="mt-2 text-gray-600">Loading comments...</p>
+                    <p className="mt-2 text-gray-600">Chargement des commentaires...</p>
                 </div>
             </div>
         );
@@ -287,7 +287,7 @@ const Comments = ({ blogId, auth }) => {
         <div className="w-full max-w-4xl mt-12">
             <div className="mb-6">
                 <h3 className="text-2xl font-bold text-[#252550] mb-4">
-                    Comments ({organizedComments.length + replies.length})
+                    Commentaires ({organizedComments.length + replies.length})
                 </h3>
 
                 {/* Comment Form */}
@@ -296,14 +296,14 @@ const Comments = ({ blogId, auth }) => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                             <input
                                 type="text"
-                                placeholder="Your name"
+                                placeholder="Votre nom"
                                 value={guestName}
                                 onChange={(e) => setGuestName(e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
                             />
                             <input
                                 type="email"
-                                placeholder="Your email"
+                                placeholder="Votre email"
                                 value={guestEmail}
                                 onChange={(e) => setGuestEmail(e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
@@ -313,31 +313,31 @@ const Comments = ({ blogId, auth }) => {
                     <textarea
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Write your comment here..."
+                        placeholder="Écrivez votre commentaire ici..."
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#252550] focus:border-transparent"
                         rows="3"
                     />
                     <div className="mt-3 flex justify-end items-center">
                         <button
                             onClick={submitComment}
-                            className="px-6 py-2 bg-[#252550] text-white rounded-lg hover:bg-[#1a1a3d] disabled:opacity-50"
+                            className="px-6 py-2 bg-[#6885ab] text-white rounded-lg hover:bg-[#485d77] disabled:opacity-50"
                             disabled={
                                 !newComment.trim() ||
                                 (!auth?.user && (!guestName.trim() || !guestEmail.trim()))
                             }
                         >
                             <Send className="inline mr-2" size={18} />
-                            Comment
+                            Commenter
                         </button>
                     </div>
                 </div>
 
                 {/* Comments List */}
                 {organizedComments.length === 0 ? (
-                    <div className="text-center py-8 bg-gray-50 rounded-lg">
-                        <XCircle className="mx-auto text-gray-400" size={48} />
-                        <p className="mt-3 text-gray-600">
-                            No comments yet. Be the first to comment!
+                    <div className="text-center py-8 bg-[#ecf2fa]/50 rounded-lg">
+                        <XCircle className="mx-auto text-[#6885ab]" size={48} />
+                        <p className="mt-3 text-[#485d77]">
+                            Aucun commentaire pour le moment. Soyez le premier à commenter !
                         </p>
                     </div>
                 ) : (

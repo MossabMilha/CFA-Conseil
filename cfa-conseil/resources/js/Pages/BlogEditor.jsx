@@ -66,27 +66,27 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                 underline: false
             }),
             Image
-            .extend({
-                addAttributes() {
-                    return {
-                        ...this.parent?.(),
-                        dataTempId: {
-                            default: null,
-                            parseHTML: el => el.getAttribute("data-temp-id"),
-                            renderHTML: attrs => attrs.dataTempId
-                                ? { "data-temp-id": attrs.dataTempId }
-                                : {},
-                        },
-                    };
-                },
-            }),
+                .extend({
+                    addAttributes() {
+                        return {
+                            ...this.parent?.(),
+                            dataTempId: {
+                                default: null,
+                                parseHTML: el => el.getAttribute("data-temp-id"),
+                                renderHTML: attrs => attrs.dataTempId
+                                    ? { "data-temp-id": attrs.dataTempId }
+                                    : {},
+                            },
+                        };
+                    },
+                }),
             TextStyle,
             Color.configure({ types: ['textStyle'] }),
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
             Underline,
             PdfAttachment,
         ],
-        content: initialBlog?.content_html || "<p>Start writing your blog here...</p>",
+        content: initialBlog?.content_html || "<p>Commencez à écrire votre article ici...</p>",
         editorProps: {
             attributes: {
                 class:
@@ -98,7 +98,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
             syncPdfs(editor);
 
         }
-});
+    });
 
     if (!editor) return null;
 
@@ -175,11 +175,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
         // Validate type and size
         if (!file.type.startsWith('image/')) {
-            showToast('Please select an image file', 'error');
+            showToast('Veuillez sélectionner un fichier image', 'error');
             return;
         }
         if (file.size > 5 * 1024 * 1024) { // 5MB limit
-            showToast('Image size should be less than 5MB', 'error');
+            showToast('La taille de l\'image doit être inférieure à 5 Mo', 'error');
             return;
         }
 
@@ -202,7 +202,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
         } catch (err) {
             console.error('Image upload failed:', err);
-            showToast('Failed to upload image', 'error');
+            showToast('Échec du téléchargement de l\'image', 'error');
         }
 
         e.target.value = ''; // reset input
@@ -214,11 +214,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
         // Validate
         if (!file.type.startsWith("image/")) {
-            showToast('Please select an image file', 'error');
+            showToast('Veuillez sélectionner un fichier image', 'error');
             return;
         }
         if (file.size > 5 * 1024 * 1024) {
-            showToast('Featured image size should be less than 5MB', 'error');
+            showToast('La taille de l\'image mise en avant doit être inférieure à 5 Mo', 'error');
             return;
         }
 
@@ -234,11 +234,11 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
         if (!file) return;
 
         if (file.type !== "application/pdf") {
-            showToast("Please upload a PDF file", "error");
+            showToast("Veuillez télécharger un fichier PDF", "error");
             return;
         }
         if (file.size > 10 * 1024 * 1024) { // limit 10MB
-            showToast("PDF file must be less than 10MB", "error");
+            showToast("Le fichier PDF doit être inférieur à 10 Mo", "error");
             return;
         }
 
@@ -261,7 +261,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
         } catch (err) {
             console.error("PDF upload failed:", err);
-            showToast("Failed to upload PDF", "error");
+            showToast("Échec du téléchargement du PDF", "error");
         }
 
         e.target.value = '';
@@ -269,6 +269,22 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
     // Handle blog submit
     const handleBlogUpload = async () => {
+
+        if (!data.title || data.title.trim() === "") {
+            showToast("Le titre est requis.", "error");
+            return;
+        }
+
+        if (!data.excerpt || data.excerpt.trim() === "") {
+            showToast("L'extrait est requis.", "error");
+            return;
+        }
+
+        if (!featuredImagePath) {
+            showToast("Veuillez ajouter une image mise en avant.", "error");
+            return;
+        }
+
         try {
             // Step 1: Create the blog first (without content_html)
             const blogFormData = new FormData();
@@ -396,14 +412,14 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
 
             // Reset form
             reset();
-            editor.commands.setContent('<p>Start writing your blog here...</p>');
+            editor.commands.setContent('<p>Commencez à écrire votre article ici...</p>');
             setFeaturedImagePath(null);
 
-            showToast('Blog saved successfully!', "success");
+            showToast('Article enregistré avec succès !', "success");
 
         } catch (err) {
             console.error('Error saving blog:', err);
-            showToast(err.response?.data?.message || 'Something went wrong while saving the blog.', "error");
+            showToast('Une erreur s\'est produite lors de l\'enregistrement de l\'article.', "error");
         }
     };
 
@@ -420,10 +436,10 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
     return (
         <>
             <SeoHead
-                title= "Blog Editor"
-                description="Create, edit, and manage blog posts for your website using the IntelliCache CMS."
+                title= "Éditeur de Blog"
+                description="Créer, éditer et gérer les articles de votre site avec le CMS IntelliCache."
                 slug="blog-editor"
-                keywords="blog editor, write post, manage blog, content management"
+                keywords="éditeur de blog, rédiger article, gérer blog, gestion contenu"
             />
             <div className=' relative py-16'>
                 <div className='absolute left-0 top-0 -z-10 grid grid-cols-3'>
@@ -475,7 +491,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                             <button
                                 onClick={() => editor.chain().focus().toggleBold().run()}
                                 className={`p-2 rounded hover:bg-gray-200 `}
-                                title="Bold"
+                                title="Gras"
                             >
                                 <Bold/>
                             </button>
@@ -484,7 +500,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                             <button
                                 onClick={() => editor.chain().focus().toggleItalic().run()}
                                 className={`p-2 rounded hover:bg-gray-200 `}
-                                title="Italic"
+                                title="Italique"
                             >
                                 <Italic/>
                             </button>
@@ -493,7 +509,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                             <button
                                 onClick={() => editor.chain().focus().toggleUnderline().run()}
                                 className={`p-2 rounded hover:bg-gray-200 `}
-                                title="Underline"
+                                title="Souligné"
                             >
                                 <UnderlineIcon/>
                             </button>
@@ -513,7 +529,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                                 className={`flex items-center gap-2 w-full p-2 rounded hover:bg-gray-200 ${editor.isActive('heading', {level: lvl}) ? 'bg-gray-200' : ''}`}
                                             >
                                                 <Icon/>
-                                                <span className="[#eaeaea]space-nowrap">Heading {lvl}</span>
+                                                <span className="[#eaeaea]space-nowrap">Titre {lvl}</span>
                                             </button>
                                         );
                                     })}
@@ -524,14 +540,14 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                             <button
                                 onClick={() => editor.chain().focus().toggleBulletList().run()}
                                 className={`p-2 rounded hover:bg-gray-200 `}
-                                title="Bullet List"
+                                title="Liste à puces"
                             >
                                 <List/>
                             </button>
                             <button
                                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
                                 className={`p-2 rounded hover:bg-gray-200 `}
-                                title="Numbered List"
+                                title="Liste numérotée"
                             >
                                 <ListOrdered/>
                             </button>
@@ -545,11 +561,23 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                     <div className="p-2">
                                         <div className="grid grid-cols-5">
                                             {[
-                                                '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
-                                                '#FFFF00', '#00FFFF', '#FF00FF', '#C0C0C0', '#808080',
-                                                '#800000', '#808000', '#008000', '#800080', '#008080',
-                                                '#000080', '#FFA500', '#A52A2A', '#FFC0CB', '#FFD700'
-                                            ].map((color) => (
+                                                '#1E1E2E', // dark navy / almost black (background)
+                                                '#FFFFFF', // white
+                                                '#ec3f4c', // red (errors, highlights)
+                                                '#92e05a', // green (success)
+                                                '#4aa7f3', // blue (info / links)
+                                                '#f5ed5b', // yellow / gold (highlight)
+                                                '#4cd1e3', // cyan / teal
+                                                '#cd5aee', // purple / magenta
+                                                '#c9c9c9', // light gray (text / secondary)
+                                                '#808080', // medium gray (borders / comments)
+                                                '#ef9f53', // orange / accent
+                                                '#a755ec', // muted purple (distinct from #C678DD)
+                                                '#27b6b4', // teal / accent
+                                                '#1658b0', // deep blue
+                                                '#fa85bd', // pink / highlight
+                                            ]
+                                                .map((color) => (
                                                 <button
                                                     key={color}
                                                     onClick={() => editor.chain().focus().setColor(color).run()}
@@ -564,7 +592,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                                 onClick={() => editor.chain().focus().unsetColor().run()}
                                                 className="w-full text-left px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
                                             >
-                                                Reset color
+                                                Réinitialiser la couleur
                                             </button>
                                         </div>
                                     </div>
@@ -583,7 +611,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                 type="button"
                                 onClick={triggerFileInput}
                                 className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
-                                title="Insert Image"
+                                title="Insérer une image"
                             >
                                 <ImagePlus/>
                             </button>
@@ -601,7 +629,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                 type="button"
                                 onClick={triggerPdfInput}
                                 className="p-2 rounded hover:bg-gray-200 flex items-center gap-2"
-                                title="Attach PDF"
+                                title="Joindre un PDF"
                             >
                                 <FileIcon/>
                             </button>
@@ -641,7 +669,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                     />
                                     <button type="button" onClick={triggerFeaturedImageInput}
                                             className="grow border border-dashed px-2 py-8 rounded hover:bg-gray-100 border-gray-300 flex items-center justify-center gap-2">
-                                        <ImagePlus/> Add Featured Image
+                                        <ImagePlus/> Ajouter une image mise en avant
                                     </button>
                                 </>
                             )}
@@ -653,7 +681,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                         <div className="flex items-center gap-2 mb-4 w-full">
                             <input
                                 type="text"
-                                placeholder="Title"
+                                placeholder="Titre"
                                 value={data.title}
                                 onChange={(e) => setData('title', e.target.value)}
                                 className="grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -663,7 +691,7 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                         {/* Excerpt */}
                         <div className="flex items-center gap-2 mb-4 w-full">
                         <textarea
-                            placeholder="Excerpt"
+                            placeholder="Extrait"
                             value={data.excerpt}
                             onChange={(e) => setData('excerpt', e.target.value)}
                             className="grow border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -684,13 +712,13 @@ export default function BlogEditor({ blog: initialBlog = null, auth }) {
                                 onClick={() => reset()}
                                 className="px-4 py-2 text-[#252550] flex rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
                             >
-                                <a href="/blogs" className="flex items-center gap-2"><ArrowLeft/> Blogs</a>
+                                <a href="/blogs" className="flex items-center gap-2"><ArrowLeft/> Articles</a>
                             </button>
                             <button
                                 onClick={handleBlogUpload}
                                 className="px-4 py-2 text-[#eaeaea] bg-[#92aec8] rounded-md hover:bg-[#7aa3c0] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
                             >
-                                Save Blog
+                                Enregistrer l'article
                             </button>
                         </div>
                     </div>

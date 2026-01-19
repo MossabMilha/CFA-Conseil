@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
@@ -60,7 +59,7 @@ export default function Blog({ blog, auth }) {
                             className="inline-flex items-center gap-2 text-[#252550] hover:underline font-medium"
                         >
                             <ArrowLeft size={20}/>
-                            <span>Back to Blogs</span>
+                            <span>Retour aux articles</span>
                         </Link>
                     </div>
 
@@ -84,7 +83,7 @@ export default function Blog({ blog, auth }) {
                             <span className="text-gray-400">•</span>
                             <div className="flex items-center gap-2">
                                 <Clock size={18}/>
-                                <span>{calculateReadTime(blog.content_html)} min read</span>
+                                <span>{calculateReadTime(blog.content_html)} min de lecture</span>
                             </div>
                         </div>
                     </div>
@@ -95,7 +94,7 @@ export default function Blog({ blog, auth }) {
                             <div className="aspect-video w-full rounded-lg overflow-hidden">
                                 <img
                                     src={`/storage/${blog.featured_image}`}
-                                    alt={blog.title}
+                                    alt={`Image mise en avant : ${blog.title}`}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
                                         e.target.src = fallbackImg;
@@ -121,13 +120,13 @@ export default function Blog({ blog, auth }) {
                                 className="text-[#252550] font-medium hover:underline flex items-center gap-1"
                             >
                                 <ArrowLeft size={20}/>
-                                All Blogs
+                                Tous les articles
                             </Link>
                             {auth?.user?.role === 'admin' && <Link
                                 href="/blog-editor"
                                 className="text-[#252550] font-medium hover:underline"
                             >
-                                Write New Blog
+                                Rédiger un nouvel article
                             </Link>}
                         </div>
                     </div>

@@ -44,10 +44,10 @@ export default function AdminComments({ pendingComments }) {
     return (
         <AppLayout
             seo={{
-                title: "Admin Comments",
-                description: "Manage and moderate user comments on your website from the admin dashboard.",
+                title: "Commentaires Admin",
+                description: "Gérer et modérer les commentaires des utilisateurs depuis le tableau de bord admin.",
                 slug: "admin/comments",
-                keywords: "admin comments, manage comments, moderate comments, user feedback",
+                keywords: "commentaires admin, gérer commentaires, modérer commentaires, retours utilisateurs",
             }}
         >
             <div className="flex justify-between mb-48">
@@ -73,16 +73,16 @@ export default function AdminComments({ pendingComments }) {
                 </div>
             </div>
             <div className="p-6">
-                <h1 className="text-2xl font-bold text-gray-800 mb-6">Pending Comments ({pendingComments.length})</h1>
+                <h1 className="text-2xl font-bold text-gray-800 mb-6">Commentaires en attente ({pendingComments.length})</h1>
 
                 <div className="overflow-x-auto bg-white rounded-md">
                     <table className="min-w-full border-collapse">
                         <thead className="bg-gray-100 text-[#252550] border-b border-[#6886ab]">
                         <tr>
-                            <th className="px-4 py-3 text-left text-sm font-semibold">Guest Name</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold">Guest Email</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold">Blog ID</th>
-                            <th className="px-4 py-3 text-left text-sm font-semibold">Comment</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">Nom du visiteur</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">Email du visiteur</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">ID de l'article</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">Commentaire</th>
                             <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
                             <th className="px-4 py-3 text-center text-sm font-semibold">Actions</th>
                         </tr>
@@ -101,13 +101,13 @@ export default function AdminComments({ pendingComments }) {
                                             onClick={() => openModal('approve', comment)}
                                             className="px-3 py-1 text-[#6886ab] hover:text-white rounded hover:bg-[#6886ab] transition-colors"
                                         >
-                                            Approve
+                                            Approuver
                                         </button>
                                         <button
                                             onClick={() => openModal('delete', comment)}
                                             className="px-3 py-1 text-red-600 hover:text-white rounded hover:bg-red-600 transition-colors"
                                         >
-                                            Delete
+                                            Supprimer
                                         </button>
                                     </td>
                                 </tr>
@@ -115,7 +115,7 @@ export default function AdminComments({ pendingComments }) {
                         ) : (
                             <tr>
                                 <td colSpan="7" className="text-center py-8 text-gray-500 text-sm">
-                                    No pending comments
+                                    Aucun commentaire en attente
                                 </td>
                             </tr>
                         )}
@@ -128,17 +128,17 @@ export default function AdminComments({ pendingComments }) {
             <Modal show={modalOpen} onClose={closeModal} maxWidth="sm">
                 <div className="p-6">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                        {modalAction === 'approve' ? 'Approve Comment' : 'Delete Comment'}
+                        {modalAction === 'approve' ? 'Approuver le commentaire' : 'Supprimer le commentaire'}
                     </h3>
                     <p className="text-gray-600 mb-6">
-                        Are you sure you want to {modalAction} this comment?
+                        Êtes-vous sûr de vouloir {modalAction === 'approve' ? 'approuver' : 'supprimer'} ce commentaire ?
                     </p>
                     <div className="flex justify-end space-x-2">
                         <button
                             onClick={(e) => closeModal(e)}
                             className="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
                         >
-                            Cancel
+                            Annuler
                         </button>
                         <button
                             onClick={handleAction}
@@ -146,7 +146,7 @@ export default function AdminComments({ pendingComments }) {
                                 modalAction === 'approve' ? 'bg-[#6886ab] hover:bg-[#557299]' : 'bg-red-600 hover:bg-red-700'
                             }`}
                         >
-                            {modalAction === 'approve' ? 'Approve' : 'Delete'}
+                            {modalAction === 'approve' ? 'Approuver' : 'Supprimer'}
                         </button>
                     </div>
                 </div>

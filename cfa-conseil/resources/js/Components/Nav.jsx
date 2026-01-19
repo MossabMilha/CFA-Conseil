@@ -86,7 +86,7 @@ export default function Nav() {
         <ul className="hidden md:flex items-center text-white space-x-4 lg:space-x-8 text-sm md:text-base">
           <li><a href="#about" onClick={(e) => scrollToSection(e, '#about')}>À propos</a></li>
           <li><a href="#services" onClick={(e) => scrollToSection(e, '#services')}>Services</a></li>
-          <li><Link href="/blogs">Blog</Link></li>
+          <li><Link href="/blogs">Article</Link></li>
           <li><Link className="text-[#252550] bg-white rounded-full px-3 py-1 font-semibold" href="/contact">Contact</Link>
           </li>
           {(auth?.user?.role === 'admin' || auth?.user?.role === 'user') && <li>
@@ -99,7 +99,7 @@ export default function Nav() {
                 <Dropdown.Content width='auto'>
                     { auth?.user?.role === 'admin' && <Dropdown.Link className='flex items-center gap-2 whitespace-nowrap text-[#252550]' as="button"
                                     onClick={() => router.visit('/blog-editor')}>
-                        <SquarePen size={'1em'}/> Editeur de blog
+                        <SquarePen size={'1em'}/> Editeur des articles
                     </Dropdown.Link>}
                   <Dropdown.Link className='flex items-center gap-2 whitespace-nowrap text-[#252550]' as="button" onClick={() => router.visit('/admin/comments')}>
                     <Bubbles size={'1em'} /> Gérer les commentaires
@@ -130,11 +130,11 @@ export default function Nav() {
           <ul className="flex flex-col space-y-4 text-white text-center">
             <li className="flex items-center justify-center"><a className="w-full" href="#about" onClick={(e) => scrollToSection(e, '#about')}>À propos</a></li>
             <li className="flex items-center justify-center"><a className="w-full" href="#services" onClick={(e) => scrollToSection(e, '#services')}>Services</a></li>
-            <li className="flex items-center justify-center"><Link className="w-full" href="/blogs">Blog</Link></li>
+            <li className="flex items-center justify-center"><Link className="w-full" href="/blogs">Article</Link></li>
             <li className="flex items-center justify-center"><Link className="w-full" href="/contact"> Contact</Link></li>
             {auth?.user?.role === 'admin' &&
             <>
-              <li className="flex items-center justify-center"><Link className="w-full" href="/blog-editor">Editeur de blog</Link></li>
+              <li className="flex items-center justify-center"><Link className="w-full" href="/blog-editor">Editeur des articles</Link></li>
               <li className="flex items-center justify-center"><Link className='w-full' href="/admin/comments">Gérer les commentaires</Link></li>
               <li className="flex items-center justify-center"><Link className='w-full text-[#252550] bg-white rounded-full px-3 py-1 font-semibold' href="/logout">Se deconnecter</Link></li>
             </>
