@@ -16,7 +16,7 @@ export default function Login() {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'), {
+        post(route('login.submit'), {
             onFinish: () => reset('password'),
         });
     };
@@ -85,7 +85,7 @@ export default function Login() {
 
                 <div className="mt-4 flex items-center justify-between">
                     <Link
-                        href={route('register')}
+                        href={route('register.form')}
                         className="text-sm text-gray-600 hover:text-gray-900"
                     >
                         Pas encore inscrit ?
@@ -103,3 +103,4 @@ export default function Login() {
         </GuestLayout>
     );
 }
+

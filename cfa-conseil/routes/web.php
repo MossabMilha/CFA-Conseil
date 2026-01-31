@@ -26,10 +26,10 @@ Route::post('/blogs/{blog}/comments', [CommentController::class, 'store'])->name
 // --------------------------
 // Authentication
 // --------------------------
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login'); // checked
-Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/login', [AuthController::class, 'login'])->name('login'); // checked
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form'); // checked
+Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit'); // checked
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // checked
 
 // --------------------------

@@ -18,7 +18,7 @@ export default function Register() {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('register'), {
+        post(route('register.submit'), {
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
@@ -136,7 +136,7 @@ export default function Register() {
 
                 <div className="mt-6 flex items-center justify-between">
                     <Link
-                        href={route('login')}
+                        href={route('login.form')}
                         className="text-sm text-gray-600 hover:text-gray-900"
                     >
                         Déjà inscrit ?

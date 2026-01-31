@@ -17,9 +17,8 @@ class EnsureUserIsAuthenticated
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-
             // For web routes, redirect to login
-            return redirect()->route('login');
+            return redirect()->route('login.form');
         }
 
         return $next($request);
