@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "optimize:images": "node optimize-images.js",
-        "build": "vite build",
+        "build": "php artisan ziggy:generate && vite build",
         "dev": "vite"
     },
     "dependencies": {
@@ -44,3 +44,4 @@
         "vite-plugin-svgr": "^4.5.0"
     }
 }
+
