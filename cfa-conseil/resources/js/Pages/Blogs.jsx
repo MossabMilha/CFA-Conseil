@@ -110,10 +110,10 @@ export default function Blogs({ blogs = [] }) {
                             className='bg-[#252550] w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full rounded-br-none'></div>
                     </div>
                 </div>
-                <h1 className="text-9xl font-bold text-center text-[#252550]">Articles.</h1>
+                <h1 className="text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-center text-[#252550]">Articles.</h1>
                 <div className="flex justify-center mt-20">
                     <div
-                        className="min-w-96 flex items-center justify-center gap-2 bg-[#e5e5e5] border-b-2 border-b-[#252550] px-2 rounded">
+                        className="sm:min-w-96 flex items-center justify-center gap-2 bg-[#e5e5e5] border-b-2 border-b-[#252550] px-2 rounded">
                         <input
                             className="border-0 w-full bg-[#e5e5e5] focus:outline-none focus:ring-0"
                             type="text"
